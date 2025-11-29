@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: concessionaria-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: concessionaria
+      POSTGRES_PASSWORD: concessionaria_password
+      POSTGRES_DB: concessionaria
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - concessionaria-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U concessionaria"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Next.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: concessionaria-app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://concessionaria:concessionaria_password@db:5432/concessionaria?schema=public
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: change-this-to-a-secure-random-string-in-production
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - concessionaria-network
+    command: sh -c "npx prisma migrate deploy && npm start"
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  concessionaria-network:
+    driver: bridge

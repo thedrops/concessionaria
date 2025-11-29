@@ -1,0 +1,37 @@
+# Arquivos de dependências
+node_modules
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build e distribuição
+dist
+build
+out
+.next
+.nuxt
+.cache
+.vscode
+.idea
+
+# Logs
+*.log
+logs
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Cobertura de testes
+coverage
+*.lcov
+
+# Arquivos temporários
+*.tmp
+*.temp
+.env.local
+.env.*.local
+
+# Arquivos gerados
+*.min.js
+*.min.css
