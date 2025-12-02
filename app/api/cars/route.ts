@@ -6,11 +6,17 @@ import { z } from "zod";
 const carSchema = z.object({
   brand: z.string().min(1),
   model: z.string().min(1),
-  year: z
-    .number()
-    .min(1900)
-    .max(new Date().getFullYear() + 1),
+  year: z.string().min(4),
+  version: z.string().nullable().optional(),
+  transmission: z.string().nullable().optional(),
+  doors: z.number().int().nullable().optional(),
+  fuel: z.string().nullable().optional(),
+  mileage: z.number().int().nullable().optional(),
+  plate: z.string().nullable().optional(),
+  color: z.string().nullable().optional(),
   price: z.number().positive(),
+  optionals: z.string().nullable().optional(),
+  additionalInfo: z.string().nullable().optional(),
   description: z.string(),
   images: z.array(z.string()),
   status: z.enum(["AVAILABLE", "SOLD"]).optional(),

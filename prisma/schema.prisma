@@ -28,17 +28,26 @@ enum Role {
 }
 
 model Car {
-  id          String     @id @default(cuid())
-  brand       String
-  model       String
-  year        Int
-  price       Float
-  description String     @db.Text
-  images      String[]
-  status      CarStatus  @default(AVAILABLE)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  leads       Lead[]
+  id             String    @id @default(cuid())
+  brand          String
+  model          String
+  year           String
+  version        String?
+  transmission   String?
+  doors          Int?
+  fuel           String?
+  mileage        Int?
+  plate          String?   @unique
+  color          String?
+  price          Float
+  optionals      String?   @db.Text
+  additionalInfo String?   @db.Text
+  description    String    @db.Text
+  images         String[]
+  status         CarStatus @default(AVAILABLE)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  leads          Lead[]
 
   @@map("cars")
 }

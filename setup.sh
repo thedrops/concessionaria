@@ -15,7 +15,7 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # Check if Docker Compose is installed
-if ! command -v docker-compose &> /dev/null; then
+if ! command -v docker compose &> /dev/null; then
     echo -e "${RED}❌ Docker Compose is not installed. Please install Docker Compose first.${NC}"
     exit 1
 fi
@@ -35,7 +35,7 @@ fi
 
 # Start only the database for development
 echo -e "${BLUE}🐘 Starting PostgreSQL database...${NC}"
-docker-compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.dev.yml up -d
 
 # Wait for database to be ready
 echo -e "${BLUE}⏳ Waiting for database to be ready...${NC}"

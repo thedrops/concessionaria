@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminLayoutWrapper from "@/components/admin/AdminLayoutWrapper";
 
 export default async function AdminLayout({
   children,
@@ -15,9 +15,6 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex h-screen bg-secondary-100">
-      <AdminSidebar user={session.user} />
-      <main className="flex-1 overflow-y-auto p-8">{children}</main>
-    </div>
+    <AdminLayoutWrapper user={session.user}>{children}</AdminLayoutWrapper>
   );
 }
