@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { Filter } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Filter, ChevronDown } from "lucide-react";
 
 export default function CatalogFilters() {
   const router = useRouter();
@@ -13,6 +13,51 @@ export default function CatalogFilters() {
   const [anoMax, setAnoMax] = useState(searchParams.get("anoMax") || "");
   const [precoMin, setPrecoMin] = useState(searchParams.get("precoMin") || "");
   const [precoMax, setPrecoMax] = useState(searchParams.get("precoMax") || "");
+  const [brands, setBrands] = useState<string[]>([]);
+  const [filteredBrands, setFilteredBrands] = useState<string[]>([]);
+  const [showBrandsList, setShowBrandsList] = useState(false);
+  const brandInputRef = useRef<HTMLInputElement>(null);
+  const brandsListRef = useRef<HTMLDivElement>(null);
+
+  // Busca as marcas disponíveis
+  useEffect(() => {
+    fetch("/api/cars/brands")
+      .then((res) => res.json())
+      .then((data) => {
+        setBrands(data);
+        setFilteredBrands(data);
+      })
+      .catch((err) => console.error("Error fetching brands:", err));
+  }, []);
+
+  // Filtra marcas conforme o usuário digita
+  useEffect(() => {
+    if (marca) {
+      const filtered = brands.filter((brand) =>
+        brand.toLowerCase().includes(marca.toLowerCase()),
+      );
+      setFilteredBrands(filtered);
+    } else {
+      setFilteredBrands(brands);
+    }
+  }, [marca, brands]);
+
+  // Fecha o dropdown ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        brandsListRef.current &&
+        !brandsListRef.current.contains(event.target as Node) &&
+        brandInputRef.current &&
+        !brandInputRef.current.contains(event.target as Node)
+      ) {
+        setShowBrandsList(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleFilter = () => {
     const params = new URLSearchParams();
@@ -31,7 +76,13 @@ export default function CatalogFilters() {
     setAnoMax("");
     setPrecoMin("");
     setPrecoMax("");
+    setShowBrandsList(false);
     router.push("/catalogo");
+  };
+
+  const handleBrandSelect = (brand: string) => {
+    setMarca(brand);
+    setShowBrandsList(false);
   };
 
   return (
@@ -42,17 +93,50 @@ export default function CatalogFilters() {
       </div>
 
       <div className="space-y-4">
-        <div>
+        <div className="relative">
           <label className="block text-sm font-medium text-secondary-700 mb-2">
             Marca
           </label>
-          <input
-            type="text"
-            value={marca}
-            onChange={(e) => setMarca(e.target.value)}
-            className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-            placeholder="Ex: Toyota"
-          />
+          <div className="relative">
+            <input
+              ref={brandInputRef}
+              type="text"
+              value={marca}
+              onChange={(e) => setMarca(e.target.value)}
+              onFocus={() => setShowBrandsList(true)}
+              className="w-full px-3 py-2 pr-8 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Digite ou selecione..."
+              autoComplete="off"
+            />
+            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-5 h-5 text-secondary-400 pointer-events-none" />
+          </div>
+
+          {/* Dropdown de marcas */}
+          {showBrandsList && filteredBrands.length > 0 && (
+            <div
+              ref={brandsListRef}
+              className="absolute z-10 w-full mt-1 bg-white border border-secondary-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
+            >
+              {filteredBrands.map((brand) => (
+                <div
+                  key={brand}
+                  onClick={() => handleBrandSelect(brand)}
+                  className="px-3 py-2 hover:bg-primary-50 cursor-pointer transition-colors"
+                >
+                  {brand}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {showBrandsList && filteredBrands.length === 0 && marca && (
+            <div
+              ref={brandsListRef}
+              className="absolute z-10 w-full mt-1 bg-white border border-secondary-300 rounded-md shadow-lg p-3 text-sm text-secondary-500"
+            >
+              Nenhuma marca encontrada
+            </div>
+          )}
         </div>
 
         <div>

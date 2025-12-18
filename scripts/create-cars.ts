@@ -21,10 +21,7 @@ async function createCars() {
       additionalInfo: "Veículo 0km, único dono",
       description:
         "Toyota Corolla XEi 2.0 Flex Automático 2023. Veículo completo com todos os opcionais de série.",
-      images: [
-        "/uploads/cars/sample-corolla-1.jpg",
-        "/uploads/cars/sample-corolla-2.jpg",
-      ],
+      images: ["/imagem-padrao-carro-nao-cadastrado.png"],
       status: "AVAILABLE" as const,
     },
     {
@@ -44,10 +41,7 @@ async function createCars() {
       additionalInfo: "Veículo 0km, versão topo de linha",
       description:
         "Honda Civic Touring 1.5 Turbo CVT 2023. Versão topo de linha com tecnologia de ponta.",
-      images: [
-        "/uploads/cars/sample-civic-1.jpg",
-        "/uploads/cars/sample-civic-2.jpg",
-      ],
+      images: ["/imagem-padrao-carro-nao-cadastrado.png"],
       status: "AVAILABLE" as const,
     },
     {
@@ -66,10 +60,7 @@ async function createCars() {
       additionalInfo: "Único dono, todas as revisões em concessionária",
       description:
         "Volkswagen Jetta Highline 1.4 TSI 2022. Sedã premium com baixa quilometragem.",
-      images: [
-        "/uploads/cars/sample-jetta-1.jpg",
-        "/uploads/cars/sample-jetta-2.jpg",
-      ],
+      images: ["/imagem-padrao-carro-nao-cadastrado.png"],
       status: "AVAILABLE" as const,
     },
     {
@@ -89,10 +80,7 @@ async function createCars() {
       additionalInfo: "Veículo 0km, pronta entrega",
       description:
         "Chevrolet Onix Premier 1.0 Turbo 2023. Hatch premium com motor turbo e design moderno.",
-      images: [
-        "/uploads/cars/sample-onix-1.jpg",
-        "/uploads/cars/sample-onix-2.jpg",
-      ],
+      images: ["/imagem-padrao-carro-nao-cadastrado.png"],
       status: "AVAILABLE" as const,
     },
     {
@@ -112,10 +100,7 @@ async function createCars() {
       additionalInfo: "Segunda mão, bem conservado",
       description:
         "Fiat Argo Drive 1.3 Flex Manual 2022. Hatch econômico e confiável.",
-      images: [
-        "/uploads/cars/sample-argo-1.jpg",
-        "/uploads/cars/sample-argo-2.jpg",
-      ],
+      images: ["/imagem-padrao-carro-nao-cadastrado.png"],
       status: "AVAILABLE" as const,
     },
   ];

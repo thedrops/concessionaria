@@ -138,7 +138,7 @@ export default async function UsersPage({ searchParams }: PageProps) {
                             : "bg-blue-100 text-blue-800"
                         }`}
                       >
-                        <Shield className="w-3 h-3 mr-1" />
+                        <Shield className="w-3 h-3 mr-1 my-auto" />
                         {user.role === "ADMIN" ? "Administrador" : "Operador"}
                       </span>
                     </td>

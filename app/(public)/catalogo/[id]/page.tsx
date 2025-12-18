@@ -73,16 +73,28 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
             </div>
 
             {/* Specifications */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <div className="flex items-center space-x-3 p-4 bg-secondary-50 rounded-lg">
                 <Calendar className="h-8 w-8 text-primary-500" />
                 <div>
-                  <p className="text-sm text-secondary-600">Ano</p>
+                  <p className="text-sm text-secondary-600">Ano Fabricação</p>
                   <p className="text-lg font-semibold text-secondary-900">
                     {car.year}
                   </p>
                 </div>
               </div>
+
+              {car.modelYear && (
+                <div className="flex items-center space-x-3 p-4 bg-secondary-50 rounded-lg">
+                  <Calendar className="h-8 w-8 text-primary-500" />
+                  <div>
+                    <p className="text-sm text-secondary-600">Ano Modelo</p>
+                    <p className="text-lg font-semibold text-secondary-900">
+                      {car.modelYear}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center space-x-3 p-4 bg-secondary-50 rounded-lg">
                 <Tag className="h-8 w-8 text-primary-500" />
@@ -103,6 +115,78 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
                   </p>
                 </div>
               </div>
+
+              {car.version && (
+                <div className="flex items-center space-x-3 p-4 bg-secondary-50 rounded-lg">
+                  <Tag className="h-8 w-8 text-primary-500" />
+                  <div>
+                    <p className="text-sm text-secondary-600">Versão</p>
+                    <p className="text-lg font-semibold text-secondary-900">
+                      {car.version}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {car.transmission && (
+                <div className="flex items-center space-x-3 p-4 bg-secondary-50 rounded-lg">
+                  <CarIcon className="h-8 w-8 text-primary-500" />
+                  <div>
+                    <p className="text-sm text-secondary-600">Câmbio</p>
+                    <p className="text-lg font-semibold text-secondary-900">
+                      {car.transmission}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {car.doors && (
+                <div className="flex items-center space-x-3 p-4 bg-secondary-50 rounded-lg">
+                  <CarIcon className="h-8 w-8 text-primary-500" />
+                  <div>
+                    <p className="text-sm text-secondary-600">Portas</p>
+                    <p className="text-lg font-semibold text-secondary-900">
+                      {car.doors}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {car.fuel && (
+                <div className="flex items-center space-x-3 p-4 bg-secondary-50 rounded-lg">
+                  <Gauge className="h-8 w-8 text-primary-500" />
+                  <div>
+                    <p className="text-sm text-secondary-600">Combustível</p>
+                    <p className="text-lg font-semibold text-secondary-900">
+                      {car.fuel}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {car.mileage !== null && (
+                <div className="flex items-center space-x-3 p-4 bg-secondary-50 rounded-lg">
+                  <Gauge className="h-8 w-8 text-primary-500" />
+                  <div>
+                    <p className="text-sm text-secondary-600">Km</p>
+                    <p className="text-lg font-semibold text-secondary-900">
+                      {car.mileage.toLocaleString("pt-BR")}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {car.passengers && (
+                <div className="flex items-center space-x-3 p-4 bg-secondary-50 rounded-lg">
+                  <CarIcon className="h-8 w-8 text-primary-500" />
+                  <div>
+                    <p className="text-sm text-secondary-600">Passageiros</p>
+                    <p className="text-lg font-semibold text-secondary-900">
+                      {car.passengers}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Description */}

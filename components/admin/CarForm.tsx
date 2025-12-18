@@ -11,6 +11,7 @@ const carSchema = z.object({
   brand: z.string().min(2, "Marca deve ter no mínimo 2 caracteres"),
   model: z.string().min(2, "Modelo deve ter no mínimo 2 caracteres"),
   year: z.string().min(4, "Ano inválido"),
+  modelYear: z.string().optional(),
   version: z.string().optional(),
   transmission: z.string().optional(),
   doors: z.coerce.number().int().positive().optional(),
@@ -18,6 +19,7 @@ const carSchema = z.object({
   mileage: z.coerce.number().int().min(0).optional(),
   plate: z.string().optional(),
   color: z.string().optional(),
+  passengers: z.coerce.number().int().positive().optional(),
   price: z.coerce.number().positive("Preço deve ser maior que zero"),
   optionals: z.string().optional(),
   additionalInfo: z.string().optional(),
@@ -34,6 +36,7 @@ interface CarFormProps {
     brand: string;
     model: string;
     year: string;
+    modelYear: string | null;
     version: string | null;
     transmission: string | null;
     doors: number | null;
@@ -41,6 +44,7 @@ interface CarFormProps {
     mileage: number | null;
     plate: string | null;
     color: string | null;
+    passengers: number | null;
     price: number;
     optionals: string | null;
     additionalInfo: string | null;
@@ -74,6 +78,7 @@ export default function CarForm({ car }: CarFormProps) {
           brand: car.brand,
           model: car.model,
           year: car.year,
+          modelYear: car.modelYear || "",
           version: car.version || "",
           transmission: car.transmission || "",
           doors: car.doors || undefined,
@@ -81,6 +86,7 @@ export default function CarForm({ car }: CarFormProps) {
           mileage: car.mileage || undefined,
           plate: car.plate || "",
           color: car.color || "",
+          passengers: car.passengers || undefined,
           price: car.price,
           optionals: car.optionals || "",
           additionalInfo: car.additionalInfo || "",
@@ -193,6 +199,7 @@ export default function CarForm({ car }: CarFormProps) {
       const payload = {
         ...data,
         images: imagesArray,
+        modelYear: data.modelYear || null,
         version: data.version || null,
         transmission: data.transmission || null,
         doors: data.doors || null,
@@ -200,6 +207,7 @@ export default function CarForm({ car }: CarFormProps) {
         mileage: data.mileage || null,
         plate: data.plate || null,
         color: data.color || null,
+        passengers: data.passengers || null,
         optionals: data.optionals || null,
         additionalInfo: data.additionalInfo || null,
       };
@@ -351,7 +359,7 @@ export default function CarForm({ car }: CarFormProps) {
                 htmlFor="year"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Ano *
+                Ano Fabricação *
               </label>
               <input
                 {...register("year")}
@@ -366,6 +374,23 @@ export default function CarForm({ car }: CarFormProps) {
                   {errors.year.message}
                 </p>
               )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="modelYear"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Ano Modelo
+              </label>
+              <input
+                {...register("modelYear")}
+                type="text"
+                id="modelYear"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="2025"
+                maxLength={4}
+              />
             </div>
 
             <div>
@@ -498,6 +523,24 @@ export default function CarForm({ car }: CarFormProps) {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="50000"
                 min="0"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="passengers"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Passageiros
+              </label>
+              <input
+                {...register("passengers")}
+                type="number"
+                id="passengers"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="5"
+                min="1"
+                max="50"
               />
             </div>
           </div>
