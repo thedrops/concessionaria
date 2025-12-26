@@ -13,7 +13,7 @@ interface CarDetailsPageProps {
 }
 
 export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
-  const car: Car = await prisma.car.findUnique({
+  const car = await prisma.car.findUnique({
     where: { id: params.id },
   });
 
