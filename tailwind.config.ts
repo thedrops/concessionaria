@@ -10,17 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#0056b3", // Azul Marinho Profundo
-          50: "#e6f0ff",
-          100: "#b3d1ff",
-          200: "#80b3ff",
-          300: "#4d94ff",
-          400: "#1a75ff",
-          500: "#0056b3",
-          600: "#004494",
-          700: "#003375",
-          800: "#002256",
-          900: "#001137",
+          DEFAULT: "#012456", // Azul Marinho Israel Veículos
+          50: "#e6eaf3",
+          100: "#b3c1da",
+          200: "#8098c1",
+          300: "#4d6fa8",
+          400: "#1a468f",
+          500: "#012456",
+          600: "#011d46",
+          700: "#011636",
+          800: "#010f26",
+          900: "#000816",
         },
         secondary: {
           DEFAULT: "#6b7280", // Cinza Prata

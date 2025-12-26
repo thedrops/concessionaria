@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Calendar, Gauge, Tag, Car as CarIcon } from "lucide-react";
 import InterestModal from "@/components/public/InterestModal";
+import ImageGallery from "@/components/public/ImageGallery";
 import { Car } from "@prisma/client/wasm";
 
 interface CarDetailsPageProps {
@@ -25,40 +26,11 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-xl overflow-hidden">
           {/* Image Gallery */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
-            {car.images.length > 0 ? (
-              <>
-                <div className="relative h-96 bg-secondary-200 rounded-lg overflow-hidden">
-                  <Image
-                    src={car.images[0]}
-                    alt={`${car.brand} ${car.model}`}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                {car.images.length > 1 && (
-                  <div className="grid grid-cols-2 gap-4">
-                    {car.images.slice(1, 5).map((image, index) => (
-                      <div
-                        key={index}
-                        className="relative h-44 bg-secondary-200 rounded-lg overflow-hidden"
-                      >
-                        <Image
-                          src={image}
-                          alt={`${car.brand} ${car.model} - ${index + 2}`}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="flex items-center justify-center h-96 bg-secondary-200 rounded-lg">
-                <CarIcon className="h-32 w-32 text-secondary-400" />
-              </div>
-            )}
+          <div className="p-6">
+            <ImageGallery
+              images={car.images.length > 0 ? car.images : []}
+              alt={`${car.brand} ${car.model}`}
+            />
           </div>
 
           {/* Car Details */}

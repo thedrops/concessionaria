@@ -1,20 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { Car, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-primary-500 text-white shadow-lg">
+    <nav className="bg-[#012456] text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <Car className="h-8 w-8" />
-              <span className="font-bold text-xl">Concessionária</span>
+            <Link href="/" className="flex items-center">
+              <span className="font-bold text-2xl tracking-wide">
+                Israel Veículos
+              </span>
             </Link>
           </div>
 
