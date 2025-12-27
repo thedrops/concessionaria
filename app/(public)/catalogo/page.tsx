@@ -13,7 +13,15 @@ export default function CatalogPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1">
-            <CatalogFilters />
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center py-20">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              }
+            >
+              <CatalogFilters />
+            </Suspense>
           </aside>
 
           <div className="lg:col-span-3">
