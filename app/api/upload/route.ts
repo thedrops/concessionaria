@@ -1,23 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { createClient } from "@supabase/supabase-js";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 
-// Detecta se está em desenvolvimento sem R2 configurado
+// Detecta se está em desenvolvimento sem Supabase configurado
 const isDev =
-  process.env.NODE_ENV === "development" && !process.env.R2_ENDPOINT;
+  process.env.NODE_ENV === "development" &&
+  !process.env.NEXT_PUBLIC_SUPABASE_URL;
 
-// Configurar cliente R2 (apenas se as credenciais estiverem configuradas)
-const s3Client = !isDev
-  ? new S3Client({
-      region: "auto",
-      endpoint: process.env.R2_ENDPOINT,
-      credentials: {
-        accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-      },
-    })
+// Configurar cliente Supabase (apenas se as credenciais estiverem configuradas)
+const supabase = !isDev
+  ? createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    )
   : null;
 
 export async function POST(request: NextRequest) {
@@ -77,17 +74,26 @@ export async function POST(request: NextRequest) {
         filename: localFilename,
       });
     } else {
-      // MODO PRODUÇÃO: Upload para Cloudflare R2
-      await s3Client!.send(
-        new PutObjectCommand({
-          Bucket: process.env.R2_BUCKET_NAME,
-          Key: filename,
-          Body: buffer,
-          ContentType: file.type,
-        }),
-      );
+      // MODO PRODUÇÃO: Upload para Supabase Storage
+      const { data, error } = await supabase!.storage
+        .from("car-images")
+        .upload(filename, buffer, {
+          contentType: file.type,
+          upsert: false,
+        });
 
-      const publicUrl = `${process.env.R2_PUBLIC_URL}/${filename}`;
+      if (error) {
+        console.error("Supabase upload error:", error);
+        return NextResponse.json(
+          { error: "Erro ao fazer upload no Supabase Storage" },
+          { status: 500 },
+        );
+      }
+
+      // Obter URL pública
+      const {
+        data: { publicUrl },
+      } = supabase!.storage.from("car-images").getPublicUrl(filename);
 
       return NextResponse.json({
         url: publicUrl,

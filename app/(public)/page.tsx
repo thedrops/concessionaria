@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Car as LucidCar, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Car, Post } from "@prisma/client/wasm";
+import { getImageUrl } from "@/lib/image-url";
 
 async function getLatestCars() {
   return await prisma.car.findMany({
@@ -70,7 +71,7 @@ export default async function Home() {
                 <div className="relative h-48 bg-secondary-200">
                   {car.images[0] ? (
                     <Image
-                      src={car.images[0]}
+                      src={getImageUrl(car.images[0])}
                       alt={`${car.brand} ${car.model}`}
                       fill
                       className="object-cover group-hover:scale-105 transition"

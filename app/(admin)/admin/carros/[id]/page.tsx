@@ -15,6 +15,7 @@ import {
   MapPin,
   Users,
 } from "lucide-react";
+import { getImageUrl } from "@/lib/image-url";
 
 interface PageProps {
   params: { id: string };
@@ -108,7 +109,7 @@ export default async function CarDetailPage({ params }: PageProps) {
                 className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden group"
               >
                 <img
-                  src={image}
+                  src={getImageUrl(image)}
                   alt={`${car.brand} ${car.model} - Imagem ${index + 1}`}
                   className="w-full h-full object-cover transition-transform group-hover:scale-105"
                 />

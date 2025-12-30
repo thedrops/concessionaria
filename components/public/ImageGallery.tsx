@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { getImageUrls } from "@/lib/image-url";
 
 interface ImageGalleryProps {
   images: string[];
@@ -10,6 +11,7 @@ interface ImageGalleryProps {
 }
 
 export default function ImageGallery({ images, alt }: ImageGalleryProps) {
+  const imageUrls = getImageUrls(images);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [loadingImages, setLoadingImages] = useState<Set<number>>(
     new Set(Array.from({ length: images.length }, (_, i) => i)),
@@ -52,7 +54,7 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {images.length > 0 ? (
+        {imageUrls.length > 0 ? (
           <>
             <div
               className="relative h-96 bg-secondary-200 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition"
@@ -64,16 +66,16 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
                 </div>
               )}
               <Image
-                src={images[0]}
+                src={imageUrls[0]}
                 alt={`${alt} - 1`}
                 fill
                 className="object-cover"
                 onLoad={() => handleImageLoad(0)}
               />
             </div>
-            {images.length > 1 && (
+            {imageUrls.length > 1 && (
               <div className="grid grid-cols-2 gap-4">
-                {images.slice(1, 5).map((image, index) => (
+                {imageUrls.slice(1, 5).map((image, index) => (
                   <div
                     key={index}
                     className="relative h-44 bg-secondary-200 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition"
@@ -145,7 +147,7 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
               </div>
             )}
             <Image
-              src={images[selectedImage]}
+              src={imageUrls[selectedImage]}
               alt={`${alt} - ${selectedImage + 1}`}
               fill
               className="object-contain"

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Car as CarType } from "@prisma/client";
 import { Car } from "lucide-react";
+import { getImageUrl } from "@/lib/image-url";
 
 interface CarCardProps {
   car: CarType;
@@ -16,7 +17,7 @@ export default function CarCard({ car }: CarCardProps) {
       <div className="relative h-48 bg-secondary-200">
         {car.images[0] ? (
           <Image
-            src={car.images[0]}
+            src={getImageUrl(car.images[0])}
             alt={`${car.brand} ${car.model}`}
             fill
             className="object-cover group-hover:scale-105 transition"

@@ -39,3 +39,6 @@ ia-context
 
 *.sql
 docs/*
+
+# scripts
+/scripts/ignore/*

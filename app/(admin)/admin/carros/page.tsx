@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { getImageUrl } from "@/lib/image-url";
 
 interface PageProps {
   searchParams: { page?: string };
@@ -108,7 +109,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {car.images[0] ? (
                         <img
-                          src={car.images[0]}
+                          src={getImageUrl(car.images[0])}
                           alt={`${car.brand} ${car.model}`}
                           className="w-16 h-16 object-cover rounded"
                         />

@@ -3,6 +3,7 @@ import { Car as LucidCar, Users, Calendar, DollarSign } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Car, User } from "@prisma/client/wasm";
+import { getImageUrl } from "@/lib/image-url";
 
 export default async function AdminDashboard() {
   // Buscar últimos 6 carros cadastrados
@@ -140,7 +141,7 @@ export default async function AdminDashboard() {
                   <div className="relative w-20 h-20 bg-secondary-200 rounded-lg overflow-hidden flex-shrink-0">
                     {car.images[0] ? (
                       <Image
-                        src={car.images[0]}
+                        src={getImageUrl(car.images[0])}
                         alt={`${car.brand} ${car.model}`}
                         fill
                         className="object-cover"
