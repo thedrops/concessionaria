@@ -26,6 +26,7 @@ const carSchema = z.object({
   description: z.string().min(10, "Descrição deve ter no mínimo 10 caracteres"),
   images: z.string().optional(),
   status: z.enum(["AVAILABLE", "SOLD"]),
+  consignado: z.boolean().optional(),
 });
 
 type CarFormData = z.infer<typeof carSchema>;
@@ -51,6 +52,7 @@ interface CarFormProps {
     description: string;
     images: string[];
     status: string;
+    consignado: boolean;
   };
 }
 
@@ -93,9 +95,11 @@ export default function CarForm({ car }: CarFormProps) {
           description: car.description,
           images: car.images.join("\n"),
           status: car.status as "AVAILABLE" | "SOLD",
+          consignado: car.consignado,
         }
       : {
           status: "AVAILABLE",
+          consignado: false,
         },
   });
 
@@ -210,6 +214,7 @@ export default function CarForm({ car }: CarFormProps) {
         passengers: data.passengers || null,
         optionals: data.optionals || null,
         additionalInfo: data.additionalInfo || null,
+        consignado: data.consignado || false,
       };
 
       const response = await fetch(url, {
@@ -590,6 +595,21 @@ export default function CarForm({ car }: CarFormProps) {
                 <option value="AVAILABLE">Disponível</option>
                 <option value="SOLD">Vendido</option>
               </select>
+            </div>
+
+            <div className="flex items-center">
+              <input
+                {...register("consignado")}
+                type="checkbox"
+                id="consignado"
+                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              />
+              <label
+                htmlFor="consignado"
+                className="ml-2 text-sm font-medium text-gray-700"
+              >
+                Veículo Consignado
+              </label>
             </div>
           </div>
         </div>

@@ -22,6 +22,7 @@ const carSchema = z.object({
   description: z.string(),
   images: z.array(z.string()),
   status: z.enum(["AVAILABLE", "SOLD"]).optional(),
+  consignado: z.boolean().optional(),
 });
 
 export async function GET() {

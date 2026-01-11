@@ -3,18 +3,29 @@ import Link from "next/link";
 import { Plus, Edit, Trash2, Eye } from "lucide-react";
 import { getImageUrl } from "@/lib/image-url";
 import DeleteCarButton from "@/components/admin/DeleteCarButton";
+import ExportCarsButton from "@/components/admin/ExportCarsButton";
 
 interface PageProps {
-  searchParams: { page?: string };
+  searchParams: { page?: string; consignado?: string };
 }
 
 export default async function CarsPage({ searchParams }: PageProps) {
   const page = Number(searchParams.page) || 1;
+  const consignadoFilter = searchParams.consignado;
   const perPage = 10;
   const skip = (page - 1) * perPage;
 
+  // Construir filtro baseado no parâmetro consignado
+  const whereFilter: any = {};
+  if (consignadoFilter === "sim") {
+    whereFilter.consignado = true;
+  } else if (consignadoFilter === "nao") {
+    whereFilter.consignado = false;
+  }
+
   const [cars, totalCars] = await Promise.all([
     prisma.car.findMany({
+      where: whereFilter,
       skip,
       take: perPage,
       orderBy: { createdAt: "desc" },
@@ -24,7 +35,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
         },
       },
     }),
-    prisma.car.count(),
+    prisma.car.count({ where: whereFilter }),
   ]);
 
   const totalPages = Math.ceil(totalCars / perPage);
@@ -36,13 +47,57 @@ export default async function CarsPage({ searchParams }: PageProps) {
           <h1 className="text-3xl font-bold text-gray-900">Carros</h1>
           <p className="text-gray-600 mt-1">Gerencie o estoque de veículos</p>
         </div>
-        <Link
-          href="/admin/carros/novo"
-          className="flex items-center gap-2  bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-600/90 transition-colors"
-        >
-          <Plus className="w-5 h-5 " />
-          Cadastrar Carro
-        </Link>
+        <div className="flex gap-3">
+          <ExportCarsButton />
+          <Link
+            href="/admin/carros/novo"
+            className="flex items-center gap-2  bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-600/90 transition-colors"
+          >
+            <Plus className="w-5 h-5 " />
+            Cadastrar Carro
+          </Link>
+        </div>
+      </div>
+
+      {/* Filtros */}
+      <div className="bg-white rounded-lg shadow p-4">
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium text-gray-700">
+            Filtrar por:
+          </label>
+          <div className="flex gap-2">
+            <Link
+              href="/admin/carros"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                !consignadoFilter
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Todos
+            </Link>
+            <Link
+              href="/admin/carros?consignado=sim"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                consignadoFilter === "sim"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Consignados
+            </Link>
+            <Link
+              href="/admin/carros?consignado=nao"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                consignadoFilter === "nao"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Não Consignados
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Stats */}
@@ -125,6 +180,11 @@ export default async function CarsPage({ searchParams }: PageProps) {
                         {car.brand}
                       </div>
                       <div className="text-sm text-gray-500">{car.model}</div>
+                      {car.consignado && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 mt-1">
+                          Consignado
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {car.year}
@@ -184,7 +244,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
           <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
             <div className="flex-1 flex justify-between sm:hidden">
               <Link
-                href={`/admin/carros?page=${Math.max(1, page - 1)}`}
+                href={`/admin/carros?page=${Math.max(1, page - 1)}${consignadoFilter ? `&consignado=${consignadoFilter}` : ""}`}
                 className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ${
                   page === 1 ? "pointer-events-none opacity-50" : ""
                 }`}
@@ -192,7 +252,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
                 Anterior
               </Link>
               <Link
-                href={`/admin/carros?page=${Math.min(totalPages, page + 1)}`}
+                href={`/admin/carros?page=${Math.min(totalPages, page + 1)}${consignadoFilter ? `&consignado=${consignadoFilter}` : ""}`}
                 className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ${
                   page === totalPages ? "pointer-events-none opacity-50" : ""
                 }`}
@@ -216,7 +276,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
                   aria-label="Pagination"
                 >
                   <Link
-                    href={`/admin/carros?page=${Math.max(1, page - 1)}`}
+                    href={`/admin/carros?page=${Math.max(1, page - 1)}${consignadoFilter ? `&consignado=${consignadoFilter}` : ""}`}
                     className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${
                       page === 1 ? "pointer-events-none opacity-50" : ""
                     }`}
@@ -233,7 +293,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
                       return (
                         <Link
                           key={pageNum}
-                          href={`/admin/carros?page=${pageNum}`}
+                          href={`/admin/carros?page=${pageNum}${consignadoFilter ? `&consignado=${consignadoFilter}` : ""}`}
                           className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                             pageNum === page
                               ? "z-10 bg-primary border-primary text-white"
@@ -256,7 +316,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
                     return null;
                   })}
                   <Link
-                    href={`/admin/carros?page=${Math.min(totalPages, page + 1)}`}
+                    href={`/admin/carros?page=${Math.min(totalPages, page + 1)}${consignadoFilter ? `&consignado=${consignadoFilter}` : ""}`}
                     className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${
                       page === totalPages
                         ? "pointer-events-none opacity-50"
