@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Eye } from "lucide-react";
 import { getImageUrl } from "@/lib/image-url";
+import DeleteCarButton from "@/components/admin/DeleteCarButton";
 
 interface PageProps {
   searchParams: { page?: string };
@@ -165,12 +166,10 @@ export default async function CarsPage({ searchParams }: PageProps) {
                         >
                           <Edit className="w-5 h-5" />
                         </Link>
-                        <button
-                          className="text-red-600 hover:text-red-800"
-                          title="Excluir"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
+                        <DeleteCarButton
+                          carId={car.id}
+                          carName={`${car.brand} ${car.model}`}
+                        />
                       </div>
                     </td>
                   </tr>

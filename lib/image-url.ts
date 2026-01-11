@@ -14,6 +14,17 @@ export function getImageUrl(path: string | null | undefined): string {
     return path;
   }
 
+  // Se começar com /storage/ é porque já tem o path do Supabase
+  if (path.startsWith("/storage/v1/object/public/")) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!supabaseUrl) {
+      console.warn("NEXT_PUBLIC_SUPABASE_URL não configurado");
+      return path;
+    }
+    // Remove a barra inicial e retorna a URL completa
+    return `${supabaseUrl}${path}`;
+  }
+
   // Se for um caminho local (/uploads/cars/...)
   if (path.startsWith("/uploads/cars/")) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

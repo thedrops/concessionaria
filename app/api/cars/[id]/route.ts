@@ -2,6 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { createClient } from "@supabase/supabase-js";
+import { unlink } from "fs/promises";
+import { join } from "path";
+import { existsSync } from "fs";
+
+// Detecta se está em desenvolvimento sem Supabase configurado
+const isDev =
+  process.env.NODE_ENV === "development" &&
+  !process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+// Configurar cliente Supabase (apenas se as credenciais estiverem configuradas)
+const supabase = !isDev
+  ? createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    )
+  : null;
 
 const carSchema = z.object({
   brand: z.string().min(1),
@@ -80,18 +97,106 @@ export async function DELETE(
 ) {
   try {
     const session = await auth();
+
+    // Verifica se está autenticado
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
+    // Verifica se é administrador
+    const userRole = (session.user as any)?.role;
+    if (userRole !== "ADMIN") {
+      return NextResponse.json(
+        {
+          error: "Apenas administradores podem excluir carros",
+        },
+        { status: 403 },
+      );
+    }
+
+    // Busca o carro para pegar as imagens
+    const car = await prisma.car.findUnique({
+      where: { id: params.id },
+      select: { images: true },
+    });
+
+    if (!car) {
+      return NextResponse.json(
+        {
+          error: "Carro não encontrado",
+        },
+        { status: 404 },
+      );
+    }
+
+    // Deleta as imagens do storage
+    if (car.images && car.images.length > 0) {
+      for (const imageUrl of car.images) {
+        try {
+          if (isDev) {
+            // MODO LOCAL: Remove do filesystem
+            // Extrai o nome do arquivo da URL local (ex: /uploads/cars/filename.jpg)
+            const localPath = imageUrl.replace("/uploads/cars/", "");
+            const filepath = join(
+              process.cwd(),
+              "public",
+              "uploads",
+              "cars",
+              localPath,
+            );
+
+            if (existsSync(filepath)) {
+              await unlink(filepath);
+            }
+          } else {
+            // MODO PRODUÇÃO: Remove do Supabase Storage
+            // Extrai o caminho do arquivo da URL do Supabase
+            let filename = imageUrl;
+
+            // Se for URL completa do Supabase, extrai apenas o caminho
+            if (imageUrl.includes("supabase.co")) {
+              const url = new URL(imageUrl);
+              const pathParts = url.pathname.split("/");
+              // Remove /storage/v1/object/public/car-images/ da URL
+              filename = pathParts
+                .slice(pathParts.indexOf("car-images") + 1)
+                .join("/");
+            }
+
+            // Se já tiver o prefixo cars/, usa direto
+            if (!filename.startsWith("cars/")) {
+              filename = `cars/${filename}`;
+            }
+
+            const { error } = await supabase!.storage
+              .from("car-images")
+              .remove([filename]);
+
+            if (error) {
+              console.error("Erro ao deletar imagem do Supabase:", error);
+              // Continua mesmo com erro, para não bloquear a exclusão do carro
+            }
+          }
+        } catch (error) {
+          console.error("Erro ao deletar imagem:", error);
+          // Continua mesmo com erro, para não bloquear a exclusão do carro
+        }
+      }
+    }
+
+    // Deleta o carro do banco de dados
     await prisma.car.delete({
       where: { id: params.id },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      message: "Carro excluído com sucesso",
+    });
   } catch (error) {
+    console.error("Erro ao deletar carro:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Erro ao excluir o carro" },
       { status: 500 },
     );
   }
