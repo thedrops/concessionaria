@@ -23,7 +23,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
     whereFilter.consignado = false;
   }
 
-  const [cars, totalCars] = await Promise.all([
+  const [cars, totalCars, totalAvailable, totalSold] = await Promise.all([
     prisma.car.findMany({
       where: whereFilter,
       skip,
@@ -36,6 +36,8 @@ export default async function CarsPage({ searchParams }: PageProps) {
       },
     }),
     prisma.car.count({ where: whereFilter }),
+    prisma.car.count({ where: { status: "AVAILABLE" } }),
+    prisma.car.count({ where: { status: "SOLD" } }),
   ]);
 
   const totalPages = Math.ceil(totalCars / perPage);
@@ -104,19 +106,19 @@ export default async function CarsPage({ searchParams }: PageProps) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-600">Total de Carros</h3>
-          <p className="text-3xl font-bold text-gray-900 mt-2">{totalCars}</p>
+          <p className="text-3xl font-bold text-gray-900 mt-2">
+            {totalAvailable + totalSold}
+          </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-600">Disponíveis</h3>
           <p className="text-3xl font-bold text-green-600 mt-2">
-            {cars.filter((c) => c.status === "AVAILABLE").length}
+            {totalAvailable}
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-600">Vendidos</h3>
-          <p className="text-3xl font-bold text-gray-600 mt-2">
-            {cars.filter((c) => c.status === "SOLD").length}
-          </p>
+          <p className="text-3xl font-bold text-gray-600 mt-2">{totalSold}</p>
         </div>
       </div>
 
