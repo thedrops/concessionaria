@@ -69,6 +69,47 @@ export default function CarForm({ car }: CarFormProps) {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [apiData, setApiData] = useState<any>(null);
   const [showApiDataModal, setShowApiDataModal] = useState(false);
+  const [formattedPrice, setFormattedPrice] = useState(
+    car?.price ? formatCurrency(car.price.toString()) : "",
+  );
+  const [formattedMileage, setFormattedMileage] = useState(
+    car?.mileage ? formatNumber(car.mileage.toString()) : "",
+  );
+
+  // Funções de formatação
+  function formatPlate(value: string): string {
+    const cleaned = value.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+    if (cleaned.length <= 3) return cleaned;
+    if (cleaned.length <= 7) {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
+    }
+    return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}`;
+  }
+
+  function formatNumber(value: string): string {
+    const numbers = value.replace(/\D/g, "");
+    return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  function formatCurrency(value: string): string {
+    const numbers = value.replace(/\D/g, "");
+    if (!numbers) return "";
+    const amount = parseFloat(numbers) / 100;
+    return amount.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  function unformatNumber(value: string): number {
+    const numbers = value.replace(/\D/g, "");
+    return parseInt(numbers) || 0;
+  }
+
+  function unformatCurrency(value: string): number {
+    const numbers = value.replace(/\D/g, "");
+    return parseFloat(numbers) / 100 || 0;
+  }
 
   const {
     register,
@@ -673,6 +714,11 @@ export default function CarForm({ car }: CarFormProps) {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent uppercase"
                 placeholder="ABC-1234"
                 maxLength={8}
+                onChange={(e) => {
+                  const formatted = formatPlate(e.target.value);
+                  e.target.value = formatted;
+                  setValue("plate", formatted);
+                }}
               />
             </div>
           </div>
@@ -751,12 +797,16 @@ export default function CarForm({ car }: CarFormProps) {
                 Quilometragem
               </label>
               <input
-                {...register("mileage")}
-                type="number"
+                type="text"
                 id="mileage"
+                value={formattedMileage}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="50000"
-                min="0"
+                placeholder="50.000"
+                onChange={(e) => {
+                  const formatted = formatNumber(e.target.value);
+                  setFormattedMileage(formatted);
+                  setValue("mileage", unformatNumber(formatted));
+                }}
               />
             </div>
 
@@ -793,15 +843,23 @@ export default function CarForm({ car }: CarFormProps) {
               >
                 Preço (R$) *
               </label>
-              <input
-                {...register("price")}
-                type="number"
-                id="price"
-                step="0.01"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="75000.00"
-                min="0"
-              />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                  R$
+                </span>
+                <input
+                  type="text"
+                  id="price"
+                  value={formattedPrice}
+                  className="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="75.000,00"
+                  onChange={(e) => {
+                    const formatted = formatCurrency(e.target.value);
+                    setFormattedPrice(formatted);
+                    setValue("price", unformatCurrency(formatted));
+                  }}
+                />
+              </div>
               {errors.price && (
                 <p className="mt-1 text-sm text-red-600">
                   {errors.price.message}
