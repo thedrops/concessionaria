@@ -67,6 +67,8 @@ export default function CarForm({ car }: CarFormProps) {
     car?.images || [],
   );
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [apiData, setApiData] = useState<any>(null);
+  const [showApiDataModal, setShowApiDataModal] = useState(false);
 
   const {
     register,
@@ -165,15 +167,45 @@ export default function CarForm({ car }: CarFormProps) {
         throw new Error(data.error || "Erro ao buscar dados da placa");
       }
 
+      // Salvar dados completos da API
+      setApiData(data);
+
       // Preencher formulário com dados da API
-      if (data.brand) setValue("brand", data.brand);
-      if (data.model) setValue("model", data.model);
-      if (data.year) setValue("year", data.year);
-      if (data.version) setValue("version", data.version);
-      if (data.transmission) setValue("transmission", data.transmission);
-      if (data.doors) setValue("doors", data.doors);
-      if (data.fuel) setValue("fuel", data.fuel);
-      if (data.color) setValue("color", data.color);
+      if (data.MARCA || data.marca) {
+        setValue("brand", data.MARCA || data.marca);
+      }
+      if (data.MODELO || data.modelo) {
+        setValue("model", data.MODELO || data.modelo);
+      }
+      if (data.ano) {
+        setValue("year", data.ano);
+      }
+      if (data.anoModelo) {
+        setValue("modelYear", data.anoModelo);
+      }
+      if (data.VERSAO) {
+        setValue("version", data.VERSAO);
+      }
+      if (data.extra?.caixa_cambio) {
+        setValue("transmission", data.extra.caixa_cambio);
+      }
+      if (data.extra?.combustivel) {
+        // Mapear combustível para formato do select
+        const fuelMap: { [key: string]: string } = {
+          "Alcool / Gasolina": "Flex",
+          Gasolina: "Gasolina",
+          Diesel: "Diesel",
+          Eletrico: "Elétrico",
+        };
+        const fuel = fuelMap[data.extra.combustivel] || data.extra.combustivel;
+        setValue("fuel", fuel);
+      }
+      if (data.cor) {
+        setValue("color", data.cor);
+      }
+      if (data.extra?.quantidade_passageiro) {
+        setValue("passengers", parseInt(data.extra.quantidade_passageiro));
+      }
       setValue("plate", plate);
 
       setUseApi(false); // Fechar o modal de busca
@@ -303,6 +335,203 @@ export default function CarForm({ car }: CarFormProps) {
             </button>
           </div>
           {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+          {apiData && (
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={() => setShowApiDataModal(true)}
+                className="text-sm text-blue-600 hover:text-blue-700 underline"
+              >
+                Ver todos os dados retornados pela API
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Modal de Dados da API */}
+      {showApiDataModal && apiData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h3 className="text-xl font-semibold text-gray-900">
+                Dados Retornados pela API
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowApiDataModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="overflow-y-auto p-6">
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    Informações Básicas
+                  </h4>
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
+                    <p>
+                      <span className="font-medium">Marca:</span>{" "}
+                      {apiData.MARCA || apiData.marca || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Modelo:</span>{" "}
+                      {apiData.MODELO || apiData.modelo || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Submodelo:</span>{" "}
+                      {apiData.SUBMODELO || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Versão:</span>{" "}
+                      {apiData.VERSAO || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Ano:</span>{" "}
+                      {apiData.ano || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Ano Modelo:</span>{" "}
+                      {apiData.anoModelo || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Cor:</span>{" "}
+                      {apiData.cor || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Placa:</span>{" "}
+                      {apiData.placa || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Chassi:</span>{" "}
+                      {apiData.chassi || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Situação:</span>{" "}
+                      {apiData.situacao || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Município:</span>{" "}
+                      {apiData.municipio || "-"}
+                    </p>
+                    <p>
+                      <span className="font-medium">UF:</span>{" "}
+                      {apiData.uf || "-"}
+                    </p>
+                  </div>
+                </div>
+
+                {apiData.extra && (
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">
+                      Dados Técnicos
+                    </h4>
+                    <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
+                      <p>
+                        <span className="font-medium">Combustível:</span>{" "}
+                        {apiData.extra.combustivel || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">Câmbio:</span>{" "}
+                        {apiData.extra.caixa_cambio || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">Passageiros:</span>{" "}
+                        {apiData.extra.quantidade_passageiro || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">Cilindradas:</span>{" "}
+                        {apiData.extra.cilindradas || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">Tipo de Veículo:</span>{" "}
+                        {apiData.extra.tipo_veiculo || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">Espécie:</span>{" "}
+                        {apiData.extra.especie || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">Carroceria:</span>{" "}
+                        {apiData.extra.tipo_carroceria || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">Nacionalidade:</span>{" "}
+                        {apiData.extra.nacionalidade || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">Eixos:</span>{" "}
+                        {apiData.extra.eixos || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">Peso Bruto:</span>{" "}
+                        {apiData.extra.peso_bruto_total || "-"}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {apiData.fipe?.dados && apiData.fipe.dados.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">
+                      Tabela FIPE
+                    </h4>
+                    <div className="bg-gray-50 rounded-lg p-4 space-y-3 text-sm">
+                      {apiData.fipe.dados.map((fipe: any, index: number) => (
+                        <div
+                          key={index}
+                          className="border-b border-gray-200 last:border-0 pb-3 last:pb-0"
+                        >
+                          <p>
+                            <span className="font-medium">Código FIPE:</span>{" "}
+                            {fipe.codigo_fipe || "-"}
+                          </p>
+                          <p>
+                            <span className="font-medium">Modelo:</span>{" "}
+                            {fipe.texto_modelo || "-"}
+                          </p>
+                          <p>
+                            <span className="font-medium">Valor:</span>{" "}
+                            {fipe.texto_valor || "-"}
+                          </p>
+                          <p>
+                            <span className="font-medium">Referência:</span>{" "}
+                            {fipe.mes_referencia || "-"}
+                          </p>
+                          <p>
+                            <span className="font-medium">Combustível:</span>{" "}
+                            {fipe.combustivel || "-"}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    JSON Completo
+                  </h4>
+                  <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                    <pre className="text-green-400 text-xs">
+                      {JSON.stringify(apiData, null, 2)}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="border-t p-6 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowApiDataModal(false)}
+                className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
