@@ -96,17 +96,27 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } },
 ) {
+  console.log("[DELETE CAR] Iniciando exclusão do carro ID:", params.id);
+
   try {
+    console.log("[DELETE CAR] Verificando autenticação...");
     const session = await auth();
 
     // Verifica se está autenticado
     if (!session) {
+      console.log("[DELETE CAR] ERRO: Usuário não autenticado");
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
+    console.log("[DELETE CAR] Usuário autenticado:", session.user?.email);
+
     // Verifica se é administrador
+    console.log("[DELETE CAR] Verificando permissão de administrador...");
     const userRole = (session.user as any)?.role;
+    console.log("[DELETE CAR] Role do usuário:", userRole);
+
     if (userRole !== "ADMIN") {
+      console.log("[DELETE CAR] ERRO: Usuário não é administrador");
       return NextResponse.json(
         {
           error: "Apenas administradores podem excluir carros",
@@ -116,12 +126,14 @@ export async function DELETE(
     }
 
     // Busca o carro para pegar as imagens
+    console.log("[DELETE CAR] Buscando dados do carro no banco...");
     const car = await prisma.car.findUnique({
       where: { id: params.id },
       select: { images: true },
     });
 
     if (!car) {
+      console.log("[DELETE CAR] ERRO: Carro não encontrado no banco");
       return NextResponse.json(
         {
           error: "Carro não encontrado",
@@ -130,11 +142,34 @@ export async function DELETE(
       );
     }
 
+    console.log(
+      "[DELETE CAR] Carro encontrado com",
+      car.images?.length || 0,
+      "imagem(ns)",
+    );
+
     // Deleta as imagens do storage
     if (car.images && car.images.length > 0) {
-      for (const imageUrl of car.images) {
+      console.log(
+        "[DELETE CAR] Iniciando exclusão de",
+        car.images.length,
+        "imagem(ns)...",
+      );
+      console.log(
+        "[DELETE CAR] Modo:",
+        isDev ? "DESENVOLVIMENTO (local)" : "PRODUÇÃO (Supabase)",
+      );
+
+      for (let i = 0; i < car.images.length; i++) {
+        const imageUrl = car.images[i];
+        console.log(
+          `[DELETE CAR] Processando imagem ${i + 1}/${car.images.length}:`,
+          imageUrl,
+        );
+
         try {
           if (isDev) {
+            console.log("[DELETE CAR] Deletando do filesystem local...");
             // MODO LOCAL: Remove do filesystem
             // Extrai o nome do arquivo da URL local (ex: /uploads/cars/filename.jpg)
             const localPath = imageUrl.replace("/uploads/cars/", "");
@@ -146,56 +181,111 @@ export async function DELETE(
               localPath,
             );
 
+            console.log("[DELETE CAR] Caminho do arquivo:", filepath);
+
             if (existsSync(filepath)) {
               await unlink(filepath);
+              console.log("[DELETE CAR] ✓ Arquivo deletado com sucesso");
+            } else {
+              console.log(
+                "[DELETE CAR] ⚠ Arquivo não encontrado no filesystem",
+              );
             }
           } else {
             // MODO PRODUÇÃO: Remove do Supabase Storage
+            console.log("[DELETE CAR] Deletando do Supabase Storage...");
             // Extrai o caminho do arquivo da URL do Supabase
             let filename = imageUrl;
 
             // Se for URL completa do Supabase, extrai apenas o caminho
             if (imageUrl.includes("supabase.co")) {
+              console.log(
+                "[DELETE CAR] URL completa detectada, extraindo path...",
+              );
               const url = new URL(imageUrl);
               const pathParts = url.pathname.split("/");
               // Remove /storage/v1/object/public/car-images/ da URL
               filename = pathParts
                 .slice(pathParts.indexOf("car-images") + 1)
                 .join("/");
+              console.log("[DELETE CAR] Path extraído:", filename);
             }
 
             // Se já tiver o prefixo cars/, usa direto
             if (!filename.startsWith("cars/")) {
               filename = `cars/${filename}`;
+              console.log("[DELETE CAR] Prefixo cars/ adicionado:", filename);
             }
+
+            console.log(
+              "[DELETE CAR] Tentando remover do bucket car-images:",
+              filename,
+            );
 
             const { error } = await supabase!.storage
               .from("car-images")
               .remove([filename]);
 
             if (error) {
-              console.error("Erro ao deletar imagem do Supabase:", error);
+              console.error(
+                "[DELETE CAR] ✗ Erro ao deletar imagem do Supabase:",
+                error,
+              );
               // Continua mesmo com erro, para não bloquear a exclusão do carro
+            } else {
+              console.log(
+                "[DELETE CAR] ✓ Imagem deletada do Supabase com sucesso",
+              );
             }
           }
         } catch (error) {
-          console.error("Erro ao deletar imagem:", error);
+          console.error(
+            `[DELETE CAR] ✗ ERRO ao processar imagem ${i + 1}:`,
+            error,
+          );
+          console.error(
+            "[DELETE CAR] Stack trace:",
+            error instanceof Error ? error.stack : "N/A",
+          );
           // Continua mesmo com erro, para não bloquear a exclusão do carro
         }
       }
+      console.log("[DELETE CAR] Finalizado processamento de todas as imagens");
+    } else {
+      console.log("[DELETE CAR] Nenhuma imagem para deletar");
     }
 
     // Deleta o carro do banco de dados
+    console.log("[DELETE CAR] Deletando carro do banco de dados...");
     await prisma.car.delete({
       where: { id: params.id },
     });
+
+    console.log("[DELETE CAR] ✓ Carro deletado com sucesso do banco de dados");
+    console.log(
+      "[DELETE CAR] ========== EXCLUSÃO CONCLUÍDA COM SUCESSO ==========",
+    );
 
     return NextResponse.json({
       success: true,
       message: "Carro excluído com sucesso",
     });
   } catch (error) {
-    console.error("Erro ao deletar carro:", error);
+    console.error("[DELETE CAR] ========== ERRO FATAL NA EXCLUSÃO ==========");
+    console.error(
+      "[DELETE CAR] Tipo do erro:",
+      error instanceof Error ? error.constructor.name : typeof error,
+    );
+    console.error(
+      "[DELETE CAR] Mensagem:",
+      error instanceof Error ? error.message : String(error),
+    );
+    console.error(
+      "[DELETE CAR] Stack trace:",
+      error instanceof Error ? error.stack : "N/A",
+    );
+    console.error("[DELETE CAR] Erro completo:", error);
+
     return NextResponse.json(
       { error: "Erro ao excluir o carro" },
       { status: 500 },

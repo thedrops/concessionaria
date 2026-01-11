@@ -49,13 +49,18 @@ export default function DeleteCarButton({
       </button>
 
       {showConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">
               Confirmar Exclusão
             </h3>
-            <p className="text-gray-600 mb-6">
-              Tem certeza que deseja excluir o carro <strong>{carName}</strong>?
+            <p className="text-gray-600 mb-2">
+              Tem certeza que deseja excluir o carro:
+            </p>
+            <p className="text-gray-900 font-semibold mb-3 break-words">
+              {carName}
+            </p>
+            <p className="text-sm text-gray-500 mb-6">
               Esta ação não pode ser desfeita e todas as imagens serão
               removidas.
             </p>
