@@ -50,31 +50,25 @@ export default function DeleteCarButton({
 
       {showConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full text-center">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Confirmar Exclusão
             </h3>
-            <p className="text-gray-600 mb-2">
-              Tem certeza que deseja excluir o carro:
+            <p className="text-gray-600 mb-6">
+              Deseja excluir{" "}
+              <strong className="text-gray-900 block mt-2">{carName}</strong>?
             </p>
-            <p className="text-gray-900 font-semibold mb-3 break-words">
-              {carName}
-            </p>
-            <p className="text-sm text-gray-500 mb-6">
-              Esta ação não pode ser desfeita e todas as imagens serão
-              removidas.
-            </p>
-            <div className="flex gap-3 justify-end">
+            <div className="flex gap-3 justify-center">
               <button
                 onClick={() => setShowConfirm(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
                 disabled={isDeleting}
               >
                 Cancelar
               </button>
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
                 disabled={isDeleting}
               >
                 {isDeleting ? "Excluindo..." : "Excluir"}
