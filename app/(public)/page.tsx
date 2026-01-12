@@ -4,6 +4,7 @@ import { Car as LucidCar, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Car, Post } from "@prisma/client/wasm";
 import { getImageUrl } from "@/lib/image-url";
+import Carousel from "@/components/public/Carousel";
 
 async function getLatestCars() {
   return await prisma.car.findMany({
@@ -22,12 +23,29 @@ async function getLatestPosts() {
   });
 }
 
+async function getCarouselImages() {
+  return await prisma.carouselImage.findMany({
+    where: { active: true },
+    orderBy: { order: "asc" },
+    select: {
+      id: true,
+      image: true,
+      title: true,
+      link: true,
+    },
+  });
+}
+
 export default async function Home() {
   const latestCars = await getLatestCars();
   const latestPosts = await getLatestPosts();
+  const carouselImages = await getCarouselImages();
 
   return (
     <div>
+      {/* Carousel */}
+      {carouselImages.length > 0 && <Carousel images={carouselImages} />}
+
       {/* Hero Banner */}
       <section className="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

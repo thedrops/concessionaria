@@ -99,3 +99,16 @@ model VehicleQuery {
 
   @@map("vehicle_queries")
 }
+
+model CarouselImage {
+  id        String   @id @default(cuid())
+  image     String
+  title     String?
+  link      String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("carousel_images")
+}
