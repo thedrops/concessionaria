@@ -4,23 +4,36 @@ import { Plus, Edit, Trash2, Eye } from "lucide-react";
 import { getImageUrl } from "@/lib/image-url";
 import DeleteCarButton from "@/components/admin/DeleteCarButton";
 import ExportCarsButton from "@/components/admin/ExportCarsButton";
+import MarkAsSoldButton from "@/components/admin/MarkAsSoldButton";
 
 interface PageProps {
-  searchParams: { page?: string; consignado?: string };
+  searchParams: { page?: string; consignado?: string; status?: string };
 }
 
 export default async function CarsPage({ searchParams }: PageProps) {
   const page = Number(searchParams.page) || 1;
   const consignadoFilter = searchParams.consignado;
+  const statusFilter = searchParams.status;
   const perPage = 10;
   const skip = (page - 1) * perPage;
 
-  // Construir filtro baseado no parâmetro consignado
+  // Construir filtro baseado nos parâmetros
   const whereFilter: any = {};
-  if (consignadoFilter === "sim") {
-    whereFilter.consignado = true;
-  } else if (consignadoFilter === "nao") {
-    whereFilter.consignado = false;
+
+  // Filtro de status (disponível/vendido)
+  if (statusFilter === "vendidos") {
+    whereFilter.status = "SOLD";
+  } else if (statusFilter === "disponiveis") {
+    whereFilter.status = "AVAILABLE";
+  }
+
+  // Filtro de consignado (apenas se não estiver filtrando por vendidos)
+  if (!statusFilter || statusFilter === "disponiveis") {
+    if (consignadoFilter === "sim") {
+      whereFilter.consignado = true;
+    } else if (consignadoFilter === "nao") {
+      whereFilter.consignado = false;
+    }
   }
 
   const [cars, totalCars, totalAvailable, totalSold] = await Promise.all([
@@ -62,16 +75,15 @@ export default async function CarsPage({ searchParams }: PageProps) {
       </div>
 
       {/* Filtros */}
-      <div className="bg-white rounded-lg shadow p-4">
+      <div className="bg-white rounded-lg shadow p-4 space-y-4">
+        {/* Filtro de Status */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-gray-700">
-            Filtrar por:
-          </label>
+          <label className="text-sm font-medium text-gray-700">Status:</label>
           <div className="flex gap-2">
             <Link
               href="/admin/carros"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                !consignadoFilter
+                !statusFilter
                   ? "bg-blue-600 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
@@ -79,27 +91,68 @@ export default async function CarsPage({ searchParams }: PageProps) {
               Todos
             </Link>
             <Link
-              href="/admin/carros?consignado=sim"
+              href="/admin/carros?status=disponiveis"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                consignadoFilter === "sim"
-                  ? "bg-blue-600 text-white"
+                statusFilter === "disponiveis"
+                  ? "bg-green-600 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              Consignados
+              Disponíveis
             </Link>
             <Link
-              href="/admin/carros?consignado=nao"
+              href="/admin/carros?status=vendidos"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                consignadoFilter === "nao"
-                  ? "bg-blue-600 text-white"
+                statusFilter === "vendidos"
+                  ? "bg-red-600 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              Não Consignados
+              Vendidos
             </Link>
           </div>
         </div>
+
+        {/* Filtro de Consignado (apenas se não estiver em vendidos) */}
+        {statusFilter !== "vendidos" && (
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium text-gray-700">
+              Consignado:
+            </label>
+            <div className="flex gap-2">
+              <Link
+                href={`/admin/carros${statusFilter ? `?status=${statusFilter}` : ""}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  !consignadoFilter
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                Todos
+              </Link>
+              <Link
+                href={`/admin/carros?${statusFilter ? `status=${statusFilter}&` : ""}consignado=sim`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  consignadoFilter === "sim"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                Consignados
+              </Link>
+              <Link
+                href={`/admin/carros?${statusFilter ? `status=${statusFilter}&` : ""}consignado=nao`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  consignadoFilter === "nao"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                Não Consignados
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Stats */}
@@ -228,6 +281,11 @@ export default async function CarsPage({ searchParams }: PageProps) {
                         >
                           <Edit className="w-5 h-5" />
                         </Link>
+                        <MarkAsSoldButton
+                          carId={car.id}
+                          carName={`${car.brand} ${car.model}`}
+                          currentStatus={car.status}
+                        />
                         <DeleteCarButton
                           carId={car.id}
                           carName={`${car.brand} ${car.model}`}
