@@ -1,18 +1,22 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import CarCard from "@/components/public/CarCard";
 import { Car } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 
 export default function CatalogGrid() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [cars, setCars] = useState<Car[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [showAll, setShowAll] = useState(
+    searchParams.get("showAll") === "true",
+  );
   const observerTarget = useRef<HTMLDivElement>(null);
 
   const fetchCars = useCallback(
@@ -22,9 +26,17 @@ export default function CatalogGrid() {
       setLoading(true);
       try {
         const params = new URLSearchParams();
-        params.set("page", pageNum.toString());
-        params.set("limit", "12");
 
+        // Se showAll está ativado, não pagina
+        if (showAll) {
+          params.set("showAll", "true");
+        } else {
+          params.set("page", pageNum.toString());
+          params.set("limit", "12");
+        }
+
+        if (searchParams.get("search"))
+          params.set("search", searchParams.get("search")!);
         if (searchParams.get("marca"))
           params.set("marca", searchParams.get("marca")!);
         if (searchParams.get("anoMin"))
@@ -45,7 +57,12 @@ export default function CatalogGrid() {
           setCars((prev) => [...prev, ...data.cars]);
         }
 
-        setHasMore(data.pagination.hasMore);
+        // Se showAll está ativado, não há mais páginas
+        if (showAll) {
+          setHasMore(false);
+        } else {
+          setHasMore(data.pagination.hasMore);
+        }
         setInitialLoad(false);
       } catch (error) {
         console.error("Error fetching cars:", error);
@@ -53,7 +70,7 @@ export default function CatalogGrid() {
         setLoading(false);
       }
     },
-    [loading, searchParams],
+    [loading, searchParams, showAll],
   );
 
   // Reset quando filtros mudam
@@ -62,7 +79,22 @@ export default function CatalogGrid() {
     setPage(1);
     setHasMore(true);
     fetchCars(1, true);
-  }, [searchParams]);
+  }, [searchParams, showAll]);
+
+  // Toggle para ver todo o estoque
+  const handleShowAllToggle = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    const newShowAll = !showAll;
+
+    if (newShowAll) {
+      params.set("showAll", "true");
+    } else {
+      params.delete("showAll");
+    }
+
+    setShowAll(newShowAll);
+    router.push(`/catalogo?${params.toString()}`);
+  };
 
   // Intersection Observer para infinite scroll
   useEffect(() => {
@@ -116,6 +148,33 @@ export default function CatalogGrid() {
 
   return (
     <>
+      {/* Checkbox para ver todo o estoque */}
+      <div className="mb-6 flex items-center justify-between bg-white rounded-lg shadow p-4">
+        <div className="flex items-center space-x-3">
+          <input
+            type="checkbox"
+            id="showAll"
+            checked={showAll}
+            onChange={handleShowAllToggle}
+            className="w-5 h-5 text-primary-500 border-secondary-300 rounded focus:ring-primary-500 cursor-pointer"
+          />
+          <label
+            htmlFor="showAll"
+            className="text-sm font-medium text-secondary-700 cursor-pointer select-none"
+          >
+            Deseja ver todo o estoque?
+          </label>
+        </div>
+        {showAll && (
+          <span className="text-sm text-secondary-500">
+            Exibindo todos os {cars.length} veículos
+          </span>
+        )}
+        {!showAll && cars.length > 0 && (
+          <span className="text-sm text-secondary-500">Paginação ativada</span>
+        )}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {cars.map((car) => (
           <CarCard key={car.id} car={car} />

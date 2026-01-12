@@ -1,5 +1,6 @@
 import CatalogFilters from "@/components/public/CatalogFilters";
 import CatalogGrid from "@/components/public/CatalogGrid";
+import CatalogSearchBar from "@/components/public/CatalogSearchBar";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -10,6 +11,10 @@ export default function CatalogPage() {
         <h1 className="text-4xl font-bold text-secondary-900 mb-8">
           Catálogo de Veículos
         </h1>
+
+        <Suspense fallback={null}>
+          <CatalogSearchBar />
+        </Suspense>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1">
