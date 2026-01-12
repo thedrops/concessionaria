@@ -9,6 +9,7 @@ import {
   MessageSquare,
   LogOut,
   LayoutDashboard,
+  Image as ImageIcon,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -22,6 +23,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   const menuItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/carros", label: "Carros", icon: Car },
+    { href: "/admin/carrossel", label: "Carrossel", icon: ImageIcon },
     { href: "/admin/usuarios", label: "Usuários", icon: Users },
     { href: "/admin/posts", label: "Posts", icon: FileText },
     { href: "/admin/leads", label: "Leads", icon: MessageSquare },

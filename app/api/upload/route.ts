@@ -4,23 +4,25 @@ import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 
-// Detecta se está em desenvolvimento sem Supabase configurado
-const isDev =
-  process.env.NODE_ENV === "development" &&
-  !process.env.NEXT_PUBLIC_SUPABASE_URL;
+// Detecta se está em desenvolvimento - sempre usa filesystem local em dev
+const isDev = process.env.NODE_ENV === "development";
 
-// Configurar cliente Supabase (apenas se as credenciais estiverem configuradas)
-const supabase = !isDev
-  ? createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    )
-  : null;
+// Configurar cliente Supabase (apenas em produção)
+const supabase =
+  !isDev &&
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+    ? createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      )
+    : null;
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
+    const type = (formData.get("type") as string) || "cars"; // Padrão: cars
 
     if (!file) {
       return NextResponse.json(
@@ -54,20 +56,21 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
     const extension = file.name.split(".").pop();
-    const filename = `cars/${timestamp}-${randomString}.${extension}`;
+    const folder = type === "carousel" ? "carousel" : "cars";
+    const filename = `${folder}/${timestamp}-${randomString}.${extension}`;
 
     if (isDev) {
       // MODO LOCAL: Salva no filesystem
-      const uploadDir = join(process.cwd(), "public", "uploads", "cars");
+      const uploadDir = join(process.cwd(), "public", "uploads", folder);
       if (!existsSync(uploadDir)) {
         await mkdir(uploadDir, { recursive: true });
       }
 
-      const localFilename = filename.replace("cars/", "");
+      const localFilename = filename.replace(`${folder}/`, "");
       const filepath = join(uploadDir, localFilename);
       await writeFile(filepath, buffer);
 
-      const publicUrl = `/uploads/cars/${localFilename}`;
+      const publicUrl = `/uploads/${folder}/${localFilename}`;
 
       return NextResponse.json({
         url: publicUrl,
@@ -75,8 +78,9 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // MODO PRODUÇÃO: Upload para Supabase Storage
+      const bucketName = type === "carousel" ? "carousel-images" : "car-images";
       const { data, error } = await supabase!.storage
-        .from("car-images")
+        .from(bucketName)
         .upload(filename, buffer, {
           contentType: file.type,
           upsert: false,
@@ -93,7 +97,7 @@ export async function POST(request: NextRequest) {
       // Obter URL pública
       const {
         data: { publicUrl },
-      } = supabase!.storage.from("car-images").getPublicUrl(filename);
+      } = supabase!.storage.from(bucketName).getPublicUrl(filename);
 
       return NextResponse.json({
         url: publicUrl,
