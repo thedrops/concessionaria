@@ -55,9 +55,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session;
     },
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isAdminRoute = nextUrl.pathname.startsWith("/admin");
+
+      if (isAdminRoute && !isLoggedIn) {
+        return false;
+      }
+
+      return true;
+    },
   },
   pages: {
-    signIn: "/admin/login",
+    signIn: "/login",
   },
   session: {
     strategy: "jwt",
