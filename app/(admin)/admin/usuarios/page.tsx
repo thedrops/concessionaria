@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { Plus, Edit, Trash2, Shield, User } from "lucide-react";
+import { Plus, Edit, Shield, User } from "lucide-react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import DeleteUserButton from "@/components/admin/DeleteUserButton";
 
 interface PageProps {
   searchParams: { page?: string };
@@ -158,12 +159,10 @@ export default async function UsersPage({ searchParams }: PageProps) {
                           <Edit className="w-5 h-5" />
                         </Link>
                         {user.id !== session.user.id && (
-                          <button
-                            className="text-red-600 hover:text-red-800"
-                            title="Excluir"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
+                          <DeleteUserButton
+                            userId={user.id}
+                            userName={user.name}
+                          />
                         )}
                       </div>
                     </td>

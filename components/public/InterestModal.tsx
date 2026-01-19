@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { X, Send } from "lucide-react";
 import { Car } from "@prisma/client/wasm";
+import Swal from "sweetalert2";
 
 const leadSchema = z.object({
   name: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
@@ -46,6 +47,15 @@ export default function InterestModal({ car }: InterestModalProps) {
       });
 
       if (response.ok) {
+        // Mostrar mensagem de sucesso
+        await Swal.fire({
+          icon: "success",
+          title: "Interesse registrado!",
+          text: "Você será redirecionado para o WhatsApp.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+
         // Redirect to WhatsApp
         const message = encodeURIComponent(
           `Olá! Tenho interesse no veículo ${car.brand} ${car.model} (${car.year}). Meu nome é ${data.name}.`,
@@ -56,10 +66,19 @@ export default function InterestModal({ car }: InterestModalProps) {
         reset();
         setIsOpen(false);
       } else {
-        alert("Erro ao enviar mensagem. Tente novamente.");
+        const errorData = await response.json();
+        Swal.fire({
+          icon: "error",
+          title: "Erro ao enviar",
+          text: errorData.error || "Erro ao enviar mensagem. Tente novamente.",
+        });
       }
     } catch (error) {
-      alert("Erro ao enviar mensagem. Tente novamente.");
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao enviar",
+        text: "Erro ao enviar mensagem. Tente novamente.",
+      });
     } finally {
       setIsSubmitting(false);
     }

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2, Search, X, Upload, Trash2 } from "lucide-react";
+import Swal from "sweetalert2";
 
 const carSchema = z.object({
   brand: z.string().min(2, "Marca deve ter no mínimo 2 caracteres"),
@@ -176,10 +177,23 @@ export default function CarForm({ car }: CarFormProps) {
       const newImages = [...uploadedImages, ...urls];
       setUploadedImages(newImages);
       setValue("images", newImages.join("\n"));
+
+      Swal.fire({
+        icon: "success",
+        title: "Upload concluído!",
+        text: `${urls.length} imagem(ns) enviada(s) com sucesso.`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Erro ao fazer upload das imagens",
-      );
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro ao fazer upload das imagens";
+      setError(errorMessage);
+      Swal.fire({
+        icon: "error",
+        title: "Erro no upload",
+        text: errorMessage,
+      });
     } finally {
       setUploadingImage(false);
     }
@@ -210,6 +224,14 @@ export default function CarForm({ car }: CarFormProps) {
 
       // Salvar dados completos da API
       setApiData(data);
+
+      Swal.fire({
+        icon: "success",
+        title: "Dados encontrados!",
+        text: "Os dados do veículo foram carregados com sucesso.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
 
       // Preencher formulário com dados da API
       if (data.MARCA || data.marca) {
@@ -251,7 +273,14 @@ export default function CarForm({ car }: CarFormProps) {
 
       setUseApi(false); // Fechar o modal de busca
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao buscar placa");
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro ao buscar placa";
+      setError(errorMessage);
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao buscar placa",
+        text: errorMessage,
+      });
     } finally {
       setSearchingPlate(false);
     }
@@ -302,10 +331,27 @@ export default function CarForm({ car }: CarFormProps) {
         throw new Error(result.error || "Erro ao salvar carro");
       }
 
+      await Swal.fire({
+        icon: "success",
+        title: car ? "Carro atualizado!" : "Carro cadastrado!",
+        text: car
+          ? "O veículo foi atualizado com sucesso."
+          : "O veículo foi cadastrado com sucesso.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
       router.push("/admin/carros");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao salvar carro");
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro ao salvar carro";
+      setError(errorMessage);
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao salvar",
+        text: errorMessage,
+      });
     } finally {
       setIsLoading(false);
     }

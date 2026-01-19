@@ -11,6 +11,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import Image from "next/image";
+import Swal from "sweetalert2";
 
 interface CarouselImage {
   id: string;
@@ -72,19 +73,48 @@ export default function CarrosselPage() {
       });
 
       if (response.ok) {
+        await Swal.fire({
+          icon: "success",
+          title: editingImage ? "Imagem atualizada!" : "Imagem adicionada!",
+          text: editingImage
+            ? "A imagem do carrossel foi atualizada."
+            : "A imagem foi adicionada ao carrossel.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
         await fetchImages();
         closeModal();
       } else {
-        alert("Erro ao salvar imagem");
+        const errorData = await response.json();
+        Swal.fire({
+          icon: "error",
+          title: "Erro ao salvar",
+          text: errorData.error || "Erro ao salvar imagem",
+        });
       }
     } catch (error) {
       console.error("Erro ao salvar:", error);
-      alert("Erro ao salvar imagem");
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao salvar",
+        text: "Erro ao salvar imagem",
+      });
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Tem certeza que deseja excluir esta imagem?")) return;
+    const result = await Swal.fire({
+      title: "Confirmar Exclusão",
+      text: "Tem certeza que deseja excluir esta imagem?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       const response = await fetch(`/api/admin/carousel/${id}`, {
@@ -92,13 +122,28 @@ export default function CarrosselPage() {
       });
 
       if (response.ok) {
+        await Swal.fire({
+          icon: "success",
+          title: "Imagem excluída!",
+          text: "A imagem foi removida do carrossel.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
         await fetchImages();
       } else {
-        alert("Erro ao excluir imagem");
+        Swal.fire({
+          icon: "error",
+          title: "Erro ao excluir",
+          text: "Erro ao excluir imagem",
+        });
       }
     } catch (error) {
       console.error("Erro ao excluir:", error);
-      alert("Erro ao excluir imagem");
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao excluir",
+        text: "Erro ao excluir imagem",
+      });
     }
   };
 
@@ -198,7 +243,11 @@ export default function CarrosselPage() {
       setFormData({ ...formData, image: data.url });
     } catch (error) {
       console.error("Erro ao fazer upload:", error);
-      alert("Erro ao fazer upload da imagem");
+      Swal.fire({
+        icon: "error",
+        title: "Erro no upload",
+        text: "Erro ao fazer upload da imagem",
+      });
     } finally {
       setUploadingImage(false);
     }

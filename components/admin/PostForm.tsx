@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
+import Swal from "sweetalert2";
 
 const postSchema = z.object({
   title: z.string().min(3, "Título deve ter no mínimo 3 caracteres"),
@@ -113,10 +114,27 @@ export default function PostForm({ post, authorId }: PostFormProps) {
         throw new Error(result.error || "Erro ao salvar post");
       }
 
+      await Swal.fire({
+        icon: "success",
+        title: post ? "Post atualizado!" : "Post criado!",
+        text: post
+          ? "O post foi atualizado com sucesso."
+          : "O post foi criado com sucesso.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
       router.push("/admin/posts");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao salvar post");
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro ao salvar post";
+      setError(errorMessage);
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao salvar",
+        text: errorMessage,
+      });
     } finally {
       setIsLoading(false);
     }

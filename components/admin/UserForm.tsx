@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
+import Swal from "sweetalert2";
 
 const userSchema = z.object({
   name: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
@@ -78,10 +79,27 @@ export default function UserForm({ user }: UserFormProps) {
         throw new Error(result.error || "Erro ao salvar usuário");
       }
 
+      await Swal.fire({
+        icon: "success",
+        title: user ? "Usuário atualizado!" : "Usuário cadastrado!",
+        text: user
+          ? "O usuário foi atualizado com sucesso."
+          : "O usuário foi cadastrado com sucesso.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
       router.push("/admin/usuarios");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao salvar usuário");
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro ao salvar usuário";
+      setError(errorMessage);
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao salvar",
+        text: errorMessage,
+      });
     } finally {
       setIsLoading(false);
     }
