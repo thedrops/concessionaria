@@ -2,15 +2,25 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Car as LucidCar, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { Car, Post } from "@prisma/client/wasm";
+import { Post, Prisma } from "@prisma/client/wasm";
 import { getImageUrl } from "@/lib/image-url";
 import Carousel from "@/components/public/Carousel";
+
+type CarWithImages = Prisma.CarGetPayload<{
+  include: { carImages: true };
+}>;
 
 async function getLatestCars() {
   return await prisma.car.findMany({
     where: { status: "AVAILABLE" },
     take: 6,
     orderBy: { createdAt: "desc" },
+    include: {
+      carImages: {
+        orderBy: { order: "asc" },
+        take: 1, // Apenas a primeira imagem para o card
+      },
+    },
   });
 }
 
@@ -80,14 +90,21 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {latestCars.map((car: Car) => (
+            {latestCars.map((car: CarWithImages) => (
               <Link
                 key={car.id}
                 href={`/catalogo/${car.id}`}
                 className="group bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition"
               >
                 <div className="relative h-48 bg-secondary-200">
-                  {car.images[0] ? (
+                  {car.carImages && car.carImages[0] ? (
+                    <Image
+                      src={getImageUrl(car.carImages[0].url)}
+                      alt={`${car.brand} ${car.model}`}
+                      fill
+                      className="object-cover group-hover:scale-105 transition"
+                    />
+                  ) : car.images[0] ? (
                     <Image
                       src={getImageUrl(car.images[0])}
                       alt={`${car.brand} ${car.model}`}
