@@ -30,7 +30,7 @@ enum Role {
 }
 
 model Car {
-  id             String    @id @default(cuid())
+  id             String     @id @default(cuid())
   brand          String
   model          String
   year           String // Ano de Fabricação
@@ -40,21 +40,35 @@ model Car {
   doors          Int?
   fuel           String?
   mileage        Int?
-  plate          String?   @unique
+  plate          String?    @unique
   color          String?
   passengers     Int? // Quantidade de passageiros
   price          Float
-  optionals      String?   @db.Text
-  additionalInfo String?   @db.Text
-  description    String    @db.Text
-  images         String[]  @default([])
-  status         CarStatus @default(AVAILABLE)
-  consignado     Boolean   @default(false)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  optionals      String?    @db.Text
+  additionalInfo String?    @db.Text
+  description    String     @db.Text
+  images         String[]   @default([])
+  carImages      CarImage[]
+  status         CarStatus  @default(AVAILABLE)
+  consignado     Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   leads          Lead[]
 
   @@map("cars")
+}
+
+model CarImage {
+  id        String   @id @default(cuid())
+  carId     String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([carId, order])
+  @@map("car_images")
 }
 
 enum CarStatus {

@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, Search, X, Upload, Trash2 } from "lucide-react";
+import { Loader2, Search, X, Upload } from "lucide-react";
 import Swal from "sweetalert2";
+import ImageSorter from "./ImageSorter";
 
 const carSchema = z.object({
   brand: z.string().min(2, "Marca deve ter no mínimo 2 caracteres"),
@@ -1046,45 +1047,23 @@ export default function CarForm({ car }: CarFormProps) {
             </label>
           </div>
 
-          {/* Image Preview Grid */}
+          {/* Image Sorter with Drag and Drop */}
           {uploadedImages.length > 0 && (
-            <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {uploadedImages.map((url, index) => (
-                <div
-                  key={index}
-                  className="relative group aspect-video bg-gray-100 rounded-lg overflow-hidden"
-                >
-                  <img
-                    src={url}
-                    alt={`Imagem ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity flex items-center justify-center">
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index)}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity bg-red-600 text-white p-2 rounded-full hover:bg-red-700"
-                      title="Remover imagem"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </div>
-                  {index === 0 && (
-                    <div className="absolute top-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
-                      Principal
-                    </div>
-                  )}
-                </div>
-              ))}
+            <div className="mt-4">
+              <ImageSorter
+                carId={car?.id}
+                images={uploadedImages}
+                onImagesChange={(newImages) => {
+                  setUploadedImages(newImages);
+                  setValue("images", newImages.join("\n"));
+                }}
+                onRemoveImage={removeImage}
+              />
             </div>
           )}
 
           {/* Hidden input for form submission */}
           <input type="hidden" {...register("images")} />
-
-          <p className="mt-2 text-sm text-gray-500">
-            A primeira imagem será a imagem principal do veículo
-          </p>
         </div>
 
         <div className="flex gap-4 pt-4 border-t">

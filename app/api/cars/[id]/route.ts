@@ -75,10 +75,30 @@ export async function PUT(
     const body = await request.json();
     const validatedData = carSchema.parse(body);
 
+    // Atualizar o carro
     const car = await prisma.car.update({
       where: { id: params.id },
       data: validatedData,
     });
+
+    // Se houver imagens, sincronizar com a tabela CarImage
+    if (validatedData.images && validatedData.images.length > 0) {
+      // Deletar imagens antigas
+      await prisma.carImage.deleteMany({
+        where: { carId: params.id },
+      });
+
+      // Criar novas imagens com ordem
+      const imageCreateData = validatedData.images.map((url, index) => ({
+        carId: params.id,
+        url,
+        order: index,
+      }));
+
+      await prisma.carImage.createMany({
+        data: imageCreateData,
+      });
+    }
 
     return NextResponse.json(car);
   } catch (error) {

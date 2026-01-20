@@ -50,9 +50,23 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = carSchema.parse(body);
 
+    // Criar o carro
     const car = await prisma.car.create({
       data: validatedData,
     });
+
+    // Se houver imagens, criar as entradas na tabela CarImage
+    if (validatedData.images && validatedData.images.length > 0) {
+      const imageCreateData = validatedData.images.map((url, index) => ({
+        carId: car.id,
+        url,
+        order: index,
+      }));
+
+      await prisma.carImage.createMany({
+        data: imageCreateData,
+      });
+    }
 
     return NextResponse.json(car, { status: 201 });
   } catch (error) {
