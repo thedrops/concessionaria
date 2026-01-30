@@ -4,6 +4,9 @@ import CatalogSearchBar from "@/components/public/CatalogSearchBar";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
+// Revalidar a página a cada 60 segundos
+export const revalidate = 60;
+
 export default function CatalogPage() {
   return (
     <div className="min-h-screen bg-secondary-50 py-12">

@@ -6,6 +6,9 @@ import { Post, Prisma } from "@prisma/client/wasm";
 import { getImageUrl } from "@/lib/image-url";
 import Carousel from "@/components/public/Carousel";
 
+// Revalidar a página a cada 60 segundos
+export const revalidate = 60;
+
 type CarWithImages = Prisma.CarGetPayload<{
   include: { carImages: true };
 }>;
