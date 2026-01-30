@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -23,15 +23,55 @@ interface InterestModalProps {
 export default function InterestModal({ car }: InterestModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [whatsappNumber, setWhatsappNumber] = useState("5511999999999");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<LeadFormData>({
     resolver: zodResolver(leadSchema),
   });
+
+  // Carregar número do WhatsApp das configurações
+  useEffect(() => {
+    const loadWhatsappNumber = async () => {
+      try {
+        const response = await fetch("/api/settings");
+        const data = await response.json();
+        if (response.ok && data.whatsappNumber) {
+          setWhatsappNumber(data.whatsappNumber);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar número do WhatsApp:", error);
+      }
+    };
+    loadWhatsappNumber();
+  }, []);
+
+  const formatPhone = (value: string) => {
+    const cleaned = value.replace(/\D/g, "");
+
+    if (cleaned.length <= 2) {
+      return cleaned;
+    } else if (cleaned.length <= 6) {
+      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
+    } else if (cleaned.length <= 10) {
+      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6)}`;
+    } else {
+      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7, 11)}`;
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhone(e.target.value);
+    setPhone(formatted);
+    // Salva apenas os números no formulário
+    setValue("phone", formatted.replace(/\D/g, ""));
+  };
 
   const onSubmit = async (data: LeadFormData) => {
     setIsSubmitting(true);
@@ -60,10 +100,11 @@ export default function InterestModal({ car }: InterestModalProps) {
         const message = encodeURIComponent(
           `Olá! Tenho interesse no veículo ${car.brand} ${car.model} (${car.year}). Meu nome é ${data.name}.`,
         );
-        const whatsappUrl = `https://wa.me/5511999999999?text=${message}`;
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
         window.location.href = whatsappUrl;
 
         reset();
+        setPhone("");
         setIsOpen(false);
       } else {
         const errorData = await response.json();
@@ -161,10 +202,12 @@ export default function InterestModal({ car }: InterestModalProps) {
                 Telefone
               </label>
               <input
-                {...register("phone")}
                 type="tel"
+                value={phone}
+                onChange={handlePhoneChange}
                 className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="(11) 99999-9999"
+                maxLength={15}
               />
               {errors.phone && (
                 <p className="text-accent-500 text-sm mt-1">

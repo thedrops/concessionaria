@@ -126,3 +126,17 @@ model CarouselImage {
 
   @@map("carousel_images")
 }
+
+model SiteSettings {
+  id             String   @id @default(cuid())
+  whatsappNumber String   @default("5511999999999")
+  companyName    String   @default("Israel Veículos")
+  companyEmail   String?
+  companyAddress String?
+  facebookUrl    String?
+  instagramUrl   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("site_settings")
+}
