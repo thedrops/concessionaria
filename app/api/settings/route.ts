@@ -3,6 +3,8 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
+export const runtime = "nodejs";
+
 const settingsSchema = z.object({
   whatsappNumber: z.string().min(10, "Número inválido"),
   companyName: z.string().min(1, "Nome da empresa é obrigatório"),
