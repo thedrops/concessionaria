@@ -312,7 +312,9 @@ export default function CarForm({ car }: CarFormProps) {
         doors: data.doors || null,
         fuel: data.fuel || null,
         mileage: data.mileage || null,
-        plate: data.plate || null,
+        plate: data.plate
+          ? data.plate.replace(/[^A-Z0-9]/gi, "").toUpperCase()
+          : null,
         color: data.color || null,
         passengers: data.passengers || null,
         optionals: data.optionals || null,

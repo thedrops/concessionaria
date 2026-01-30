@@ -75,6 +75,13 @@ export async function PUT(
     const body = await request.json();
     const validatedData = carSchema.parse(body);
 
+    // Sanitizar placa removendo hífen e espaços
+    if (validatedData.plate) {
+      validatedData.plate = validatedData.plate
+        .replace(/[^A-Z0-9]/gi, "")
+        .toUpperCase();
+    }
+
     // Atualizar o carro
     const car = await prisma.car.update({
       where: { id: params.id },

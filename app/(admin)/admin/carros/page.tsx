@@ -5,20 +5,35 @@ import { getImageUrl } from "@/lib/image-url";
 import DeleteCarButton from "@/components/admin/DeleteCarButton";
 import ExportCarsButton from "@/components/admin/ExportCarsButton";
 import MarkAsSoldButton from "@/components/admin/MarkAsSoldButton";
+import PlateSearchInput from "@/components/admin/PlateSearchInput";
 
 interface PageProps {
-  searchParams: { page?: string; consignado?: string; status?: string };
+  searchParams: {
+    page?: string;
+    consignado?: string;
+    status?: string;
+    placa?: string;
+  };
 }
 
 export default async function CarsPage({ searchParams }: PageProps) {
   const page = Number(searchParams.page) || 1;
   const consignadoFilter = searchParams.consignado;
   const statusFilter = searchParams.status;
+  const plateFilter = searchParams.placa;
   const perPage = 10;
   const skip = (page - 1) * perPage;
 
   // Construir filtro baseado nos parâmetros
   const whereFilter: any = {};
+
+  // Filtro de placa
+  if (plateFilter) {
+    whereFilter.plate = {
+      contains: plateFilter,
+      mode: "insensitive",
+    };
+  }
 
   // Filtro de status (disponível/vendido)
   if (statusFilter === "vendidos") {
@@ -72,6 +87,14 @@ export default async function CarsPage({ searchParams }: PageProps) {
             Cadastrar Carro
           </Link>
         </div>
+      </div>
+
+      {/* Busca por Placa */}
+      <div className="bg-white rounded-lg shadow p-4">
+        <label className="text-sm font-medium text-gray-700 mb-2 block">
+          Buscar por Placa:
+        </label>
+        <PlateSearchInput />
       </div>
 
       {/* Filtros */}

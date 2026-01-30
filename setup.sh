@@ -20,22 +20,22 @@ if ! command -v docker compose &> /dev/null; then
     exit 1
 fi
 
-# Create .env file if it doesn't exist
-if [ ! -f .env ]; then
-    echo -e "${BLUE}📝 Creating .env file...${NC}"
-    cat > .env << EOF
+# Create .env.development file if it doesn't exist
+if [ ! -f .env.development ]; then
+    echo -e "${BLUE}📝 Creating .env.development file...${NC}"
+    cat > .env.development << EOF
 DATABASE_URL="postgresql://concessionaria:concessionaria_password@localhost:5432/concessionaria?schema=public"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="$(openssl rand -base64 32)"
 EOF
-    echo -e "${GREEN}✅ .env file created${NC}\n"
+    echo -e "${GREEN}✅ .env.development file created${NC}\n"
 else
-    echo -e "${GREEN}✅ .env file already exists${NC}\n"
+    echo -e "${GREEN}✅ .env.development file already exists${NC}\n"
 fi
 
 # Start only the database for development
 echo -e "${BLUE}🐘 Starting PostgreSQL database...${NC}"
-docker compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.dev.yml --env-file .env.development up -d
 
 # Wait for database to be ready
 echo -e "${BLUE}⏳ Waiting for database to be ready...${NC}"
@@ -43,15 +43,15 @@ sleep 5
 
 # Run Prisma migrations
 echo -e "${BLUE}🔄 Running database migrations...${NC}"
-npx prisma migrate dev --name init
+export $(cat .env.development | xargs) && npx prisma migrate dev --name init
 
 # Generate Prisma Client
 echo -e "${BLUE}⚙️  Generating Prisma Client...${NC}"
-npx prisma generate
+export $(cat .env.development | xargs) && npx prisma generate
 
 # Create admin user
 echo -e "${BLUE}👤 Creating admin user...${NC}"
-npx tsx scripts/create-admin.ts
+export $(cat .env.development | xargs) && npx tsx scripts/create-admin.ts
 
 echo -e "\n${GREEN}✅ Setup complete!${NC}\n"
 echo -e "${BLUE}📚 Next steps:${NC}"
@@ -61,6 +61,6 @@ echo -e "  3. Login to admin panel at ${GREEN}http://localhost:3000/admin/login$
 echo -e "     Email: ${GREEN}admin@concessionaria.com${NC}"
 echo -e "     Password: ${GREEN}admin123${NC}\n"
 echo -e "${BLUE}🛠️  Useful commands:${NC}"
-echo -e "  • View database: ${GREEN}npx prisma studio${NC}"
-echo -e "  • Stop database: ${GREEN}docker-compose -f docker-compose.dev.yml down${NC}"
-echo -e "  • View logs: ${GREEN}docker-compose -f docker-compose.dev.yml logs -f${NC}\n"
+echo -e "  • View database: ${GREEN}export \$(cat .env.development | xargs) && npx prisma studio${NC}"
+echo -e "  • Stop database: ${GREEN}docker compose -f docker-compose.dev.yml --env-file .env.development down${NC}"
+echo -e "  • View logs: ${GREEN}docker compose -f docker-compose.dev.yml logs -f${NC}\n"
