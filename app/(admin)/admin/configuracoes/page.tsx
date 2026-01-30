@@ -176,7 +176,7 @@ export default function ConfiguracoesPage() {
                 </p>
               )}
               <p className="text-sm text-gray-500 mt-1">
-                Este número será usado no botão "Tenho Interesse"
+                Este número será usado no botão &quot;Tenho Interesse&quot;
               </p>
             </div>
           </div>
