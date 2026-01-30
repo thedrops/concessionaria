@@ -39,8 +39,8 @@ export async function GET() {
   }
 }
 
-// PUT - Atualizar configurações (requer autenticação)
-export async function PUT(request: NextRequest) {
+// POST/PUT - Atualizar configurações (requer autenticação)
+async function updateSettings(request: NextRequest) {
   try {
     const session = await auth();
     if (!session) {
@@ -77,4 +77,12 @@ export async function PUT(request: NextRequest) {
       { status: 500 },
     );
   }
+}
+
+export async function PUT(request: NextRequest) {
+  return updateSettings(request);
+}
+
+export async function POST(request: NextRequest) {
+  return updateSettings(request);
 }
