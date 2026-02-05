@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Mail, Phone, Calendar, Car } from "lucide-react";
+import DeleteLeadButton from "@/components/admin/DeleteLeadButton";
 
 interface PageProps {
   searchParams: { page?: string };
@@ -153,14 +154,20 @@ export default async function LeadsPage({ searchParams }: PageProps) {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <a
-                        href={`https://wa.me/55${lead.phone.replace(/\D/g, "")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-green-600 hover:text-green-800"
-                      >
-                        WhatsApp
-                      </a>
+                      <div className="flex items-center justify-end gap-2">
+                        <a
+                          href={`https://wa.me/55${lead.phone.replace(/\D/g, "")}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 hover:text-green-800"
+                        >
+                          WhatsApp
+                        </a>
+                        <DeleteLeadButton
+                          leadId={lead.id}
+                          leadName={lead.name}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))
