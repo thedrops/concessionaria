@@ -140,3 +140,23 @@ model SiteSettings {
 
   @@map("site_settings")
 }
+
+model CustomScript {
+  id          String         @id @default(cuid())
+  name        String // Nome identificador do script
+  content     String         @db.Text // Código do script
+  position    ScriptPosition // Onde inserir o script
+  isActive    Boolean        @default(true)
+  description String? // Descrição opcional
+  order       Int            @default(0) // Ordem de carregamento
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("custom_scripts")
+}
+
+enum ScriptPosition {
+  HEAD // Dentro do <head>
+  BODY_START // Logo após abrir <body>
+  BODY_END // Antes de fechar </body>
+}
