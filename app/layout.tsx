@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Concessionária - Encontre seu carro ideal",
+  title: "Israel Veículos - Encontre seu carro ideal",
   description: "A melhor concessionária de carros da região",
 };
 
