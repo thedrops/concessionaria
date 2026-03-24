@@ -61,11 +61,7 @@ export default function Carousel({ images }: CarouselProps) {
         priority={currentIndex === 0}
       />
       {currentImage.title && (
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8">
-          <h2 className="text-white text-2xl md:text-4xl font-bold">
-            {currentImage.title}
-          </h2>
-        </div>
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8"></div>
       )}
     </div>
   );
