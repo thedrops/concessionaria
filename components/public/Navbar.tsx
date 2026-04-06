@@ -30,9 +30,6 @@ export default function Navbar() {
             <Link href="/sobre" className="hover:text-accent-400 transition">
               Sobre
             </Link>
-            <Link href="/contato" className="hover:text-accent-400 transition">
-              Contato
-            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -75,13 +72,6 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
             >
               Sobre
-            </Link>
-            <Link
-              href="/contato"
-              className="block px-3 py-2 rounded-md hover:bg-primary-700"
-              onClick={() => setIsOpen(false)}
-            >
-              Contato
             </Link>
           </div>
         </div>
