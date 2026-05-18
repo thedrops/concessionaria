@@ -108,7 +108,7 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
       {/* Modal de imagem expandida */}
       {selectedImage !== null && (
         <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
           onClick={closeImage}
           onKeyDown={handleKeyDown}
           tabIndex={0}
@@ -129,7 +129,7 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
                 e.stopPropagation();
                 prevImage();
               }}
-              className="absolute left-4 text-white hover:text-gray-300 transition z-10"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition z-10"
               aria-label="Imagem anterior"
             >
               <ChevronLeft className="h-12 w-12" />
@@ -138,7 +138,7 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
 
           {/* Imagem */}
           <div
-            className="relative w-full h-full max-w-5xl max-h-[90vh]"
+            className="relative w-[calc(100vw-8rem)] h-[calc(100vh-8rem)]"
             onClick={(e) => e.stopPropagation()}
           >
             {loadingImages.has(selectedImage) && (
@@ -152,6 +152,8 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
               fill
               className="object-contain"
               onLoad={() => handleImageLoad(selectedImage)}
+              sizes="100vw"
+              priority
             />
           </div>
 
@@ -162,7 +164,7 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
                 e.stopPropagation();
                 nextImage();
               }}
-              className="absolute right-4 text-white hover:text-gray-300 transition z-10"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition z-10"
               aria-label="Próxima imagem"
             >
               <ChevronRight className="h-12 w-12" />
