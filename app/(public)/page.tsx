@@ -28,39 +28,51 @@ type CarWithImages = Prisma.CarGetPayload<{
 }>;
 
 async function getLatestCars() {
-  return await prisma.car.findMany({
-    where: { status: "AVAILABLE" },
-    take: 6,
-    orderBy: { createdAt: "desc" },
-    include: {
-      carImages: {
-        orderBy: { order: "asc" },
-        take: 1,
+  try {
+    return await prisma.car.findMany({
+      where: { status: "AVAILABLE" },
+      take: 6,
+      orderBy: { createdAt: "desc" },
+      include: {
+        carImages: {
+          orderBy: { order: "asc" },
+          take: 1,
+        },
       },
-    },
-  });
+    });
+  } catch {
+    return [];
+  }
 }
 
 async function getLatestPosts() {
-  return await prisma.post.findMany({
-    where: { published: true },
-    take: 3,
-    orderBy: { createdAt: "desc" },
-    include: { author: true },
-  });
+  try {
+    return await prisma.post.findMany({
+      where: { published: true },
+      take: 3,
+      orderBy: { createdAt: "desc" },
+      include: { author: true },
+    });
+  } catch {
+    return [];
+  }
 }
 
 async function getCarouselImages() {
-  return await prisma.carouselImage.findMany({
-    where: { active: true },
-    orderBy: { order: "asc" },
-    select: {
-      id: true,
-      image: true,
-      title: true,
-      link: true,
-    },
-  });
+  try {
+    return await prisma.carouselImage.findMany({
+      where: { active: true },
+      orderBy: { order: "asc" },
+      select: {
+        id: true,
+        image: true,
+        title: true,
+        link: true,
+      },
+    });
+  } catch {
+    return [];
+  }
 }
 
 const testimonials = [
@@ -537,7 +549,7 @@ export default async function Home() {
                   ))}
                 </div>
                 <p className="text-secondary-700 mb-6 italic leading-relaxed">
-                  "{testimonial.text}"
+                  &ldquo;{testimonial.text}&rdquo;
                 </p>
                 <div className="border-t border-secondary-200 pt-4">
                   <p className="font-bold text-secondary-900">
