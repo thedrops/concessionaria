@@ -34,9 +34,11 @@ export default async function LeadsPage({ searchParams }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Leads</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            Leads
+          </h1>
           <p className="text-gray-600 mt-1">
             Gerencie os contatos interessados
           </p>
@@ -77,7 +79,56 @@ export default async function LeadsPage({ searchParams }: PageProps) {
 
       {/* Leads Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
+
+        {/* Mobile cards */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {leads.length === 0 ? (
+            <div className="px-4 py-12 text-center text-gray-500">
+              Nenhum lead cadastrado
+            </div>
+          ) : (
+            leads.map((lead) => (
+              <div key={lead.id} className="p-4 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="font-semibold text-gray-900">{lead.name}</p>
+                  <span className="text-xs text-gray-400 flex-shrink-0">
+                    {new Date(lead.createdAt).toLocaleDateString("pt-BR")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <a href={`mailto:${lead.email}`} className="truncate hover:underline">
+                    {lead.email}
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <span>{lead.phone}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <Car className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <span>
+                    {lead.car.brand} {lead.car.model} ({lead.car.year})
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 pt-1">
+                  <a
+                    href={`https://wa.me/55${lead.phone.replace(/\D/g, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-sm text-green-700 font-medium min-h-[44px] px-3 py-2 rounded-lg bg-green-50 hover:bg-green-100 transition"
+                  >
+                    WhatsApp
+                  </a>
+                  <DeleteLeadButton leadId={lead.id} leadName={lead.name} />
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -175,6 +226,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
             </tbody>
           </table>
         </div>
+        {/* end desktop table */}
 
         {/* Pagination */}
         {totalPages > 1 && (

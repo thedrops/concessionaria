@@ -39,16 +39,18 @@ export default async function UsersPage({ searchParams }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Usuários</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            Usuários
+          </h1>
           <p className="text-gray-600 mt-1">Gerencie os usuários do sistema</p>
         </div>
         <Link
           href="/admin/usuarios/novo"
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-600/90 transition-colors shadow-md font-semibold"
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-600/90 transition-colors shadow-md font-semibold text-sm self-start sm:self-auto"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4" />
           Cadastrar Usuário
         </Link>
       </div>
@@ -77,7 +79,59 @@ export default async function UsersPage({ searchParams }: PageProps) {
 
       {/* Users Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
+
+        {/* Mobile cards */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {users.length === 0 ? (
+            <div className="px-4 py-12 text-center text-gray-500">
+              Nenhum usuário cadastrado
+            </div>
+          ) : (
+            users.map((user) => (
+              <div key={user.id} className="p-4 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <User className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">{user.name}</p>
+                      <p className="text-sm text-gray-500">{user.email}</p>
+                    </div>
+                  </div>
+                  <span
+                    className={`mt-1 text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0 ${
+                      user.role === "ADMIN"
+                        ? "bg-purple-100 text-purple-800"
+                        : "bg-blue-100 text-blue-800"
+                    }`}
+                  >
+                    {user.role === "ADMIN" ? "Admin" : "Operador"}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-400">
+                  {user._count.posts} post{user._count.posts !== 1 ? "s" : ""} &bull;{" "}
+                  Cadastro: {new Date(user.createdAt).toLocaleDateString("pt-BR")}
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <Link
+                    href={`/admin/usuarios/${user.id}/editar`}
+                    className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 min-h-[44px] px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition"
+                  >
+                    <Edit className="w-4 h-4" />
+                    <span>Editar</span>
+                  </Link>
+                  {user.id !== session.user.id && (
+                    <DeleteUserButton userId={user.id} userName={user.name} />
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -172,6 +226,7 @@ export default async function UsersPage({ searchParams }: PageProps) {
             </tbody>
           </table>
         </div>
+        {/* end desktop table */}
 
         {/* Pagination */}
         {totalPages > 1 && (

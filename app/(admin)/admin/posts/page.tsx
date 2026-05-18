@@ -40,16 +40,18 @@ export default async function PostsPage({ searchParams }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Posts</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            Posts
+          </h1>
           <p className="text-gray-600 mt-1">Gerencie os posts do blog</p>
         </div>
         <Link
           href="/admin/posts/novo"
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-600/90 transition-colors shadow-md font-semibold"
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-600/90 transition-colors shadow-md font-semibold text-sm self-start sm:self-auto"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4" />
           Criar Post
         </Link>
       </div>
@@ -76,7 +78,77 @@ export default async function PostsPage({ searchParams }: PageProps) {
 
       {/* Posts Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
+
+        {/* Mobile cards */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {posts.length === 0 ? (
+            <div className="px-4 py-12 text-center text-gray-500">
+              Nenhum post cadastrado
+            </div>
+          ) : (
+            posts.map((post) => (
+              <div key={post.id} className="p-4 space-y-2">
+                <div className="flex items-start gap-3">
+                  {post.image && (
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-16 h-16 object-cover rounded flex-shrink-0"
+                    />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-900 leading-snug">
+                      {post.title}
+                    </p>
+                    {post.excerpt && (
+                      <p className="text-sm text-gray-500 line-clamp-2 mt-0.5">
+                        {post.excerpt}
+                      </p>
+                    )}
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
+                          post.published
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {post.published ? "Publicado" : "Rascunho"}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {post.author.name} &bull;{" "}
+                        {new Date(post.createdAt).toLocaleDateString("pt-BR")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 pt-1">
+                  {post.published && (
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      target="_blank"
+                      className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 min-h-[44px] px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition"
+                    >
+                      <Eye className="w-4 h-4" />
+                      <span>Ver</span>
+                    </Link>
+                  )}
+                  <Link
+                    href={`/admin/posts/${post.id}/editar`}
+                    className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 min-h-[44px] px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition"
+                  >
+                    <Edit className="w-4 h-4" />
+                    <span>Editar</span>
+                  </Link>
+                  <DeletePostButton postId={post.id} postTitle={post.title} />
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -181,6 +253,7 @@ export default async function PostsPage({ searchParams }: PageProps) {
             </tbody>
           </table>
         </div>
+        {/* end desktop table */}
 
         {/* Pagination */}
         {totalPages > 1 && (

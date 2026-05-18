@@ -17,9 +17,10 @@ import { signOut } from "next-auth/react";
 
 interface AdminSidebarProps {
   user: any;
+  onClose?: () => void;
 }
 
-export default function AdminSidebar({ user }: AdminSidebarProps) {
+export default function AdminSidebar({ user, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
 
   const menuItems = [
@@ -34,9 +35,13 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   ];
 
   return (
-    <aside className="w-64 bg-primary-500 text-white flex flex-col">
+    <aside className="w-64 h-full bg-primary-500 text-white flex flex-col">
       <div className="p-6 border-b border-primary-600">
-        <Link href="/admin" className="flex items-center space-x-2">
+        <Link
+          href="/admin"
+          onClick={onClose}
+          className="flex items-center space-x-2"
+        >
           <Car className="h-8 w-8" />
           <span className="font-bold text-xl">Admin</span>
         </Link>
@@ -46,7 +51,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
         </div>
       </div>
 
-      <nav className="flex-1 py-6">
+      <nav className="flex-1 py-6 overflow-y-auto">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -54,13 +59,14 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center space-x-3 px-6 py-3 transition ${
+              onClick={onClose}
+              className={`flex items-center space-x-3 px-6 py-3 transition min-h-[44px] ${
                 isActive
                   ? "bg-primary-600 border-l-4 border-accent-500"
                   : "hover:bg-primary-600"
               }`}
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="h-5 w-5 flex-shrink-0" />
               <span>{item.label}</span>
             </Link>
           );
@@ -70,9 +76,9 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       <div className="p-6 border-t border-primary-600">
         <button
           onClick={() => signOut({ callbackUrl: "/admin/login" })}
-          className="flex items-center space-x-3 text-primary-100 hover:text-white transition w-full"
+          className="flex items-center space-x-3 text-primary-100 hover:text-white transition w-full min-h-[44px]"
         >
-          <LogOut className="h-5 w-5" />
+          <LogOut className="h-5 w-5 flex-shrink-0" />
           <span>Sair</span>
         </button>
       </div>
