@@ -143,9 +143,9 @@ export default function Footer() {
                 <div>
                   <p className="font-semibold">Endereço</p>
                   <p className="text-sm">
-                    Rua Exemplo, 123
+                    Av Miguel Varlez, 165 - Centro
                     <br />
-                    Cidade - Estado
+                    Caraguatatuba - São Paulo
                   </p>
                 </div>
               </li>
