@@ -119,10 +119,10 @@ export default function Footer() {
                 <div>
                   <p className="font-semibold">Telefone</p>
                   <a
-                    href="tel:+5511999999999"
+                    href="tel:+5512974088993"
                     className="hover:text-accent-400 transition-colors"
                   >
-                    (11) 99999-9999
+                    (12) 97408-8993
                   </a>
                 </div>
               </li>

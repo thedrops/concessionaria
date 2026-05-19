@@ -129,7 +129,7 @@ model CarouselImage {
 
 model SiteSettings {
   id             String   @id @default(cuid())
-  whatsappNumber String   @default("5511999999999")
+  whatsappNumber String   @default("5512974088993")
   companyName    String   @default("Israel Veículos")
   companyEmail   String?
   companyAddress String?

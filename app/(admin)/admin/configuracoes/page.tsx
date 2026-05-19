@@ -167,7 +167,7 @@ export default function ConfiguracoesPage() {
                 value={phone}
                 onChange={handlePhoneChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="(11) 99999-9999"
+                placeholder="(12) 97408-8993"
                 maxLength={15}
               />
               {errors.whatsappNumber && (

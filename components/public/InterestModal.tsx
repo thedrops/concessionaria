@@ -24,7 +24,7 @@ export default function InterestModal({ car }: InterestModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phone, setPhone] = useState("");
-  const [whatsappNumber, setWhatsappNumber] = useState("5511999999999");
+  const [whatsappNumber, setWhatsappNumber] = useState("5512974088993");
 
   const {
     register,
@@ -206,7 +206,7 @@ export default function InterestModal({ car }: InterestModalProps) {
                 value={phone}
                 onChange={handlePhoneChange}
                 className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="(11) 99999-9999"
+                placeholder="(12) 97408-8993"
                 maxLength={15}
               />
               {errors.phone && (
