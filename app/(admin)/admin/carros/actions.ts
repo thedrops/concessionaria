@@ -8,18 +8,19 @@ import { unlink } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 
-// Detecta se está em desenvolvimento sem Supabase configurado
-const isDev =
-  process.env.NODE_ENV === "development" &&
-  !process.env.NEXT_PUBLIC_SUPABASE_URL;
+// Detecta se está em desenvolvimento - sempre usa filesystem local em dev
+const isDev = process.env.NODE_ENV === "development";
 
 // Configurar cliente Supabase (apenas se as credenciais estiverem configuradas)
-const supabase = !isDev
-  ? createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    )
-  : null;
+const supabase =
+  !isDev &&
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+    ? createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY,
+      )
+    : null;
 
 export async function deleteCar(carId: string) {
   console.log("[DELETE CAR ACTION] Iniciando exclusão do carro ID:", carId);
@@ -216,5 +217,57 @@ export async function deleteCar(carId: string) {
       success: false,
       error: "Erro ao excluir o carro",
     };
+  }
+}
+
+export async function deleteCarsBulk(carIds: string[]) {
+  try {
+    const session = await auth();
+    if (!session) return { success: false, error: "Não autorizado" };
+
+    const userRole = (session.user as any)?.role;
+    if (userRole !== "ADMIN") {
+      return { success: false, error: "Apenas administradores podem excluir carros" };
+    }
+
+    if (!carIds || carIds.length === 0) {
+      return { success: false, error: "Nenhum carro selecionado" };
+    }
+
+    const cars = await prisma.car.findMany({
+      where: { id: { in: carIds } },
+      select: { id: true, images: true },
+    });
+
+    for (const car of cars) {
+      for (const imageUrl of car.images ?? []) {
+        try {
+          if (isDev) {
+            const localPath = imageUrl.replace("/uploads/cars/", "");
+            const filepath = join(process.cwd(), "public", "uploads", "cars", localPath);
+            if (existsSync(filepath)) await unlink(filepath);
+          } else if (supabase) {
+            let filename = imageUrl;
+            if (imageUrl.includes("supabase.co")) {
+              const url = new URL(imageUrl);
+              const parts = url.pathname.split("/");
+              filename = parts.slice(parts.indexOf("car-images") + 1).join("/");
+            }
+            if (!filename.startsWith("cars/")) filename = `cars/${filename}`;
+            await supabase.storage.from("car-images").remove([filename]);
+          }
+        } catch {
+          // continue — não bloquear exclusão por falha de arquivo
+        }
+      }
+    }
+
+    await prisma.car.deleteMany({ where: { id: { in: carIds } } });
+
+    revalidatePath("/admin/carros");
+
+    return { success: true, deleted: cars.length };
+  } catch {
+    return { success: false, error: "Erro ao excluir os carros" };
   }
 }

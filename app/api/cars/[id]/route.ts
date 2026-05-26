@@ -7,18 +7,19 @@ import { unlink } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 
-// Detecta se está em desenvolvimento sem Supabase configurado
-const isDev =
-  process.env.NODE_ENV === "development" &&
-  !process.env.NEXT_PUBLIC_SUPABASE_URL;
+// Detecta se está em desenvolvimento - sempre usa filesystem local em dev
+const isDev = process.env.NODE_ENV === "development";
 
 // Configurar cliente Supabase (apenas se as credenciais estiverem configuradas)
-const supabase = !isDev
-  ? createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    )
-  : null;
+const supabase =
+  !isDev &&
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+    ? createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY,
+      )
+    : null;
 
 const carSchema = z.object({
   brand: z.string().min(1),

@@ -30,7 +30,7 @@ type CarWithImages = Prisma.CarGetPayload<{
 async function getLatestCars() {
   try {
     return await prisma.car.findMany({
-      where: { status: "AVAILABLE" },
+      where: { status: "AVAILABLE", NOT: { images: { isEmpty: true } } },
       take: 6,
       orderBy: { createdAt: "desc" },
       include: {

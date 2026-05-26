@@ -16,7 +16,10 @@ export async function GET(request: NextRequest) {
     const precoMin = searchParams.get("precoMin");
     const precoMax = searchParams.get("precoMax");
 
-    const filters: any = { status: "AVAILABLE" };
+    const filters: any = {
+      status: "AVAILABLE",
+      NOT: { images: { isEmpty: true } },
+    };
 
     // Busca por texto em múltiplos campos
     if (search) {
