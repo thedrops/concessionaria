@@ -10,7 +10,7 @@ interface PageProps {
     page?: string;
     consignado?: string;
     status?: string;
-    placa?: string;
+    busca?: string;
     fotos?: string;
   };
 }
@@ -19,7 +19,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
   const page = Number(searchParams.page) || 1;
   const consignadoFilter = searchParams.consignado;
   const statusFilter = searchParams.status;
-  const plateFilter = searchParams.placa;
+  const buscaFilter = searchParams.busca;
   const fotosFilter = searchParams.fotos;
   const perPage = 10;
   const skip = (page - 1) * perPage;
@@ -27,12 +27,26 @@ export default async function CarsPage({ searchParams }: PageProps) {
   // Construir filtro baseado nos parâmetros
   const whereFilter: any = {};
 
-  // Filtro de placa
-  if (plateFilter) {
-    whereFilter.plate = {
-      contains: plateFilter,
-      mode: "insensitive",
-    };
+  // Filtro de busca geral (placa, marca, modelo, ano, valor)
+  if (buscaFilter) {
+    const conditions: any[] = [
+      { brand: { contains: buscaFilter, mode: "insensitive" } },
+      { model: { contains: buscaFilter, mode: "insensitive" } },
+      { year: { contains: buscaFilter, mode: "insensitive" } },
+    ];
+
+    const cleanPlate = buscaFilter.replace(/[^A-Z0-9]/gi, "");
+    if (cleanPlate) {
+      conditions.push({ plate: { contains: cleanPlate, mode: "insensitive" } });
+    }
+
+    const cleanedPrice = buscaFilter.replace(/[R$\s.]/g, "").replace(",", ".");
+    const parsedPrice = parseFloat(cleanedPrice);
+    if (!isNaN(parsedPrice)) {
+      conditions.push({ price: { equals: parsedPrice } });
+    }
+
+    whereFilter.OR = conditions;
   }
 
   // Filtro de status (disponível/vendido)
@@ -95,10 +109,10 @@ export default async function CarsPage({ searchParams }: PageProps) {
         </div>
       </div>
 
-      {/* Busca por Placa */}
+      {/* Busca */}
       <div className="bg-white rounded-lg shadow p-4">
         <label className="text-sm font-medium text-gray-700 mb-2 block">
-          Buscar por Placa:
+          Buscar:
         </label>
         <PlateSearchInput />
       </div>
@@ -245,7 +259,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
       {/* Cars Table */}
       <CarsTableWithBulkDelete
         cars={cars}
-        pagination={{ page, totalPages, totalCars, perPage, skip, consignadoFilter, statusFilter, fotosFilter }}
+        pagination={{ page, totalPages, totalCars, perPage, skip, consignadoFilter, statusFilter, fotosFilter, buscaFilter }}
       />
     </div>
   );

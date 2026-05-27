@@ -22,6 +22,7 @@ interface PaginationProps {
   consignadoFilter?: string;
   statusFilter?: string;
   fotosFilter?: string;
+  buscaFilter?: string;
 }
 
 interface Props {
@@ -34,7 +35,7 @@ export default function CarsTableWithBulkDelete({ cars, pagination }: Props) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
-  const { page, totalPages, totalCars, perPage, skip, consignadoFilter, statusFilter, fotosFilter } = pagination;
+  const { page, totalPages, totalCars, perPage, skip, consignadoFilter, statusFilter, fotosFilter, buscaFilter } = pagination;
 
   const allSelected = cars.length > 0 && cars.every((car) => selectedIds.has(car.id));
   const someSelected = selectedIds.size > 0;
@@ -100,6 +101,7 @@ export default function CarsTableWithBulkDelete({ cars, pagination }: Props) {
     if (consignadoFilter) params.set("consignado", consignadoFilter);
     if (statusFilter) params.set("status", statusFilter);
     if (fotosFilter) params.set("fotos", fotosFilter);
+    if (buscaFilter) params.set("busca", buscaFilter);
     return `/admin/carros?${params.toString()}`;
   };
 
