@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { Plus, ImageOff } from "lucide-react";
+import { Plus, ImageOff, Upload } from "lucide-react";
 import ExportCarsButton from "@/components/admin/ExportCarsButton";
 import PlateSearchInput from "@/components/admin/PlateSearchInput";
 import CarsTableWithBulkDelete from "@/components/admin/CarsTableWithBulkDelete";
@@ -99,6 +99,13 @@ export default async function CarsPage({ searchParams }: PageProps) {
         </div>
         <div className="flex gap-3 flex-wrap">
           <ExportCarsButton />
+          <Link
+            href="/admin/carros/importar"
+            className="flex items-center gap-2 bg-gray-700 text-white px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+          >
+            <Upload className="w-4 h-4" />
+            Importar CSV
+          </Link>
           <Link
             href="/admin/carros/novo"
             className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-600/90 transition-colors text-sm font-medium"
