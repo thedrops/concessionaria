@@ -64,13 +64,18 @@ export async function POST(request: NextRequest) {
     let created = 0;
     let skipped = 0;
     let errors = 0;
+    const createdList: { plate: string; brand: string; model: string }[] = [];
+    const skippedList: { plate: string; brand: string; model: string }[] = [];
+    const errorList: { plate: string; reason: string }[] = [];
 
     for (const row of rows) {
+      const rawPlate = row.placa?.replace(/[^A-Z0-9]/gi, "").toUpperCase() || "";
       try {
-        const plate = row.placa?.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+        const plate = rawPlate;
 
         if (!plate) {
           errors++;
+          errorList.push({ plate: row.placa || "—", reason: "Placa inválida ou ausente" });
           continue;
         }
 
@@ -80,6 +85,7 @@ export async function POST(request: NextRequest) {
 
         if (existing) {
           skipped++;
+          skippedList.push({ plate, brand: existing.brand, model: existing.model });
           continue;
         }
 
@@ -88,6 +94,7 @@ export async function POST(request: NextRequest) {
         const price = parsePrice(row.valor);
         if (!price) {
           errors++;
+          errorList.push({ plate, reason: "Valor inválido ou ausente" });
           continue;
         }
 
@@ -97,6 +104,7 @@ export async function POST(request: NextRequest) {
 
         if (!brand || !model || !year) {
           errors++;
+          errorList.push({ plate, reason: "Dados insuficientes — marca, modelo ou ano não encontrado" });
           continue;
         }
 
@@ -130,12 +138,14 @@ export async function POST(request: NextRequest) {
         });
 
         created++;
+        createdList.push({ plate, brand, model });
       } catch {
         errors++;
+        errorList.push({ plate: rawPlate || "—", reason: "Erro interno ao processar" });
       }
     }
 
-    return NextResponse.json({ created, skipped, errors });
+    return NextResponse.json({ created, skipped, errors, createdList, skippedList, errorList });
   } catch {
     return NextResponse.json(
       { error: "Erro interno do servidor" },

@@ -16,10 +16,24 @@ interface CsvRow {
   valor: string;
 }
 
+interface VehicleDetail {
+  plate: string;
+  brand: string;
+  model: string;
+}
+
+interface ErrorDetail {
+  plate: string;
+  reason: string;
+}
+
 interface ImportResult {
   created: number;
   skipped: number;
   errors: number;
+  createdList: VehicleDetail[];
+  skippedList: VehicleDetail[];
+  errorList: ErrorDetail[];
 }
 
 function parseCSVLine(line: string): string[] {
@@ -88,6 +102,7 @@ export default function ImportarCarsPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
+  const [expandedSection, setExpandedSection] = useState<"created" | "skipped" | "errors" | null>(null);
 
   const handleFile = useCallback((file: File) => {
     if (!file.name.endsWith(".csv")) {
@@ -294,42 +309,101 @@ export default function ImportarCarsPage() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="flex items-center gap-4 bg-green-50 border border-green-200 rounded-lg p-5">
+            <button
+              onClick={() => result.created > 0 && setExpandedSection(expandedSection === "created" ? null : "created")}
+              disabled={result.created === 0}
+              className={`flex items-center gap-4 bg-green-50 border rounded-lg p-5 text-left transition-all ${
+                result.created > 0 ? "hover:border-green-400 cursor-pointer" : "cursor-default"
+              } ${expandedSection === "created" ? "border-green-400 ring-2 ring-green-300" : "border-green-200"}`}
+            >
               <CheckCircle className="w-10 h-10 text-green-500 shrink-0" />
-              <div>
-                <p className="text-3xl font-bold text-green-700">
-                  {result.created}
-                </p>
-                <p className="text-sm text-green-600 font-medium mt-0.5">
-                  Cadastrado(s)
-                </p>
+              <div className="flex-1">
+                <p className="text-3xl font-bold text-green-700">{result.created}</p>
+                <p className="text-sm text-green-600 font-medium mt-0.5">Cadastrado(s)</p>
+                {result.created > 0 && (
+                  <p className="text-xs text-green-500 mt-1.5">
+                    {expandedSection === "created" ? "Ocultar lista ↑" : "Ver lista ↓"}
+                  </p>
+                )}
               </div>
-            </div>
+            </button>
 
-            <div className="flex items-center gap-4 bg-yellow-50 border border-yellow-200 rounded-lg p-5">
+            <button
+              onClick={() => result.skipped > 0 && setExpandedSection(expandedSection === "skipped" ? null : "skipped")}
+              disabled={result.skipped === 0}
+              className={`flex items-center gap-4 bg-yellow-50 border rounded-lg p-5 text-left transition-all ${
+                result.skipped > 0 ? "hover:border-yellow-400 cursor-pointer" : "cursor-default"
+              } ${expandedSection === "skipped" ? "border-yellow-400 ring-2 ring-yellow-300" : "border-yellow-200"}`}
+            >
               <SkipForward className="w-10 h-10 text-yellow-500 shrink-0" />
-              <div>
-                <p className="text-3xl font-bold text-yellow-700">
-                  {result.skipped}
-                </p>
-                <p className="text-sm text-yellow-600 font-medium mt-0.5">
-                  Ignorado(s) — já no estoque
-                </p>
+              <div className="flex-1">
+                <p className="text-3xl font-bold text-yellow-700">{result.skipped}</p>
+                <p className="text-sm text-yellow-600 font-medium mt-0.5">Ignorado(s) — já no estoque</p>
+                {result.skipped > 0 && (
+                  <p className="text-xs text-yellow-500 mt-1.5">
+                    {expandedSection === "skipped" ? "Ocultar lista ↑" : "Ver lista ↓"}
+                  </p>
+                )}
               </div>
-            </div>
+            </button>
 
-            <div className="flex items-center gap-4 bg-red-50 border border-red-200 rounded-lg p-5">
+            <button
+              onClick={() => result.errors > 0 && setExpandedSection(expandedSection === "errors" ? null : "errors")}
+              disabled={result.errors === 0}
+              className={`flex items-center gap-4 bg-red-50 border rounded-lg p-5 text-left transition-all ${
+                result.errors > 0 ? "hover:border-red-400 cursor-pointer" : "cursor-default"
+              } ${expandedSection === "errors" ? "border-red-400 ring-2 ring-red-300" : "border-red-200"}`}
+            >
               <XCircle className="w-10 h-10 text-red-500 shrink-0" />
-              <div>
-                <p className="text-3xl font-bold text-red-700">
-                  {result.errors}
-                </p>
-                <p className="text-sm text-red-600 font-medium mt-0.5">
-                  Erro(s) — não cadastrado(s)
-                </p>
+              <div className="flex-1">
+                <p className="text-3xl font-bold text-red-700">{result.errors}</p>
+                <p className="text-sm text-red-600 font-medium mt-0.5">Erro(s) — não cadastrado(s)</p>
+                {result.errors > 0 && (
+                  <p className="text-xs text-red-500 mt-1.5">
+                    {expandedSection === "errors" ? "Ocultar lista ↑" : "Ver lista ↓"}
+                  </p>
+                )}
+              </div>
+            </button>
+          </div>
+
+          {expandedSection && (
+            <div className={`rounded-lg border overflow-hidden ${
+              expandedSection === "created" ? "border-green-200" :
+              expandedSection === "skipped" ? "border-yellow-200" :
+              "border-red-200"
+            }`}>
+              <div className={`px-4 py-2.5 text-sm font-medium ${
+                expandedSection === "created" ? "bg-green-50 text-green-700" :
+                expandedSection === "skipped" ? "bg-yellow-50 text-yellow-700" :
+                "bg-red-50 text-red-700"
+              }`}>
+                {expandedSection === "created" && `${result.created} veículo(s) cadastrado(s)`}
+                {expandedSection === "skipped" && `${result.skipped} veículo(s) já existente(s) no estoque`}
+                {expandedSection === "errors" && `${result.errors} veículo(s) com erro`}
+              </div>
+              <div className="divide-y divide-gray-100 max-h-72 overflow-y-auto">
+                {expandedSection === "created" && result.createdList.map((v, i) => (
+                  <div key={i} className="px-4 py-2.5 flex items-center gap-3 text-sm">
+                    <span className="font-mono font-medium text-gray-900 w-24 shrink-0">{v.plate}</span>
+                    <span className="text-gray-600">{v.brand} {v.model}</span>
+                  </div>
+                ))}
+                {expandedSection === "skipped" && result.skippedList.map((v, i) => (
+                  <div key={i} className="px-4 py-2.5 flex items-center gap-3 text-sm">
+                    <span className="font-mono font-medium text-gray-900 w-24 shrink-0">{v.plate}</span>
+                    <span className="text-gray-600">{v.brand} {v.model}</span>
+                  </div>
+                ))}
+                {expandedSection === "errors" && result.errorList.map((v, i) => (
+                  <div key={i} className="px-4 py-2.5 flex items-center gap-3 text-sm">
+                    <span className="font-mono font-medium text-gray-900 w-24 shrink-0">{v.plate}</span>
+                    <span className="text-red-600">{v.reason}</span>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          )}
 
           <div className="flex gap-3">
             <Link
@@ -343,6 +417,7 @@ export default function ImportarCarsPage() {
                 setRows([]);
                 setFileName("");
                 setResult(null);
+                setExpandedSection(null);
               }}
               className="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium"
             >

@@ -3,7 +3,7 @@
 import { Download } from "lucide-react";
 import { useState } from "react";
 
-type ExportFormat = "xlsx" | "pdf";
+type ExportFormat = "xlsx" | "pdf" | "csv";
 
 export default function ExportCarsButton() {
   const [showMenu, setShowMenu] = useState(false);
@@ -25,7 +25,11 @@ export default function ExportCarsButton() {
 
     try {
       const baseUrl =
-        format === "pdf" ? "/api/export/cars/pdf" : "/api/export/cars";
+        format === "pdf"
+          ? "/api/export/cars/pdf"
+          : format === "csv"
+            ? "/api/export/cars/csv"
+            : "/api/export/cars";
       const url =
         selectedFilter === "todos"
           ? baseUrl
@@ -125,6 +129,13 @@ export default function ExportCarsButton() {
                   className="w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 font-medium"
                 >
                   Exportar em XLSX (Excel)
+                </button>
+                <button
+                  onClick={() => handleExport("csv")}
+                  disabled={isExporting}
+                  className="w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors disabled:opacity-50 font-medium"
+                >
+                  Exportar em CSV
                 </button>
                 <button
                   onClick={() => handleExport("pdf")}
