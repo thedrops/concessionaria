@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import { unlink } from "fs/promises";
@@ -25,6 +26,7 @@ const carSchema = z.object({
   brand: z.string().min(1),
   model: z.string().min(1),
   year: z.string().min(4),
+  modelYear: z.string().nullable().optional(),
   version: z.string().nullable().optional(),
   transmission: z.string().nullable().optional(),
   doors: z.number().int().nullable().optional(),
@@ -32,6 +34,7 @@ const carSchema = z.object({
   mileage: z.number().int().nullable().optional(),
   plate: z.string().nullable().optional(),
   color: z.string().nullable().optional(),
+  passengers: z.number().int().nullable().optional(),
   price: z.number().positive(),
   optionals: z.string().nullable().optional(),
   additionalInfo: z.string().nullable().optional(),
@@ -40,6 +43,30 @@ const carSchema = z.object({
   status: z.enum(["AVAILABLE", "SOLD"]).optional(),
   consignado: z.boolean().optional(),
 });
+
+function handlePrismaError(error: unknown) {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === "P2002") {
+      return NextResponse.json(
+        { error: "Já existe um veículo cadastrado com esta placa." },
+        { status: 409 },
+      );
+    }
+
+    if (error.code === "P2022") {
+      return NextResponse.json(
+        {
+          error:
+            "Estrutura do banco desatualizada. Execute as migrations pendentes para incluir os campos mais recentes.",
+        },
+        { status: 500 },
+      );
+    }
+  }
+
+  console.error("[PUT /api/cars/:id] Erro ao atualizar carro:", error);
+  return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+}
 
 export async function GET(
   request: NextRequest,
@@ -81,6 +108,10 @@ export async function PUT(
       validatedData.plate = validatedData.plate
         .replace(/[^A-Z0-9]/gi, "")
         .toUpperCase();
+
+      if (validatedData.plate.length === 0) {
+        validatedData.plate = null;
+      }
     }
 
     // Atualizar o carro
@@ -113,10 +144,8 @@ export async function PUT(
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+
+    return handlePrismaError(error);
   }
 }
 

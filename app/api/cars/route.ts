@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 const carSchema = z.object({
@@ -24,6 +25,30 @@ const carSchema = z.object({
   status: z.enum(["AVAILABLE", "SOLD"]).optional(),
   consignado: z.boolean().optional(),
 });
+
+function handlePrismaError(error: unknown) {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === "P2002") {
+      return NextResponse.json(
+        { error: "Já existe um veículo cadastrado com esta placa." },
+        { status: 409 },
+      );
+    }
+
+    if (error.code === "P2022") {
+      return NextResponse.json(
+        {
+          error:
+            "Estrutura do banco desatualizada. Execute as migrations pendentes para incluir os campos mais recentes.",
+        },
+        { status: 500 },
+      );
+    }
+  }
+
+  console.error("[POST /api/cars] Erro ao criar carro:", error);
+  return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+}
 
 export async function GET() {
   try {
@@ -55,6 +80,10 @@ export async function POST(request: NextRequest) {
       validatedData.plate = validatedData.plate
         .replace(/[^A-Z0-9]/gi, "")
         .toUpperCase();
+
+      if (validatedData.plate.length === 0) {
+        validatedData.plate = null;
+      }
     }
 
     // Criar o carro
@@ -80,9 +109,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+
+    return handlePrismaError(error);
   }
 }
