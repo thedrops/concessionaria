@@ -149,14 +149,14 @@ export default function CatalogGrid() {
   return (
     <>
       {/* Checkbox para ver todo o estoque */}
-      <div className="mb-6 flex items-center justify-between bg-white rounded-lg shadow p-4">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-white rounded-lg border border-secondary-100 shadow-sm p-4">
         <div className="flex items-center space-x-3">
           <input
             type="checkbox"
             id="showAll"
             checked={showAll}
             onChange={handleShowAllToggle}
-            className="w-5 h-5 text-primary-500 border-secondary-300 rounded focus:ring-primary-500 cursor-pointer"
+            className="w-5 h-5 text-primary border-secondary-300 rounded focus:ring-primary cursor-pointer"
           />
           <label
             htmlFor="showAll"

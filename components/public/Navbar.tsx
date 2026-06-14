@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, Phone, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
@@ -19,15 +19,20 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`bg-[#012456] text-white shadow-lg sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? "shadow-2xl backdrop-blur-sm bg-[#012456]/95" : ""
+      className={`bg-primary text-white shadow-lg sticky top-0 z-50 transition-all duration-300 ${
+        scrolled ? "shadow-xl backdrop-blur-sm bg-primary/95" : ""
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center group">
-              <span className="font-display font-bold text-2xl tracking-wide group-hover:text-accent-400 transition-colors">
+              <img
+                src="/logo-israel.png"
+                alt="logo"
+                className="h-14 md:h-16 w-auto"
+              />
+              <span className="font-display font-bold text-2xl tracking-wide group-hover:text-white/85 transition-colors ml-0 md:ml-2">
                 Israel Veículos
               </span>
             </Link>
@@ -37,32 +42,39 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className="relative hover:text-accent-400 transition-all group"
+              className="relative hover:text-white/85 transition-all group"
             >
               Home
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-400 transition-all group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
             </Link>
             <Link
               href="/catalogo"
-              className="relative hover:text-accent-400 transition-all group"
+              className="relative hover:text-white/85 transition-all group"
             >
               Catálogo
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-400 transition-all group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
             </Link>
             <Link
               href="/sobre"
-              className="relative hover:text-accent-400 transition-all group"
+              className="relative hover:text-white/85 transition-all group"
             >
               Sobre
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-400 transition-all group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
             </Link>
+            <a
+              href="tel:+5512974088993"
+              className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 font-semibold text-primary transition hover:bg-blue-50"
+            >
+              <Phone className="h-4 w-4" />
+              Contato
+            </a>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-accent-400 transition-colors p-2"
+              className="text-white hover:text-white/85 transition-colors p-2"
               aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
             >
               <div className="relative w-6 h-6">
@@ -110,6 +122,13 @@ export default function Navbar() {
           >
             Sobre
           </Link>
+          <a
+            href="tel:+5512974088993"
+            className="block px-3 py-2 rounded-md bg-white text-primary font-semibold"
+            onClick={() => setIsOpen(false)}
+          >
+            Contato
+          </a>
         </div>
       </div>
     </nav>

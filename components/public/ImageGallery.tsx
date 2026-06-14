@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Car, ChevronLeft, ChevronRight } from "lucide-react";
 import { getImageUrls } from "@/lib/image-url";
 
 interface ImageGalleryProps {
@@ -12,171 +12,95 @@ interface ImageGalleryProps {
 
 export default function ImageGallery({ images, alt }: ImageGalleryProps) {
   const imageUrls = getImageUrls(images);
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [loadingImages, setLoadingImages] = useState<Set<number>>(
-    new Set(Array.from({ length: images.length }, (_, i) => i)),
-  );
+  const [currentImage, setCurrentImage] = useState(0);
 
-  const openImage = (index: number) => {
-    setSelectedImage(index);
-  };
-
-  const closeImage = () => {
-    setSelectedImage(null);
-  };
+  const hasImages = imageUrls.length > 0;
+  const canNavigate = imageUrls.length > 1;
 
   const nextImage = () => {
-    if (selectedImage !== null && selectedImage < images.length - 1) {
-      setSelectedImage(selectedImage + 1);
-    }
+    setCurrentImage((current) => (current + 1) % imageUrls.length);
   };
 
   const prevImage = () => {
-    if (selectedImage !== null && selectedImage > 0) {
-      setSelectedImage(selectedImage - 1);
-    }
+    setCurrentImage((current) =>
+      current === 0 ? imageUrls.length - 1 : current - 1,
+    );
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") closeImage();
-    if (e.key === "ArrowRight") nextImage();
-    if (e.key === "ArrowLeft") prevImage();
-  };
-
-  const handleImageLoad = (index: number) => {
-    setLoadingImages((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(index);
-      return newSet;
-    });
-  };
+  if (!hasImages) {
+    return (
+      <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-secondary-100">
+        <div className="text-center text-secondary-400">
+          <Car className="mx-auto mb-3 h-16 w-16" />
+          <span>Sem imagem disponível</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {imageUrls.length > 0 ? (
+    <div className="space-y-4">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-secondary-100">
+        <Image
+          src={imageUrls[currentImage]}
+          alt={`${alt} - ${currentImage + 1}`}
+          fill
+          priority
+          className="object-cover"
+          sizes="(min-width: 1024px) 58vw, 100vw"
+        />
+
+        <div className="absolute right-4 top-4 rounded-full bg-black/60 px-3 py-1 text-sm font-medium text-white">
+          {currentImage + 1} / {imageUrls.length}
+        </div>
+
+        {canNavigate && (
           <>
-            <div
-              className="relative h-96 bg-secondary-200 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition"
-              onClick={() => openImage(0)}
+            <button
+              type="button"
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-secondary-900 shadow transition hover:bg-white"
+              aria-label="Imagem anterior"
             >
-              {loadingImages.has(0) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-secondary-100 z-10">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
-                </div>
-              )}
-              <Image
-                src={imageUrls[0]}
-                alt={`${alt} - 1`}
-                fill
-                className="object-cover"
-                onLoad={() => handleImageLoad(0)}
-              />
-            </div>
-            {imageUrls.length > 1 && (
-              <div className="grid grid-cols-2 gap-4">
-                {imageUrls.slice(1, 5).map((image, index) => (
-                  <div
-                    key={index}
-                    className="relative h-44 bg-secondary-200 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition"
-                    onClick={() => openImage(index + 1)}
-                  >
-                    {loadingImages.has(index + 1) && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-secondary-100 z-10">
-                        <Loader2 className="h-6 w-6 animate-spin text-primary-500" />
-                      </div>
-                    )}
-                    <Image
-                      src={image}
-                      alt={`${alt} - ${index + 2}`}
-                      fill
-                      className="object-cover"
-                      onLoad={() => handleImageLoad(index + 1)}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <button
+              type="button"
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-secondary-900 shadow transition hover:bg-white"
+              aria-label="Próxima imagem"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
           </>
-        ) : (
-          <div className="flex items-center justify-center h-96 bg-secondary-200 rounded-lg">
-            <span className="text-secondary-400">Sem imagem disponível</span>
-          </div>
         )}
       </div>
 
-      {/* Modal de imagem expandida */}
-      {selectedImage !== null && (
-        <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
-          onClick={closeImage}
-          onKeyDown={handleKeyDown}
-          tabIndex={0}
-        >
-          {/* Botão fechar */}
-          <button
-            onClick={closeImage}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 transition z-10"
-            aria-label="Fechar"
-          >
-            <X className="h-8 w-8" />
-          </button>
-
-          {/* Botão anterior */}
-          {selectedImage > 0 && (
+      {canNavigate && (
+        <div className="grid grid-cols-5 gap-3">
+          {imageUrls.slice(0, 10).map((image, index) => (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                prevImage();
-              }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition z-10"
-              aria-label="Imagem anterior"
+              type="button"
+              key={image}
+              onClick={() => setCurrentImage(index)}
+              className={`relative aspect-[4/3] overflow-hidden rounded-lg border-2 bg-secondary-100 transition ${
+                currentImage === index
+                  ? "border-primary"
+                  : "border-transparent hover:border-secondary-300"
+              }`}
+              aria-label={`Ver imagem ${index + 1}`}
             >
-              <ChevronLeft className="h-12 w-12" />
+              <Image
+                src={image}
+                alt={`${alt} miniatura ${index + 1}`}
+                fill
+                className="object-cover"
+                sizes="160px"
+              />
             </button>
-          )}
-
-          {/* Imagem */}
-          <div
-            className="relative w-[calc(100vw-8rem)] h-[calc(100vh-8rem)]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {loadingImages.has(selectedImage) && (
-              <div className="absolute inset-0 flex items-center justify-center z-10">
-                <Loader2 className="h-12 w-12 animate-spin text-white" />
-              </div>
-            )}
-            <Image
-              src={imageUrls[selectedImage]}
-              alt={`${alt} - ${selectedImage + 1}`}
-              fill
-              className="object-contain"
-              onLoad={() => handleImageLoad(selectedImage)}
-              sizes="100vw"
-              priority
-            />
-          </div>
-
-          {/* Botão próximo */}
-          {selectedImage < images.length - 1 && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                nextImage();
-              }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition z-10"
-              aria-label="Próxima imagem"
-            >
-              <ChevronRight className="h-12 w-12" />
-            </button>
-          )}
-
-          {/* Contador de imagens */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-4 py-2 rounded-full">
-            {selectedImage + 1} / {images.length}
-          </div>
+          ))}
         </div>
       )}
-    </>
+    </div>
   );
 }

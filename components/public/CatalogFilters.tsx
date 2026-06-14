@@ -86,9 +86,9 @@ export default function CatalogFilters() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-secondary-50 rounded-lg border border-secondary-100 p-6 lg:sticky lg:top-36">
       <div className="flex items-center mb-6">
-        <Filter className="h-5 w-5 mr-2 text-primary-500" />
+        <Filter className="h-5 w-5 mr-2 text-primary" />
         <h2 className="text-xl font-bold text-secondary-900">Filtros</h2>
       </div>
 
@@ -104,7 +104,7 @@ export default function CatalogFilters() {
               value={marca}
               onChange={(e) => setMarca(e.target.value)}
               onFocus={() => setShowBrandsList(true)}
-              className="w-full px-3 py-2 pr-8 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 pr-8 border border-secondary-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Digite ou selecione..."
               autoComplete="off"
             />
@@ -121,7 +121,7 @@ export default function CatalogFilters() {
                 <div
                   key={brand}
                   onClick={() => handleBrandSelect(brand)}
-                  className="px-3 py-2 hover:bg-primary-50 cursor-pointer transition-colors"
+                  className="px-3 py-2 hover:bg-blue-50 cursor-pointer transition-colors"
                 >
                   {brand}
                 </div>
@@ -148,14 +148,14 @@ export default function CatalogFilters() {
               type="number"
               value={anoMin}
               onChange={(e) => setAnoMin(e.target.value)}
-              className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 border border-secondary-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Mín"
             />
             <input
               type="number"
               value={anoMax}
               onChange={(e) => setAnoMax(e.target.value)}
-              className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 border border-secondary-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Máx"
             />
           </div>
@@ -170,14 +170,14 @@ export default function CatalogFilters() {
               type="number"
               value={precoMin}
               onChange={(e) => setPrecoMin(e.target.value)}
-              className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 border border-secondary-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Mín"
             />
             <input
               type="number"
               value={precoMax}
               onChange={(e) => setPrecoMax(e.target.value)}
-              className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 border border-secondary-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Máx"
             />
           </div>
@@ -186,13 +186,13 @@ export default function CatalogFilters() {
         <div className="flex space-x-2 pt-4">
           <button
             onClick={handleFilter}
-            className="flex-1 bg-primary-500 hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-md transition"
+            className="flex-1 bg-primary hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-md transition"
           >
             Aplicar
           </button>
           <button
             onClick={handleClear}
-            className="flex-1 bg-secondary-200 hover:bg-secondary-300 text-secondary-700 font-medium py-2 px-4 rounded-md transition"
+            className="flex-1 bg-white hover:bg-secondary-100 text-secondary-700 font-medium py-2 px-4 rounded-md border border-secondary-200 transition"
           >
             Limpar
           </button>

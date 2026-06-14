@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { X, Send } from "lucide-react";
-import { Car } from "@prisma/client/wasm";
+import { Car } from "@prisma/client";
 import Swal from "sweetalert2";
 
 const leadSchema = z.object({
@@ -129,9 +129,9 @@ export default function InterestModal({ car }: InterestModalProps) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-accent-500 hover:bg-accent-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition inline-flex items-center"
+        className="w-full bg-primary hover:bg-primary-600 text-white font-bold py-3 px-6 rounded-lg transition inline-flex items-center justify-center"
       >
-        <Send className="mr-2 h-6 w-6" />
+        <Send className="mr-2 h-5 w-5" />
         Tenho Interesse
       </button>
     );
@@ -174,7 +174,7 @@ export default function InterestModal({ car }: InterestModalProps) {
                 placeholder="Seu nome"
               />
               {errors.name && (
-                <p className="text-accent-500 text-sm mt-1">
+                <p className="text-accent text-sm mt-1">
                   {errors.name.message}
                 </p>
               )}
@@ -191,7 +191,7 @@ export default function InterestModal({ car }: InterestModalProps) {
                 placeholder="seu@email.com"
               />
               {errors.email && (
-                <p className="text-accent-500 text-sm mt-1">
+                <p className="text-accent text-sm mt-1">
                   {errors.email.message}
                 </p>
               )}
@@ -210,7 +210,7 @@ export default function InterestModal({ car }: InterestModalProps) {
                 maxLength={15}
               />
               {errors.phone && (
-                <p className="text-accent-500 text-sm mt-1">
+                <p className="text-accent text-sm mt-1">
                   {errors.phone.message}
                 </p>
               )}
@@ -219,7 +219,7 @@ export default function InterestModal({ car }: InterestModalProps) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-accent-500 hover:bg-accent-600 disabled:bg-secondary-300 text-white font-bold py-3 px-6 rounded-md transition"
+              className="w-full bg-primary hover:bg-primary-600 disabled:bg-secondary-300 text-white font-bold py-3 px-6 rounded-md transition"
             >
               {isSubmitting ? "Enviando..." : "Enviar e Continuar no WhatsApp"}
             </button>

@@ -18,7 +18,7 @@ export default function Logo({
 
   return (
     <Image
-      src="/logo.jpg"
+      src="/logo-israel.png"
       alt="Israel Veículos - Há mais de 42 anos crescendo com o Litoral Norte"
       width={width || defaultWidth}
       height={height || defaultHeight}
