@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Edit, Eye, ImageOff, Trash2 } from "lucide-react";
+import { Edit, Eye, ImageOff, Trash2, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { getImageUrl } from "@/lib/image-url";
@@ -203,6 +203,17 @@ export default function CarsTableWithBulkDelete({ cars, pagination }: Props) {
                     <Edit className="w-4 h-4" />
                     <span>Editar</span>
                   </Link>
+                  {car.images.length > 0 && (
+                    <a
+                      href={`/api/cars/${car.id}/zip`}
+                      download
+                      className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 min-h-[44px] px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition"
+                      title="Baixar fotos (ZIP)"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>ZIP</span>
+                    </a>
+                  )}
                   <MarkAsSoldButton carId={car.id} carName={`${car.brand} ${car.model}`} currentStatus={car.status} />
                   <DeleteCarButton carId={car.id} carName={`${car.brand} ${car.model}`} />
                 </div>
@@ -307,6 +318,16 @@ export default function CarsTableWithBulkDelete({ cars, pagination }: Props) {
                         <Link href={`/admin/carros/${car.id}/editar`} className="text-primary hover:text-primary/80" title="Editar">
                           <Edit className="w-5 h-5" />
                         </Link>
+                        {car.images.length > 0 && (
+                          <a
+                            href={`/api/cars/${car.id}/zip`}
+                            download
+                            className="text-blue-600 hover:text-blue-800"
+                            title="Baixar fotos (ZIP)"
+                          >
+                            <Download className="w-5 h-5" />
+                          </a>
+                        )}
                         <MarkAsSoldButton carId={car.id} carName={`${car.brand} ${car.model}`} currentStatus={car.status} />
                         <DeleteCarButton carId={car.id} carName={`${car.brand} ${car.model}`} />
                       </div>

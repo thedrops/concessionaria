@@ -14,6 +14,7 @@ import {
   Car,
   MapPin,
   Users,
+  Download,
 } from "lucide-react";
 import { getImageUrl } from "@/lib/image-url";
 
@@ -102,6 +103,17 @@ export default async function CarDetailPage({ params }: PageProps) {
       {/* Image Gallery */}
       {car.images.length > 0 && (
         <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-6 pt-6 pb-4 border-b border-gray-100 gap-3">
+            <h2 className="text-xl font-bold text-gray-900">Galeria de Imagens</h2>
+            <a
+              href={`/api/cars/${car.id}/zip`}
+              download
+              className="inline-flex items-center justify-center gap-2 bg-blue-50 text-blue-700 hover:bg-blue-100 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors border border-blue-100 shadow-sm"
+            >
+              <Download className="w-4 h-4" />
+              Baixar Todas as Fotos (ZIP)
+            </a>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
             {car.images.map((image, index) => (
               <div
