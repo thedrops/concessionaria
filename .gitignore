@@ -39,6 +39,7 @@ next-env.d.ts
 ia-context
 
 *.sql
+/backups/
 docs/*
 
 # scripts
