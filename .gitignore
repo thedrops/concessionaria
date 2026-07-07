@@ -40,6 +40,7 @@ next-env.d.ts
 ia-context
 
 *.sql
+!prisma/migrations/**/*.sql
 /backups/
 docs/*
 
