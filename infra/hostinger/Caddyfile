@@ -1,14 +1,8 @@
-{
-	email {$TLS_EMAIL}
-}
+:80 {
+    reverse_proxy app:3000
 
-{$APP_DOMAIN} {
-	encode zstd gzip
-
-	handle_path /uploads/* {
-		root * /srv/uploads
-		file_server
-	}
-
-	reverse_proxy app:3000
+    handle_path /uploads/* {
+        root * /srv/uploads
+        file_server
+    }
 }

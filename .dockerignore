@@ -27,9 +27,6 @@ coverage
 # Debug
 *.log
 
-# Prisma
-prisma/migrations/**/migration.sql
-
 # Git
 .git
 .gitignore
