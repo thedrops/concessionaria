@@ -45,10 +45,11 @@ jobs:
 
       - name: Write production env
         run: |
-          ssh -i ~/.ssh/hostinger "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
-            "cat > '${{ secrets.HOSTINGER_APP_DIR }}/.env.production' <<'EOF'
+          cat > .env.production.deploy <<'EOF'
           ${{ secrets.PRODUCTION_ENV_FILE }}
-          EOF"
+          EOF
+          scp -i ~/.ssh/hostinger .env.production.deploy "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_APP_DIR }}/.env.production"
+          rm -f .env.production.deploy
 
       - name: Deploy
         run: |

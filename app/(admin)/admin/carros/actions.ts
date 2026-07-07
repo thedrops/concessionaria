@@ -3,24 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { createClient } from "@supabase/supabase-js";
-import { unlink } from "fs/promises";
-import { join } from "path";
-import { existsSync } from "fs";
-
-// Detecta se está em desenvolvimento - sempre usa filesystem local em dev
-const isDev = process.env.NODE_ENV === "development";
-
-// Configurar cliente Supabase (apenas se as credenciais estiverem configuradas)
-const supabase =
-  !isDev &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL &&
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-    ? createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.SUPABASE_SERVICE_ROLE_KEY,
-      )
-    : null;
+import { deleteUploadedFile } from "@/lib/storage";
 
 export async function deleteCar(carId: string) {
   console.log("[DELETE CAR ACTION] Iniciando exclusão do carro ID:", carId);
@@ -82,10 +65,7 @@ export async function deleteCar(carId: string) {
         car.images.length,
         "imagem(ns)...",
       );
-      console.log(
-        "[DELETE CAR ACTION] Modo:",
-        isDev ? "DESENVOLVIMENTO (local)" : "PRODUÇÃO (Supabase)",
-      );
+      console.log("[DELETE CAR ACTION] Modo: STORAGE LOCAL");
 
       for (let i = 0; i < car.images.length; i++) {
         const imageUrl = car.images[i];
@@ -95,73 +75,17 @@ export async function deleteCar(carId: string) {
         );
 
         try {
-          if (isDev) {
-            console.log("[DELETE CAR ACTION] Deletando do filesystem local...");
-            const localPath = imageUrl.replace("/uploads/cars/", "");
-            const filepath = join(
-              process.cwd(),
-              "public",
-              "uploads",
-              "cars",
-              localPath,
-            );
+          const result = await deleteUploadedFile(imageUrl);
 
-            console.log("[DELETE CAR ACTION] Caminho do arquivo:", filepath);
-
-            if (existsSync(filepath)) {
-              await unlink(filepath);
-              console.log("[DELETE CAR ACTION] ✓ Arquivo deletado com sucesso");
-            } else {
-              console.log(
-                "[DELETE CAR ACTION] ⚠ Arquivo não encontrado no filesystem",
-              );
-            }
-          } else {
-            // MODO PRODUÇÃO: Remove do Supabase Storage
-            console.log("[DELETE CAR ACTION] Deletando do Supabase Storage...");
-            let filename = imageUrl;
-
-            // Se for URL completa do Supabase, extrai apenas o caminho
-            if (imageUrl.includes("supabase.co")) {
-              console.log(
-                "[DELETE CAR ACTION] URL completa detectada, extraindo path...",
-              );
-              const url = new URL(imageUrl);
-              const pathParts = url.pathname.split("/");
-              filename = pathParts
-                .slice(pathParts.indexOf("car-images") + 1)
-                .join("/");
-              console.log("[DELETE CAR ACTION] Path extraído:", filename);
-            }
-
-            // Se já tiver o prefixo cars/, usa direto
-            if (!filename.startsWith("cars/")) {
-              filename = `cars/${filename}`;
-              console.log(
-                "[DELETE CAR ACTION] Prefixo cars/ adicionado:",
-                filename,
-              );
-            }
-
+          if (result.deleted) {
             console.log(
-              "[DELETE CAR ACTION] Tentando remover do bucket car-images:",
-              filename,
+              "[DELETE CAR ACTION] Arquivo local deletado com sucesso",
             );
-
-            const { error } = await supabase!.storage
-              .from("car-images")
-              .remove([filename]);
-
-            if (error) {
-              console.error(
-                "[DELETE CAR ACTION] ✗ Erro ao deletar imagem do Supabase:",
-                error,
-              );
-            } else {
-              console.log(
-                "[DELETE CAR ACTION] ✓ Imagem deletada do Supabase com sucesso",
-              );
-            }
+          } else {
+            console.log(
+              "[DELETE CAR ACTION] Arquivo local nao removido:",
+              result.reason,
+            );
           }
         } catch (error) {
           console.error(
@@ -227,7 +151,10 @@ export async function deleteCarsBulk(carIds: string[]) {
 
     const userRole = (session.user as any)?.role;
     if (userRole !== "ADMIN") {
-      return { success: false, error: "Apenas administradores podem excluir carros" };
+      return {
+        success: false,
+        error: "Apenas administradores podem excluir carros",
+      };
     }
 
     if (!carIds || carIds.length === 0) {
@@ -242,22 +169,9 @@ export async function deleteCarsBulk(carIds: string[]) {
     for (const car of cars) {
       for (const imageUrl of car.images ?? []) {
         try {
-          if (isDev) {
-            const localPath = imageUrl.replace("/uploads/cars/", "");
-            const filepath = join(process.cwd(), "public", "uploads", "cars", localPath);
-            if (existsSync(filepath)) await unlink(filepath);
-          } else if (supabase) {
-            let filename = imageUrl;
-            if (imageUrl.includes("supabase.co")) {
-              const url = new URL(imageUrl);
-              const parts = url.pathname.split("/");
-              filename = parts.slice(parts.indexOf("car-images") + 1).join("/");
-            }
-            if (!filename.startsWith("cars/")) filename = `cars/${filename}`;
-            await supabase.storage.from("car-images").remove([filename]);
-          }
+          await deleteUploadedFile(imageUrl);
         } catch {
-          // continue — não bloquear exclusão por falha de arquivo
+          // continue - nao bloquear exclusao por falha de arquivo
         }
       }
     }

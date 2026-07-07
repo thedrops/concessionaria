@@ -140,6 +140,7 @@ Se for configurado backup externo, adicionar variaveis especificas do destino es
 
 6. Dependencias
    - Remover `@supabase/supabase-js` depois que todas as chamadas diretas forem eliminadas.
+   - Status: removido do runtime da aplicacao na branch de migracao.
    - Nao e necessario SDK de S3 para a arquitetura com disco interno.
 
 ## Arquivos operacionais previstos
