@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: concessionaria-db
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    volumes:
+      - /opt/concessionaria/postgres:/var/lib/postgresql/data
+    networks:
+      - concessionaria-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: concessionaria-app
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+    volumes:
+      - /opt/concessionaria/storage/uploads:/app/public/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - concessionaria-network
+    command: sh -c "npx prisma migrate deploy && npm start"
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: concessionaria-caddy
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infra/hostinger/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+      - /opt/concessionaria/storage/uploads:/srv/uploads:ro
+    depends_on:
+      - app
+    networks:
+      - concessionaria-network
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  concessionaria-network:
+    driver: bridge

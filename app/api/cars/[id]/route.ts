@@ -3,24 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import { createClient } from "@supabase/supabase-js";
-import { unlink } from "fs/promises";
-import { join } from "path";
-import { existsSync } from "fs";
-
-// Detecta se está em desenvolvimento - sempre usa filesystem local em dev
-const isDev = process.env.NODE_ENV === "development";
-
-// Configurar cliente Supabase (apenas se as credenciais estiverem configuradas)
-const supabase =
-  !isDev &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL &&
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-    ? createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.SUPABASE_SERVICE_ROLE_KEY,
-      )
-    : null;
+import { deleteUploadedFile } from "@/lib/storage";
 
 const carSchema = z.object({
   brand: z.string().min(1),
@@ -212,10 +195,7 @@ export async function DELETE(
         car.images.length,
         "imagem(ns)...",
       );
-      console.log(
-        "[DELETE CAR] Modo:",
-        isDev ? "DESENVOLVIMENTO (local)" : "PRODUÇÃO (Supabase)",
-      );
+      console.log("[DELETE CAR] Modo: STORAGE LOCAL");
 
       for (let i = 0; i < car.images.length; i++) {
         const imageUrl = car.images[i];
@@ -225,75 +205,15 @@ export async function DELETE(
         );
 
         try {
-          if (isDev) {
-            console.log("[DELETE CAR] Deletando do filesystem local...");
-            // MODO LOCAL: Remove do filesystem
-            // Extrai o nome do arquivo da URL local (ex: /uploads/cars/filename.jpg)
-            const localPath = imageUrl.replace("/uploads/cars/", "");
-            const filepath = join(
-              process.cwd(),
-              "public",
-              "uploads",
-              "cars",
-              localPath,
-            );
+          const result = await deleteUploadedFile(imageUrl);
 
-            console.log("[DELETE CAR] Caminho do arquivo:", filepath);
-
-            if (existsSync(filepath)) {
-              await unlink(filepath);
-              console.log("[DELETE CAR] ✓ Arquivo deletado com sucesso");
-            } else {
-              console.log(
-                "[DELETE CAR] ⚠ Arquivo não encontrado no filesystem",
-              );
-            }
+          if (result.deleted) {
+            console.log("[DELETE CAR] Arquivo local deletado com sucesso");
           } else {
-            // MODO PRODUÇÃO: Remove do Supabase Storage
-            console.log("[DELETE CAR] Deletando do Supabase Storage...");
-            // Extrai o caminho do arquivo da URL do Supabase
-            let filename = imageUrl;
-
-            // Se for URL completa do Supabase, extrai apenas o caminho
-            if (imageUrl.includes("supabase.co")) {
-              console.log(
-                "[DELETE CAR] URL completa detectada, extraindo path...",
-              );
-              const url = new URL(imageUrl);
-              const pathParts = url.pathname.split("/");
-              // Remove /storage/v1/object/public/car-images/ da URL
-              filename = pathParts
-                .slice(pathParts.indexOf("car-images") + 1)
-                .join("/");
-              console.log("[DELETE CAR] Path extraído:", filename);
-            }
-
-            // Se já tiver o prefixo cars/, usa direto
-            if (!filename.startsWith("cars/")) {
-              filename = `cars/${filename}`;
-              console.log("[DELETE CAR] Prefixo cars/ adicionado:", filename);
-            }
-
             console.log(
-              "[DELETE CAR] Tentando remover do bucket car-images:",
-              filename,
+              "[DELETE CAR] Arquivo local nao removido:",
+              result.reason,
             );
-
-            const { error } = await supabase!.storage
-              .from("car-images")
-              .remove([filename]);
-
-            if (error) {
-              console.error(
-                "[DELETE CAR] ✗ Erro ao deletar imagem do Supabase:",
-                error,
-              );
-              // Continua mesmo com erro, para não bloquear a exclusão do carro
-            } else {
-              console.log(
-                "[DELETE CAR] ✓ Imagem deletada do Supabase com sucesso",
-              );
-            }
           }
         } catch (error) {
           console.error(

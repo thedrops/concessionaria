@@ -1,22 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { existsSync } from "fs";
-
-// Detecta se está em desenvolvimento - sempre usa filesystem local em dev
-const isDev = process.env.NODE_ENV === "development";
-
-// Configurar cliente Supabase (apenas em produção)
-const supabase =
-  !isDev &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL &&
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-    ? createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      )
-    : null;
+import { saveUploadedFile } from "@/lib/storage";
 
 export async function POST(request: NextRequest) {
   try {
@@ -52,58 +35,16 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Gerar nome único para o arquivo
-    const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
-    const extension = file.name.split(".").pop();
     const folder = type === "carousel" ? "carousel" : "cars";
-    const filename = `${folder}/${timestamp}-${randomString}.${extension}`;
 
-    if (isDev) {
-      // MODO LOCAL: Salva no filesystem
-      const uploadDir = join(process.cwd(), "public", "uploads", folder);
-      if (!existsSync(uploadDir)) {
-        await mkdir(uploadDir, { recursive: true });
-      }
+    const upload = await saveUploadedFile({
+      buffer,
+      contentType: file.type,
+      originalName: file.name,
+      folder,
+    });
 
-      const localFilename = filename.replace(`${folder}/`, "");
-      const filepath = join(uploadDir, localFilename);
-      await writeFile(filepath, buffer);
-
-      const publicUrl = `/uploads/${folder}/${localFilename}`;
-
-      return NextResponse.json({
-        url: publicUrl,
-        filename: localFilename,
-      });
-    } else {
-      // MODO PRODUÇÃO: Upload para Supabase Storage
-      const bucketName = type === "carousel" ? "carousel-images" : "car-images";
-      const { data, error } = await supabase!.storage
-        .from(bucketName)
-        .upload(filename, buffer, {
-          contentType: file.type,
-          upsert: false,
-        });
-
-      if (error) {
-        console.error("Supabase upload error:", error);
-        return NextResponse.json(
-          { error: "Erro ao fazer upload no Supabase Storage" },
-          { status: 500 },
-        );
-      }
-
-      // Obter URL pública
-      const {
-        data: { publicUrl },
-      } = supabase!.storage.from(bucketName).getPublicUrl(filename);
-
-      return NextResponse.json({
-        url: publicUrl,
-        filename,
-      });
-    }
+    return NextResponse.json(upload);
   } catch (error) {
     console.error("Error uploading file:", error);
     return NextResponse.json(
