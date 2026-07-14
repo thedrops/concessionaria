@@ -1,3 +1,7 @@
+www.israelveiculos.com.br {
+    redir https://israelveiculos.com.br{uri} permanent
+}
+
 israelveiculos.com.br {
     reverse_proxy app:3000
 
