@@ -8,14 +8,14 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: npm
@@ -35,11 +35,19 @@ jobs:
 
       - name: Upload files
         run: |
-          rsync -az --delete \
+          ssh -i ~/.ssh/hostinger "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
+            "test -d '${{ secrets.HOSTINGER_APP_DIR }}' && test -w '${{ secrets.HOSTINGER_APP_DIR }}'" || {
+              echo 'Diretório da aplicação ausente ou sem permissão de escrita para o usuário SSH.' >&2
+              exit 1
+            }
+
+          rsync -az --delete --itemize-changes \
             --exclude ".git" \
             --exclude "node_modules" \
             --exclude ".next" \
             --exclude "backups" \
+            --exclude ".env.production" \
+            --exclude "public/uploads/" \
             -e "ssh -i ~/.ssh/hostinger" \
             ./ "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_APP_DIR }}/"
 
