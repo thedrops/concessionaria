@@ -27,6 +27,9 @@ services:
       NODE_ENV: production
       HOSTNAME: 0.0.0.0
       PORT: 3000
+      # Deve coincidir com o volume compartilhado com o Caddy, mesmo quando
+      # .env.production ainda contiver um caminho antigo.
+      UPLOADS_DIR: /app/public/uploads
     volumes:
       - /opt/concessionaria/storage/uploads:/app/public/uploads
     depends_on:
