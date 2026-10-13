@@ -26,6 +26,21 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Prepare production env
+        env:
+          PRODUCTION_ENV_FILE: ${{ secrets.PRODUCTION_ENV_FILE }}
+        run: |
+          if [ -z "${PRODUCTION_ENV_FILE:-}" ]; then
+            echo 'O secret PRODUCTION_ENV_FILE está vazio ou não foi configurado.' >&2
+            exit 1
+          fi
+
+          printf '%s\n' "$PRODUCTION_ENV_FILE" > .env.production.deploy
+          if ! grep -qE '^DATABASE_URL=.+$' .env.production.deploy; then
+            echo 'O secret PRODUCTION_ENV_FILE precisa conter DATABASE_URL.' >&2
+            exit 1
+          fi
+
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
@@ -53,9 +68,6 @@ jobs:
 
       - name: Write production env
         run: |
-          cat > .env.production.deploy <<'EOF'
-          ${{ secrets.PRODUCTION_ENV_FILE }}
-          EOF
           scp -i ~/.ssh/hostinger .env.production.deploy "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_APP_DIR }}/.env.production"
           rm -f .env.production.deploy
 
