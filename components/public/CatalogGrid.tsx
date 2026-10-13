@@ -131,7 +131,7 @@ export default function CatalogGrid() {
   if (initialLoad) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary dark:text-blue-400" />
       </div>
     );
   }
@@ -139,7 +139,7 @@ export default function CatalogGrid() {
   if (cars.length === 0 && !loading) {
     return (
       <div className="text-center py-12">
-        <p className="text-xl text-secondary-600">
+        <p className="text-xl text-secondary-600 dark:text-slate-300">
           Nenhum veículo encontrado com os filtros selecionados.
         </p>
       </div>
@@ -149,29 +149,31 @@ export default function CatalogGrid() {
   return (
     <>
       {/* Checkbox para ver todo o estoque */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-white rounded-lg border border-secondary-100 shadow-sm p-4">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-white dark:bg-slate-900 rounded-lg border border-secondary-100 dark:border-slate-700 shadow-sm p-4">
         <div className="flex items-center space-x-3">
           <input
             type="checkbox"
             id="showAll"
             checked={showAll}
             onChange={handleShowAllToggle}
-            className="w-5 h-5 text-primary border-secondary-300 rounded focus:ring-primary cursor-pointer"
+            className="w-5 h-5 text-primary dark:text-blue-400 border-secondary-300 dark:border-slate-600 rounded focus:ring-primary cursor-pointer"
           />
           <label
             htmlFor="showAll"
-            className="text-sm font-medium text-secondary-700 cursor-pointer select-none"
+            className="text-sm font-medium text-secondary-700 dark:text-slate-200 cursor-pointer select-none"
           >
             Deseja ver todo o estoque?
           </label>
         </div>
         {showAll && (
-          <span className="text-sm text-secondary-500">
+          <span className="text-sm text-secondary-500 dark:text-slate-300">
             Exibindo todos os {cars.length} veículos
           </span>
         )}
         {!showAll && cars.length > 0 && (
-          <span className="text-sm text-secondary-500">Paginação ativada</span>
+          <span className="text-sm text-secondary-500 dark:text-slate-300">
+            Paginação ativada
+          </span>
         )}
       </div>
 
@@ -184,8 +186,8 @@ export default function CatalogGrid() {
       {/* Loading indicator */}
       {loading && (
         <div className="flex justify-center items-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-primary" />
-          <span className="ml-2 text-secondary-600">
+          <Loader2 className="h-6 w-6 animate-spin text-primary dark:text-blue-400" />
+          <span className="ml-2 text-secondary-600 dark:text-slate-300">
             Carregando mais veículos...
           </span>
         </div>
@@ -198,7 +200,7 @@ export default function CatalogGrid() {
 
       {/* End message */}
       {!hasMore && cars.length > 0 && (
-        <div className="text-center py-8 text-secondary-500">
+        <div className="text-center py-8 text-secondary-500 dark:text-slate-300">
           Você visualizou todos os veículos disponíveis
         </div>
       )}

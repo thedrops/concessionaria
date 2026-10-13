@@ -36,19 +36,19 @@ export default function CatalogSearchBar() {
     <form onSubmit={handleSearch}>
       <div className="relative max-w-3xl">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-secondary-400" />
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-secondary-400 dark:text-slate-400" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por marca, modelo, placa..."
-            className="w-full pl-12 pr-28 py-3 border border-secondary-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-secondary-900 placeholder-secondary-400"
+            className="w-full pl-12 pr-28 py-3 border border-secondary-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-secondary-900 dark:text-slate-100 placeholder-secondary-400 dark:placeholder-slate-400"
           />
           {searchTerm && (
             <button
               type="button"
               onClick={handleClear}
-              className="absolute right-24 top-1/2 transform -translate-y-1/2 text-secondary-400 hover:text-secondary-600 transition"
+              className="absolute right-24 top-1/2 transform -translate-y-1/2 text-secondary-400 dark:text-slate-400 hover:text-secondary-600 dark:hover:text-slate-300 transition"
             >
               <X className="h-5 w-5" />
             </button>

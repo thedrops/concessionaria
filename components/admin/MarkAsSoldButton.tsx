@@ -78,7 +78,7 @@ export default function MarkAsSoldButton({
   return (
     <button
       onClick={handleMarkAsSold}
-      className="text-green-600 hover:text-green-900"
+      className="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-100"
       title="Marcar como vendido"
       disabled={isLoading}
     >

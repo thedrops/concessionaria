@@ -63,7 +63,7 @@ export default function Navbar() {
             </Link>
             <a
               href="tel:+5512974088993"
-              className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 font-semibold text-primary transition hover:bg-blue-50"
+              className="inline-flex items-center gap-2 rounded-lg bg-white dark:bg-slate-900 px-4 py-2 font-semibold text-primary dark:text-blue-400 transition hover:bg-blue-50 dark:hover:bg-blue-950"
             >
               <Phone className="h-4 w-4" />
               Contato
@@ -124,7 +124,7 @@ export default function Navbar() {
           </Link>
           <a
             href="tel:+5512974088993"
-            className="block px-3 py-2 rounded-md bg-white text-primary font-semibold"
+            className="block px-3 py-2 rounded-md bg-white dark:bg-slate-900 text-primary dark:text-blue-400 font-semibold"
             onClick={() => setIsOpen(false)}
           >
             Contato

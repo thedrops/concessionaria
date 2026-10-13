@@ -59,14 +59,17 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
   );
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <nav className="mb-6 text-sm text-secondary-500">
-          <Link href="/catalogo" className="hover:text-primary">
+        <nav className="mb-6 text-sm text-secondary-500 dark:text-slate-300">
+          <Link
+            href="/catalogo"
+            className="hover:text-primary dark:hover:text-blue-400"
+          >
             Catálogo
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-secondary-900">
+          <span className="text-secondary-900 dark:text-slate-100">
             {car.brand} {car.model}
           </span>
         </nav>
@@ -79,27 +82,27 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
 
           <aside className="space-y-6">
             <div>
-              <h1 className="text-4xl md:text-5xl font-display font-bold text-secondary-900 mb-3">
+              <h1 className="text-4xl md:text-5xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-3">
                 {car.brand} {car.model}
               </h1>
-              <p className="text-lg text-secondary-500">
+              <p className="text-lg text-secondary-500 dark:text-slate-300">
                 Ano {car.year}
                 {car.modelYear ? ` / Modelo ${car.modelYear}` : ""}
               </p>
             </div>
 
-            <div className="rounded-lg bg-secondary-50 p-6 border border-secondary-100">
-              <p className="text-sm font-medium text-secondary-500 mb-1">
+            <div className="rounded-lg bg-secondary-50 dark:bg-slate-800 p-6 border border-secondary-100 dark:border-slate-700">
+              <p className="text-sm font-medium text-secondary-500 dark:text-slate-300 mb-1">
                 Preço
               </p>
-              <p className="text-4xl font-bold text-blue-500 mb-5">
+              <p className="text-4xl font-bold text-blue-500 dark:text-blue-400 mb-5">
                 R$ {car.price.toLocaleString("pt-BR")}
               </p>
               <div className="space-y-3">
                 <InterestModal car={car} />
                 <a
                   href={`https://wa.me/5512974088993?text=${whatsappMessage}`}
-                  className="inline-flex w-full items-center justify-center rounded-lg border border-primary px-6 py-3 font-semibold text-primary transition hover:bg-blue-50"
+                  className="inline-flex w-full items-center justify-center rounded-lg border border-primary px-6 py-3 font-semibold text-primary dark:text-blue-400 transition hover:bg-blue-50 dark:hover:bg-blue-950"
                 >
                   Fale via WhatsApp
                 </a>
@@ -120,7 +123,7 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
         </div>
 
         <section className="py-12">
-          <h2 className="text-3xl font-display font-bold text-secondary-900 mb-6">
+          <h2 className="text-3xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-6">
             Especificações
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -159,11 +162,15 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
             ].map((spec) => (
               <div
                 key={spec.label}
-                className="rounded-lg bg-secondary-50 p-5 border border-secondary-100"
+                className="rounded-lg bg-secondary-50 dark:bg-slate-800 p-5 border border-secondary-100 dark:border-slate-700"
               >
-                <spec.icon className="h-6 w-6 text-primary mb-3" />
-                <p className="text-sm text-secondary-500">{spec.label}</p>
-                <p className="font-semibold text-secondary-900">{spec.value}</p>
+                <spec.icon className="h-6 w-6 text-primary dark:text-blue-400 mb-3" />
+                <p className="text-sm text-secondary-500 dark:text-slate-300">
+                  {spec.label}
+                </p>
+                <p className="font-semibold text-secondary-900 dark:text-slate-100">
+                  {spec.value}
+                </p>
               </div>
             ))}
           </div>
@@ -171,21 +178,21 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
 
         <section className="grid gap-8 lg:grid-cols-2 pb-12">
           <div>
-            <h2 className="text-3xl font-display font-bold text-secondary-900 mb-4">
+            <h2 className="text-3xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-4">
               Descrição
             </h2>
-            <p className="text-secondary-600 leading-relaxed whitespace-pre-line">
+            <p className="text-secondary-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
               {car.description}
             </p>
             {car.additionalInfo && (
-              <p className="mt-4 text-secondary-600 leading-relaxed whitespace-pre-line">
+              <p className="mt-4 text-secondary-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
                 {car.additionalInfo}
               </p>
             )}
           </div>
 
           <div>
-            <h2 className="text-3xl font-display font-bold text-secondary-900 mb-4">
+            <h2 className="text-3xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-4">
               Características
             </h2>
             {features.length > 0 ? (
@@ -193,15 +200,15 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
                 {features.map((feature) => (
                   <li
                     key={feature}
-                    className="flex items-start gap-2 text-secondary-700"
+                    className="flex items-start gap-2 text-secondary-700 dark:text-slate-200"
                   >
-                    <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary dark:text-blue-400" />
                     {feature}
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-secondary-600">
+              <p className="text-secondary-600 dark:text-slate-300">
                 Consulte nossa equipe para confirmar opcionais e detalhes deste
                 veículo.
               </p>
@@ -211,7 +218,7 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
 
         {relatedCars.length > 0 && (
           <section className="py-12">
-            <h2 className="text-3xl font-display font-bold text-secondary-900 mb-6">
+            <h2 className="text-3xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-6">
               Veículos Relacionados
             </h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

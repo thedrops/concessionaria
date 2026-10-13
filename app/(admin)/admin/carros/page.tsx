@@ -70,23 +70,26 @@ export default async function CarsPage({ searchParams }: PageProps) {
     whereFilter.images = { isEmpty: true };
   }
 
-  const [cars, totalCars, totalAvailable, totalSold, totalSemFotos] = await Promise.all([
-    prisma.car.findMany({
-      where: whereFilter,
-      skip,
-      take: perPage,
-      orderBy: { createdAt: "desc" },
-      include: {
-        _count: {
-          select: { leads: true },
+  const [cars, totalCars, totalAvailable, totalSold, totalSemFotos] =
+    await Promise.all([
+      prisma.car.findMany({
+        where: whereFilter,
+        skip,
+        take: perPage,
+        orderBy: { createdAt: "desc" },
+        include: {
+          _count: {
+            select: { leads: true },
+          },
         },
-      },
-    }),
-    prisma.car.count({ where: whereFilter }),
-    prisma.car.count({ where: { status: "AVAILABLE" } }),
-    prisma.car.count({ where: { status: "SOLD" } }),
-    prisma.car.count({ where: { images: { isEmpty: true }, status: "AVAILABLE" } }),
-  ]);
+      }),
+      prisma.car.count({ where: whereFilter }),
+      prisma.car.count({ where: { status: "AVAILABLE" } }),
+      prisma.car.count({ where: { status: "SOLD" } }),
+      prisma.car.count({
+        where: { images: { isEmpty: true }, status: "AVAILABLE" },
+      }),
+    ]);
 
   const totalPages = Math.ceil(totalCars / perPage);
 
@@ -94,8 +97,12 @@ export default async function CarsPage({ searchParams }: PageProps) {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Carros</h1>
-          <p className="text-gray-600 mt-1">Gerencie o estoque de veículos</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-slate-100">
+            Carros
+          </h1>
+          <p className="text-gray-600 dark:text-slate-300 mt-1">
+            Gerencie o estoque de veículos
+          </p>
         </div>
         <div className="flex gap-3 flex-wrap">
           <ExportCarsButton />
@@ -117,25 +124,27 @@ export default async function CarsPage({ searchParams }: PageProps) {
       </div>
 
       {/* Busca */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <label className="text-sm font-medium text-gray-700 mb-2 block">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-4">
+        <label className="text-sm font-medium text-gray-700 dark:text-slate-200 mb-2 block">
           Buscar:
         </label>
         <PlateSearchInput />
       </div>
 
       {/* Filtros */}
-      <div className="bg-white rounded-lg shadow p-4 space-y-3">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-4 space-y-3">
         {/* Filtro de Status */}
         <div className="flex flex-wrap items-center gap-2">
-          <label className="text-sm font-medium text-gray-700 min-w-[52px]">Status:</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-200 min-w-[52px]">
+            Status:
+          </label>
           <div className="flex flex-wrap gap-2">
             <Link
               href="/admin/carros"
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 !statusFilter
                   ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-700"
               }`}
             >
               Todos
@@ -145,7 +154,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 statusFilter === "disponiveis"
                   ? "bg-green-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-700"
               }`}
             >
               Disponíveis
@@ -155,7 +164,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 statusFilter === "vendidos"
                   ? "bg-red-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-700"
               }`}
             >
               Vendidos
@@ -166,7 +175,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
         {/* Filtro de Consignado (apenas se não estiver em vendidos) */}
         {statusFilter !== "vendidos" && (
           <div className="flex flex-wrap items-center gap-2">
-            <label className="text-sm font-medium text-gray-700 min-w-[52px]">
+            <label className="text-sm font-medium text-gray-700 dark:text-slate-200 min-w-[52px]">
               Consig.:
             </label>
             <div className="flex flex-wrap gap-2">
@@ -175,7 +184,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   !consignadoFilter
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-700"
                 }`}
               >
                 Todos
@@ -185,7 +194,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   consignadoFilter === "sim"
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-700"
                 }`}
               >
                 Consignados
@@ -195,7 +204,7 @@ export default async function CarsPage({ searchParams }: PageProps) {
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   consignadoFilter === "nao"
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-700"
                 }`}
               >
                 Não Consig.
@@ -206,14 +215,16 @@ export default async function CarsPage({ searchParams }: PageProps) {
 
         {/* Filtro de Fotos */}
         <div className="flex flex-wrap items-center gap-2">
-          <label className="text-sm font-medium text-gray-700 min-w-[52px]">Fotos:</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-200 min-w-[52px]">
+            Fotos:
+          </label>
           <div className="flex flex-wrap gap-2">
             <Link
               href={`/admin/carros${statusFilter ? `?status=${statusFilter}` : ""}${consignadoFilter ? `${statusFilter ? "&" : "?"}consignado=${consignadoFilter}` : ""}`}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 !fotosFilter
                   ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-700"
               }`}
             >
               Todos
@@ -223,13 +234,15 @@ export default async function CarsPage({ searchParams }: PageProps) {
               className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 fotosFilter === "sem"
                   ? "bg-orange-500 text-white"
-                  : "bg-orange-50 text-orange-700 hover:bg-orange-100"
+                  : "bg-orange-50 dark:bg-orange-950 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900"
               }`}
             >
               <ImageOff className="w-3.5 h-3.5" />
               Sem Fotos
               {totalSemFotos > 0 && (
-                <span className={`ml-1 px-1.5 py-0.5 rounded-full text-xs font-bold ${fotosFilter === "sem" ? "bg-white text-orange-600" : "bg-orange-500 text-white"}`}>
+                <span
+                  className={`ml-1 px-1.5 py-0.5 rounded-full text-xs font-bold ${fotosFilter === "sem" ? "bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-300" : "bg-orange-500 text-white"}`}
+                >
                   {totalSemFotos}
                 </span>
               )}
@@ -240,33 +253,57 @@ export default async function CarsPage({ searchParams }: PageProps) {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-sm font-medium text-gray-600">Total de Carros</h3>
-          <p className="text-3xl font-bold text-gray-900 mt-2">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-lg shadow">
+          <h3 className="text-sm font-medium text-gray-600 dark:text-slate-300">
+            Total de Carros
+          </h3>
+          <p className="text-3xl font-bold text-gray-900 dark:text-slate-100 mt-2">
             {totalAvailable + totalSold}
           </p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-sm font-medium text-gray-600">Disponíveis</h3>
-          <p className="text-3xl font-bold text-green-600 mt-2">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-lg shadow">
+          <h3 className="text-sm font-medium text-gray-600 dark:text-slate-300">
+            Disponíveis
+          </h3>
+          <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">
             {totalAvailable}
           </p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-sm font-medium text-gray-600">Vendidos</h3>
-          <p className="text-3xl font-bold text-gray-600 mt-2">{totalSold}</p>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-lg shadow">
+          <h3 className="text-sm font-medium text-gray-600 dark:text-slate-300">
+            Vendidos
+          </h3>
+          <p className="text-3xl font-bold text-gray-600 dark:text-slate-300 mt-2">
+            {totalSold}
+          </p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow border-l-4 border-orange-400">
-          <h3 className="text-sm font-medium text-gray-600">Sem Fotos (Ocultos)</h3>
-          <p className="text-3xl font-bold text-orange-500 mt-2">{totalSemFotos}</p>
-          <p className="text-xs text-gray-400 mt-1">Disponíveis sem imagens</p>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-lg shadow border-l-4 border-orange-400">
+          <h3 className="text-sm font-medium text-gray-600 dark:text-slate-300">
+            Sem Fotos (Ocultos)
+          </h3>
+          <p className="text-3xl font-bold text-orange-500 dark:text-orange-400 mt-2">
+            {totalSemFotos}
+          </p>
+          <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">
+            Disponíveis sem imagens
+          </p>
         </div>
       </div>
 
       {/* Cars Table */}
       <CarsTableWithBulkDelete
         cars={cars}
-        pagination={{ page, totalPages, totalCars, perPage, skip, consignadoFilter, statusFilter, fotosFilter, buscaFilter }}
+        pagination={{
+          page,
+          totalPages,
+          totalCars,
+          perPage,
+          skip,
+          consignadoFilter,
+          statusFilter,
+          fotosFilter,
+          buscaFilter,
+        }}
       />
     </div>
   );

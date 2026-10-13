@@ -2,7 +2,15 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, FileText, CheckCircle, XCircle, SkipForward, ArrowLeft, Loader2 } from "lucide-react";
+import {
+  Upload,
+  FileText,
+  CheckCircle,
+  XCircle,
+  SkipForward,
+  ArrowLeft,
+  Loader2,
+} from "lucide-react";
 import Link from "next/link";
 
 interface CsvRow {
@@ -65,7 +73,12 @@ function parseCSV(text: string): CsvRow[] {
   if (lines.length < 2) return [];
 
   const rawHeaders = parseCSVLine(lines[0]);
-  const headers = rawHeaders.map((h) => h.toLowerCase().replace(/[^a-záéíóúâêôãõüç]/gi, "").trim());
+  const headers = rawHeaders.map((h) =>
+    h
+      .toLowerCase()
+      .replace(/[^a-záéíóúâêôãõüç]/gi, "")
+      .trim(),
+  );
 
   const headerMap: Record<string, number> = {};
   rawHeaders.forEach((h, i) => {
@@ -102,7 +115,9 @@ export default function ImportarCarsPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
-  const [expandedSection, setExpandedSection] = useState<"created" | "skipped" | "errors" | null>(null);
+  const [expandedSection, setExpandedSection] = useState<
+    "created" | "skipped" | "errors" | null
+  >(null);
 
   const handleFile = useCallback((file: File) => {
     if (!file.name.endsWith(".csv")) {
@@ -164,29 +179,30 @@ export default function ImportarCarsPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/admin/carros"
-          className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Voltar
         </Link>
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-slate-100">
             Importar Carros via CSV
           </h1>
-          <p className="text-gray-600 mt-1">
-            Cadastre múltiplos veículos a partir de uma planilha exportada em CSV
+          <p className="text-gray-600 dark:text-slate-300 mt-1">
+            Cadastre múltiplos veículos a partir de uma planilha exportada em
+            CSV
           </p>
         </div>
       </div>
 
       {/* Upload area */}
       {!result && (
-        <div className="bg-white rounded-lg shadow p-6 space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-6 space-y-4">
           <div
             className={`border-2 border-dashed rounded-lg p-10 text-center transition-colors cursor-pointer ${
               isDragging
-                ? "border-blue-500 bg-blue-50"
-                : "border-gray-300 hover:border-blue-400 hover:bg-gray-50"
+                ? "border-blue-500 bg-blue-50 dark:bg-blue-950"
+                : "border-gray-300 dark:border-slate-600 hover:border-blue-400 hover:bg-gray-50 dark:hover:bg-slate-800"
             }`}
             onDragOver={(e) => {
               e.preventDefault();
@@ -206,11 +222,11 @@ export default function ImportarCarsPage() {
                 if (file) handleFile(file);
               }}
             />
-            <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-700 font-medium">
+            <Upload className="w-10 h-10 text-gray-400 dark:text-slate-400 mx-auto mb-3" />
+            <p className="text-gray-700 dark:text-slate-200 font-medium">
               Arraste o arquivo CSV aqui ou clique para selecionar
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-500 dark:text-slate-300 mt-1">
               Colunas esperadas: Placa, Marca, Modelo, Câmbio, Combustível,
               Observações, Valor
             </p>
@@ -220,60 +236,77 @@ export default function ImportarCarsPage() {
           {rows.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">
+                <FileText className="w-4 h-4 text-gray-500 dark:text-slate-300" />
+                <span className="text-sm font-medium text-gray-700 dark:text-slate-200">
                   {fileName}
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-500 dark:text-slate-300">
                   — {rows.length} linha(s) encontrada(s),{" "}
-                  <span className="text-green-600 font-medium">
+                  <span className="text-green-600 dark:text-green-400 font-medium">
                     {validRows.length} válida(s)
                   </span>
                 </span>
               </div>
 
-              <div className="overflow-x-auto rounded-lg border border-gray-200">
+              <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-slate-700">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-gray-50 dark:bg-slate-800">
                     <tr>
-                      {["Placa", "Marca", "Modelo", "Câmbio", "Combustível", "Valor"].map(
-                        (h) => (
-                          <th
-                            key={h}
-                            className="px-3 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wide"
-                          >
-                            {h}
-                          </th>
-                        ),
-                      )}
+                      {[
+                        "Placa",
+                        "Marca",
+                        "Modelo",
+                        "Câmbio",
+                        "Combustível",
+                        "Valor",
+                      ].map((h) => (
+                        <th
+                          key={h}
+                          className="px-3 py-2 text-left text-xs font-semibold text-gray-600 dark:text-slate-300 uppercase tracking-wide"
+                        >
+                          {h}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
                     {rows.slice(0, 10).map((row, i) => (
                       <tr
                         key={i}
                         className={
-                          !row.placa || !row.valor ? "bg-red-50" : ""
+                          !row.placa || !row.valor
+                            ? "bg-red-50 dark:bg-red-950"
+                            : ""
                         }
                       >
-                        <td className="px-3 py-2 font-mono font-medium text-gray-900">
+                        <td className="px-3 py-2 font-mono font-medium text-gray-900 dark:text-slate-100">
                           {row.placa || (
-                            <span className="text-red-500 text-xs">vazio</span>
+                            <span className="text-red-500 dark:text-red-400 text-xs">
+                              vazio
+                            </span>
                           )}
                         </td>
-                        <td className="px-3 py-2 text-gray-700">{row.marca}</td>
-                        <td className="px-3 py-2 text-gray-700">{row.modelo}</td>
-                        <td className="px-3 py-2 text-gray-700">{row.cambio}</td>
-                        <td className="px-3 py-2 text-gray-700">
+                        <td className="px-3 py-2 text-gray-700 dark:text-slate-200">
+                          {row.marca}
+                        </td>
+                        <td className="px-3 py-2 text-gray-700 dark:text-slate-200">
+                          {row.modelo}
+                        </td>
+                        <td className="px-3 py-2 text-gray-700 dark:text-slate-200">
+                          {row.cambio}
+                        </td>
+                        <td className="px-3 py-2 text-gray-700 dark:text-slate-200">
                           {row.combustivel}
                         </td>
-                        <td className="px-3 py-2 text-gray-700">{row.valor}</td>
+                        <td className="px-3 py-2 text-gray-700 dark:text-slate-200">
+                          {row.valor}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
                 {rows.length > 10 && (
-                  <p className="text-xs text-gray-500 px-3 py-2 border-t border-gray-100">
+                  <p className="text-xs text-gray-500 dark:text-slate-300 px-3 py-2 border-t border-gray-100 dark:border-slate-700">
                     + {rows.length - 10} linha(s) não exibida(s)
                   </p>
                 )}
@@ -303,64 +336,103 @@ export default function ImportarCarsPage() {
 
       {/* Result */}
       {result && (
-        <div className="bg-white rounded-lg shadow p-8 space-y-6">
-          <h2 className="text-xl font-semibold text-gray-900">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-8 space-y-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
             Importação concluída
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <button
-              onClick={() => result.created > 0 && setExpandedSection(expandedSection === "created" ? null : "created")}
+              onClick={() =>
+                result.created > 0 &&
+                setExpandedSection(
+                  expandedSection === "created" ? null : "created",
+                )
+              }
               disabled={result.created === 0}
-              className={`flex items-center gap-4 bg-green-50 border rounded-lg p-5 text-left transition-all ${
-                result.created > 0 ? "hover:border-green-400 cursor-pointer" : "cursor-default"
-              } ${expandedSection === "created" ? "border-green-400 ring-2 ring-green-300" : "border-green-200"}`}
+              className={`flex items-center gap-4 bg-green-50 dark:bg-green-950 border rounded-lg p-5 text-left transition-all ${
+                result.created > 0
+                  ? "hover:border-green-400 cursor-pointer"
+                  : "cursor-default"
+              } ${expandedSection === "created" ? "border-green-400 ring-2 ring-green-300" : "border-green-200 dark:border-green-800"}`}
             >
               <CheckCircle className="w-10 h-10 text-green-500 shrink-0" />
               <div className="flex-1">
-                <p className="text-3xl font-bold text-green-700">{result.created}</p>
-                <p className="text-sm text-green-600 font-medium mt-0.5">Cadastrado(s)</p>
+                <p className="text-3xl font-bold text-green-700 dark:text-green-300">
+                  {result.created}
+                </p>
+                <p className="text-sm text-green-600 dark:text-green-400 font-medium mt-0.5">
+                  Cadastrado(s)
+                </p>
                 {result.created > 0 && (
                   <p className="text-xs text-green-500 mt-1.5">
-                    {expandedSection === "created" ? "Ocultar lista ↑" : "Ver lista ↓"}
+                    {expandedSection === "created"
+                      ? "Ocultar lista ↑"
+                      : "Ver lista ↓"}
                   </p>
                 )}
               </div>
             </button>
 
             <button
-              onClick={() => result.skipped > 0 && setExpandedSection(expandedSection === "skipped" ? null : "skipped")}
+              onClick={() =>
+                result.skipped > 0 &&
+                setExpandedSection(
+                  expandedSection === "skipped" ? null : "skipped",
+                )
+              }
               disabled={result.skipped === 0}
-              className={`flex items-center gap-4 bg-yellow-50 border rounded-lg p-5 text-left transition-all ${
-                result.skipped > 0 ? "hover:border-yellow-400 cursor-pointer" : "cursor-default"
-              } ${expandedSection === "skipped" ? "border-yellow-400 ring-2 ring-yellow-300" : "border-yellow-200"}`}
+              className={`flex items-center gap-4 bg-yellow-50 dark:bg-yellow-950 border rounded-lg p-5 text-left transition-all ${
+                result.skipped > 0
+                  ? "hover:border-yellow-400 cursor-pointer"
+                  : "cursor-default"
+              } ${expandedSection === "skipped" ? "border-yellow-400 ring-2 ring-yellow-300" : "border-yellow-200 dark:border-yellow-800"}`}
             >
               <SkipForward className="w-10 h-10 text-yellow-500 shrink-0" />
               <div className="flex-1">
-                <p className="text-3xl font-bold text-yellow-700">{result.skipped}</p>
-                <p className="text-sm text-yellow-600 font-medium mt-0.5">Ignorado(s) — já no estoque</p>
+                <p className="text-3xl font-bold text-yellow-700 dark:text-yellow-300">
+                  {result.skipped}
+                </p>
+                <p className="text-sm text-yellow-600 dark:text-yellow-400 font-medium mt-0.5">
+                  Ignorado(s) — já no estoque
+                </p>
                 {result.skipped > 0 && (
                   <p className="text-xs text-yellow-500 mt-1.5">
-                    {expandedSection === "skipped" ? "Ocultar lista ↑" : "Ver lista ↓"}
+                    {expandedSection === "skipped"
+                      ? "Ocultar lista ↑"
+                      : "Ver lista ↓"}
                   </p>
                 )}
               </div>
             </button>
 
             <button
-              onClick={() => result.errors > 0 && setExpandedSection(expandedSection === "errors" ? null : "errors")}
+              onClick={() =>
+                result.errors > 0 &&
+                setExpandedSection(
+                  expandedSection === "errors" ? null : "errors",
+                )
+              }
               disabled={result.errors === 0}
-              className={`flex items-center gap-4 bg-red-50 border rounded-lg p-5 text-left transition-all ${
-                result.errors > 0 ? "hover:border-red-400 cursor-pointer" : "cursor-default"
-              } ${expandedSection === "errors" ? "border-red-400 ring-2 ring-red-300" : "border-red-200"}`}
+              className={`flex items-center gap-4 bg-red-50 dark:bg-red-950 border rounded-lg p-5 text-left transition-all ${
+                result.errors > 0
+                  ? "hover:border-red-400 cursor-pointer"
+                  : "cursor-default"
+              } ${expandedSection === "errors" ? "border-red-400 ring-2 ring-red-300" : "border-red-200 dark:border-red-800"}`}
             >
-              <XCircle className="w-10 h-10 text-red-500 shrink-0" />
+              <XCircle className="w-10 h-10 text-red-500 dark:text-red-400 shrink-0" />
               <div className="flex-1">
-                <p className="text-3xl font-bold text-red-700">{result.errors}</p>
-                <p className="text-sm text-red-600 font-medium mt-0.5">Erro(s) — não cadastrado(s)</p>
+                <p className="text-3xl font-bold text-red-700 dark:text-red-300">
+                  {result.errors}
+                </p>
+                <p className="text-sm text-red-600 dark:text-red-400 font-medium mt-0.5">
+                  Erro(s) — não cadastrado(s)
+                </p>
                 {result.errors > 0 && (
-                  <p className="text-xs text-red-500 mt-1.5">
-                    {expandedSection === "errors" ? "Ocultar lista ↑" : "Ver lista ↓"}
+                  <p className="text-xs text-red-500 dark:text-red-400 mt-1.5">
+                    {expandedSection === "errors"
+                      ? "Ocultar lista ↑"
+                      : "Ver lista ↓"}
                   </p>
                 )}
               </div>
@@ -368,39 +440,74 @@ export default function ImportarCarsPage() {
           </div>
 
           {expandedSection && (
-            <div className={`rounded-lg border overflow-hidden ${
-              expandedSection === "created" ? "border-green-200" :
-              expandedSection === "skipped" ? "border-yellow-200" :
-              "border-red-200"
-            }`}>
-              <div className={`px-4 py-2.5 text-sm font-medium ${
-                expandedSection === "created" ? "bg-green-50 text-green-700" :
-                expandedSection === "skipped" ? "bg-yellow-50 text-yellow-700" :
-                "bg-red-50 text-red-700"
-              }`}>
-                {expandedSection === "created" && `${result.created} veículo(s) cadastrado(s)`}
-                {expandedSection === "skipped" && `${result.skipped} veículo(s) já existente(s) no estoque`}
-                {expandedSection === "errors" && `${result.errors} veículo(s) com erro`}
+            <div
+              className={`rounded-lg border overflow-hidden ${
+                expandedSection === "created"
+                  ? "border-green-200 dark:border-green-800"
+                  : expandedSection === "skipped"
+                    ? "border-yellow-200 dark:border-yellow-800"
+                    : "border-red-200 dark:border-red-800"
+              }`}
+            >
+              <div
+                className={`px-4 py-2.5 text-sm font-medium ${
+                  expandedSection === "created"
+                    ? "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300"
+                    : expandedSection === "skipped"
+                      ? "bg-yellow-50 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-300"
+                      : "bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-300"
+                }`}
+              >
+                {expandedSection === "created" &&
+                  `${result.created} veículo(s) cadastrado(s)`}
+                {expandedSection === "skipped" &&
+                  `${result.skipped} veículo(s) já existente(s) no estoque`}
+                {expandedSection === "errors" &&
+                  `${result.errors} veículo(s) com erro`}
               </div>
-              <div className="divide-y divide-gray-100 max-h-72 overflow-y-auto">
-                {expandedSection === "created" && result.createdList.map((v, i) => (
-                  <div key={i} className="px-4 py-2.5 flex items-center gap-3 text-sm">
-                    <span className="font-mono font-medium text-gray-900 w-24 shrink-0">{v.plate}</span>
-                    <span className="text-gray-600">{v.brand} {v.model}</span>
-                  </div>
-                ))}
-                {expandedSection === "skipped" && result.skippedList.map((v, i) => (
-                  <div key={i} className="px-4 py-2.5 flex items-center gap-3 text-sm">
-                    <span className="font-mono font-medium text-gray-900 w-24 shrink-0">{v.plate}</span>
-                    <span className="text-gray-600">{v.brand} {v.model}</span>
-                  </div>
-                ))}
-                {expandedSection === "errors" && result.errorList.map((v, i) => (
-                  <div key={i} className="px-4 py-2.5 flex items-center gap-3 text-sm">
-                    <span className="font-mono font-medium text-gray-900 w-24 shrink-0">{v.plate}</span>
-                    <span className="text-red-600">{v.reason}</span>
-                  </div>
-                ))}
+              <div className="divide-y divide-gray-100 dark:divide-slate-700 max-h-72 overflow-y-auto">
+                {expandedSection === "created" &&
+                  result.createdList.map((v, i) => (
+                    <div
+                      key={i}
+                      className="px-4 py-2.5 flex items-center gap-3 text-sm"
+                    >
+                      <span className="font-mono font-medium text-gray-900 dark:text-slate-100 w-24 shrink-0">
+                        {v.plate}
+                      </span>
+                      <span className="text-gray-600 dark:text-slate-300">
+                        {v.brand} {v.model}
+                      </span>
+                    </div>
+                  ))}
+                {expandedSection === "skipped" &&
+                  result.skippedList.map((v, i) => (
+                    <div
+                      key={i}
+                      className="px-4 py-2.5 flex items-center gap-3 text-sm"
+                    >
+                      <span className="font-mono font-medium text-gray-900 dark:text-slate-100 w-24 shrink-0">
+                        {v.plate}
+                      </span>
+                      <span className="text-gray-600 dark:text-slate-300">
+                        {v.brand} {v.model}
+                      </span>
+                    </div>
+                  ))}
+                {expandedSection === "errors" &&
+                  result.errorList.map((v, i) => (
+                    <div
+                      key={i}
+                      className="px-4 py-2.5 flex items-center gap-3 text-sm"
+                    >
+                      <span className="font-mono font-medium text-gray-900 dark:text-slate-100 w-24 shrink-0">
+                        {v.plate}
+                      </span>
+                      <span className="text-red-600 dark:text-red-400">
+                        {v.reason}
+                      </span>
+                    </div>
+                  ))}
               </div>
             </div>
           )}
@@ -419,7 +526,7 @@ export default function ImportarCarsPage() {
                 setResult(null);
                 setExpandedSection(null);
               }}
-              className="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium"
+              className="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors text-sm font-medium"
             >
               Nova importação
             </button>

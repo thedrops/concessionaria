@@ -13,13 +13,15 @@ export default async function NewUserPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Novo Usuário</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
+          Novo Usuário
+        </h1>
+        <p className="text-gray-600 dark:text-slate-300 mt-1">
           Cadastre um novo usuário no sistema
         </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-6">
         <UserForm />
       </div>
     </div>

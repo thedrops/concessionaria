@@ -30,37 +30,39 @@ export default async function AdminDashboard() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-secondary-900">Dashboard</h1>
-        <p className="text-secondary-600 mt-2">
+        <h1 className="text-3xl font-bold text-secondary-900 dark:text-slate-100">
+          Dashboard
+        </h1>
+        <p className="text-secondary-600 dark:text-slate-300 mt-2">
           Visão geral do sistema de concessionária
         </p>
       </div>
 
       {/* Estatísticas Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-secondary-600 text-sm font-medium">
+              <p className="text-secondary-600 dark:text-slate-300 text-sm font-medium">
                 Total de Carros
               </p>
-              <p className="text-3xl font-bold text-secondary-900 mt-2">
+              <p className="text-3xl font-bold text-secondary-900 dark:text-slate-100 mt-2">
                 {totalCars}
               </p>
             </div>
-            <div className="bg-blue-500 p-3 rounded-lg">
+            <div className="bg-blue-500 dark:bg-blue-600 p-3 rounded-lg">
               <LucidCar className="h-6 w-6 text-white" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-secondary-600 text-sm font-medium">
+              <p className="text-secondary-600 dark:text-slate-300 text-sm font-medium">
                 Disponíveis
               </p>
-              <p className="text-3xl font-bold text-green-600 mt-2">
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">
                 {availableCars}
               </p>
             </div>
@@ -70,13 +72,13 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-secondary-600 text-sm font-medium">
+              <p className="text-secondary-600 dark:text-slate-300 text-sm font-medium">
                 Total de Leads
               </p>
-              <p className="text-3xl font-bold text-secondary-900 mt-2">
+              <p className="text-3xl font-bold text-secondary-900 dark:text-slate-100 mt-2">
                 {totalLeads}
               </p>
             </div>
@@ -86,11 +88,13 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-secondary-600 text-sm font-medium">Usuários</p>
-              <p className="text-3xl font-bold text-secondary-900 mt-2">
+              <p className="text-secondary-600 dark:text-slate-300 text-sm font-medium">
+                Usuários
+              </p>
+              <p className="text-3xl font-bold text-secondary-900 dark:text-slate-100 mt-2">
                 {totalUsers}
               </p>
             </div>
@@ -104,14 +108,14 @@ export default async function AdminDashboard() {
       {/* Grid de Conteúdo */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Últimos Carros Cadastrados */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-secondary-900">
+            <h2 className="text-xl font-bold text-secondary-900 dark:text-slate-100">
               Últimos Carros Cadastrados
             </h2>
             <Link
               href="/admin/carros"
-              className="text-primary-500 hover:text-primary-600 text-sm font-medium"
+              className="text-primary-500 dark:text-blue-400 hover:text-primary-600 dark:hover:text-blue-400 text-sm font-medium"
             >
               Ver todos →
             </Link>
@@ -119,13 +123,13 @@ export default async function AdminDashboard() {
 
           {recentCars.length === 0 ? (
             <div className="text-center py-12">
-              <LucidCar className="h-12 w-12 text-secondary-300 mx-auto mb-3" />
-              <p className="text-secondary-600">
+              <LucidCar className="h-12 w-12 text-secondary-300 dark:text-slate-400 mx-auto mb-3" />
+              <p className="text-secondary-600 dark:text-slate-300">
                 Nenhum carro cadastrado ainda
               </p>
               <Link
                 href="/admin/carros/novo"
-                className="inline-block mt-4 text-primary-500 hover:text-primary-600 font-medium"
+                className="inline-block mt-4 text-primary-500 dark:text-blue-400 hover:text-primary-600 dark:hover:text-blue-400 font-medium"
               >
                 Cadastrar primeiro carro
               </Link>
@@ -136,9 +140,9 @@ export default async function AdminDashboard() {
                 <Link
                   key={car.id}
                   href={`/admin/carros/${car.id}`}
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary-50 transition"
+                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary-50 dark:hover:bg-slate-800 transition"
                 >
-                  <div className="relative w-20 h-20 bg-secondary-200 rounded-lg overflow-hidden flex-shrink-0">
+                  <div className="relative w-20 h-20 bg-secondary-200 dark:bg-slate-700 rounded-lg overflow-hidden flex-shrink-0">
                     {car.images[0] ? (
                       <Image
                         src={getImageUrl(car.images[0])}
@@ -148,27 +152,27 @@ export default async function AdminDashboard() {
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full">
-                        <LucidCar className="h-8 w-8 text-secondary-400" />
+                        <LucidCar className="h-8 w-8 text-secondary-400 dark:text-slate-400" />
                       </div>
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-secondary-900 truncate">
+                    <h3 className="font-semibold text-secondary-900 dark:text-slate-100 truncate">
                       {car.brand} {car.model}
                     </h3>
-                    <p className="text-sm text-secondary-600">
+                    <p className="text-sm text-secondary-600 dark:text-slate-300">
                       Ano: {car.year}
                     </p>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-sm font-medium text-primary-600">
+                      <span className="text-sm font-medium text-primary-600 dark:text-blue-400">
                         R$ {car.price.toLocaleString("pt-BR")}
                       </span>
                       <span
                         className={`text-xs px-2 py-0.5 rounded-full ${
                           car.status === "AVAILABLE"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
+                            ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
+                            : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200"
                         }`}
                       >
                         {car.status === "AVAILABLE" ? "Disponível" : "Vendido"}
@@ -176,7 +180,7 @@ export default async function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="flex items-center text-xs text-secondary-500">
+                  <div className="flex items-center text-xs text-secondary-500 dark:text-slate-300">
                     <Calendar className="h-3 w-3 mr-1" />
                     {new Date(car.createdAt).toLocaleDateString("pt-BR")}
                   </div>
@@ -187,14 +191,14 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Últimos Usuários Cadastrados */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-secondary-900">
+            <h2 className="text-xl font-bold text-secondary-900 dark:text-slate-100">
               Últimos Usuários Cadastrados
             </h2>
             <Link
               href="/admin/usuarios"
-              className="text-primary-500 hover:text-primary-600 text-sm font-medium"
+              className="text-primary-500 dark:text-blue-400 hover:text-primary-600 dark:hover:text-blue-400 text-sm font-medium"
             >
               Ver todos →
             </Link>
@@ -202,35 +206,37 @@ export default async function AdminDashboard() {
 
           {recentUsers.length === 0 ? (
             <div className="text-center py-12">
-              <Users className="h-12 w-12 text-secondary-300 mx-auto mb-3" />
-              <p className="text-secondary-600">Nenhum usuário cadastrado</p>
+              <Users className="h-12 w-12 text-secondary-300 dark:text-slate-400 mx-auto mb-3" />
+              <p className="text-secondary-600 dark:text-slate-300">
+                Nenhum usuário cadastrado
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
               {recentUsers.map((user: User) => (
                 <div
                   key={user.id}
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary-50 transition"
+                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary-50 dark:hover:bg-slate-800 transition"
                 >
-                  <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-primary-600 font-bold text-lg">
+                  <div className="w-12 h-12 bg-primary-100 dark:bg-blue-950 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-primary-600 dark:text-blue-400 font-bold text-lg">
                       {user.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-secondary-900 truncate">
+                    <h3 className="font-semibold text-secondary-900 dark:text-slate-100 truncate">
                       {user.name}
                     </h3>
-                    <p className="text-sm text-secondary-600 truncate">
+                    <p className="text-sm text-secondary-600 dark:text-slate-300 truncate">
                       {user.email}
                     </p>
                     <div className="flex items-center gap-2 mt-1">
                       <span
                         className={`text-xs px-2 py-0.5 rounded-full ${
                           user.role === "ADMIN"
-                            ? "bg-accent-100 text-accent-800"
-                            : "bg-blue-100 text-blue-800"
+                            ? "bg-accent-100 text-accent-800 dark:text-red-200"
+                            : "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
                         }`}
                       >
                         {user.role === "ADMIN" ? "Administrador" : "Operador"}
@@ -238,7 +244,7 @@ export default async function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="flex items-center text-xs text-secondary-500">
+                  <div className="flex items-center text-xs text-secondary-500 dark:text-slate-300">
                     <Calendar className="h-3 w-3 mr-1" />
                     {new Date(user.createdAt).toLocaleDateString("pt-BR")}
                   </div>

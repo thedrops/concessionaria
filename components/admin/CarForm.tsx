@@ -364,11 +364,11 @@ export default function CarForm({ car }: CarFormProps) {
     <div className="space-y-6">
       {/* API Search Option */}
       {!car && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-900 mb-2">
+        <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
             Buscar dados pela placa
           </h3>
-          <p className="text-sm text-blue-700 mb-4">
+          <p className="text-sm text-blue-700 dark:text-blue-300 mb-4">
             Utilize nossa API para preencher automaticamente os dados do veículo
           </p>
           <button
@@ -383,15 +383,15 @@ export default function CarForm({ car }: CarFormProps) {
 
       {/* Plate Search Modal */}
       {useApi && (
-        <div className="bg-white border border-gray-300 rounded-lg p-6">
+        <div className="bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
               Buscar veículo pela placa
             </h3>
             <button
               type="button"
               onClick={() => setUseApi(false)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-300"
             >
               <X className="w-5 h-5" />
             </button>
@@ -402,7 +402,7 @@ export default function CarForm({ car }: CarFormProps) {
               value={plate}
               onChange={(e) => setPlate(e.target.value.toUpperCase())}
               placeholder="ABC-1234 ou ABC1D34"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent uppercase"
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent uppercase"
               maxLength={8}
             />
             <button
@@ -424,13 +424,17 @@ export default function CarForm({ car }: CarFormProps) {
               )}
             </button>
           </div>
-          {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+          {error && (
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+              {error}
+            </p>
+          )}
           {apiData && (
             <div className="mt-4">
               <button
                 type="button"
                 onClick={() => setShowApiDataModal(true)}
-                className="text-sm text-blue-600 hover:text-blue-700 underline"
+                className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline"
               >
                 Ver todos os dados retornados pela API
               </button>
@@ -442,15 +446,15 @@ export default function CarForm({ car }: CarFormProps) {
       {/* Modal de Dados da API */}
       {showApiDataModal && apiData && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="bg-white dark:bg-slate-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             <div className="flex items-center justify-between p-6 border-b">
-              <h3 className="text-xl font-semibold text-gray-900">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
                 Dados Retornados pela API
               </h3>
               <button
                 type="button"
                 onClick={() => setShowApiDataModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-300"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -458,10 +462,10 @@ export default function CarForm({ car }: CarFormProps) {
             <div className="overflow-y-auto p-6">
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">
                     Informações Básicas
                   </h4>
-                  <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
+                  <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 space-y-2 text-sm">
                     <p>
                       <span className="font-medium">Marca:</span>{" "}
                       {apiData.MARCA || apiData.marca || "-"}
@@ -515,10 +519,10 @@ export default function CarForm({ car }: CarFormProps) {
 
                 {apiData.extra && (
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">
+                    <h4 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">
                       Dados Técnicos
                     </h4>
-                    <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
+                    <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 space-y-2 text-sm">
                       <p>
                         <span className="font-medium">Combustível:</span>{" "}
                         {apiData.extra.combustivel || "-"}
@@ -565,14 +569,14 @@ export default function CarForm({ car }: CarFormProps) {
 
                 {apiData.fipe?.dados && apiData.fipe.dados.length > 0 && (
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">
+                    <h4 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">
                       Tabela FIPE
                     </h4>
-                    <div className="bg-gray-50 rounded-lg p-4 space-y-3 text-sm">
+                    <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 space-y-3 text-sm">
                       {apiData.fipe.dados.map((fipe: any, index: number) => (
                         <div
                           key={index}
-                          className="border-b border-gray-200 last:border-0 pb-3 last:pb-0"
+                          className="border-b border-gray-200 dark:border-slate-700 last:border-0 pb-3 last:pb-0"
                         >
                           <p>
                             <span className="font-medium">Código FIPE:</span>{" "}
@@ -601,7 +605,7 @@ export default function CarForm({ car }: CarFormProps) {
                 )}
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">
                     JSON Completo
                   </h4>
                   <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
@@ -627,19 +631,21 @@ export default function CarForm({ car }: CarFormProps) {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {error && !useApi && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-lg">{error}</div>
+          <div className="bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 p-4 rounded-lg">
+            {error}
+          </div>
         )}
 
         {/* Informações Básicas */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
             Informações Básicas
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label
                 htmlFor="brand"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Marca *
               </label>
@@ -647,11 +653,11 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("brand")}
                 type="text"
                 id="brand"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Toyota"
               />
               {errors.brand && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                   {errors.brand.message}
                 </p>
               )}
@@ -660,7 +666,7 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="model"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Modelo *
               </label>
@@ -668,11 +674,11 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("model")}
                 type="text"
                 id="model"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Corolla"
               />
               {errors.model && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                   {errors.model.message}
                 </p>
               )}
@@ -681,7 +687,7 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="year"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Ano Fabricação *
               </label>
@@ -689,12 +695,12 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("year")}
                 type="text"
                 id="year"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="2024"
                 maxLength={4}
               />
               {errors.year && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                   {errors.year.message}
                 </p>
               )}
@@ -703,7 +709,7 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="modelYear"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Ano Modelo
               </label>
@@ -711,7 +717,7 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("modelYear")}
                 type="text"
                 id="modelYear"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="2025"
                 maxLength={4}
               />
@@ -720,7 +726,7 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="version"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Versão
               </label>
@@ -728,7 +734,7 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("version")}
                 type="text"
                 id="version"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="XEi 2.0"
               />
             </div>
@@ -736,7 +742,7 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="color"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Cor
               </label>
@@ -744,7 +750,7 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("color")}
                 type="text"
                 id="color"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Prata"
               />
             </div>
@@ -752,7 +758,7 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="plate"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Placa
               </label>
@@ -760,7 +766,7 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("plate")}
                 type="text"
                 id="plate"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent uppercase"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent uppercase"
                 placeholder="ABC-1234"
                 maxLength={8}
                 onChange={(e) => {
@@ -775,21 +781,21 @@ export default function CarForm({ car }: CarFormProps) {
 
         {/* Especificações Técnicas */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
             Especificações Técnicas
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label
                 htmlFor="transmission"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Câmbio
               </label>
               <select
                 {...register("transmission")}
                 id="transmission"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="">Selecione</option>
                 <option value="Manual">Manual</option>
@@ -802,7 +808,7 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="doors"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Portas
               </label>
@@ -810,7 +816,7 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("doors")}
                 type="number"
                 id="doors"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="4"
                 min="2"
                 max="5"
@@ -820,14 +826,14 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="fuel"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Combustível
               </label>
               <select
                 {...register("fuel")}
                 id="fuel"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="">Selecione</option>
                 <option value="Flex">Flex</option>
@@ -841,7 +847,7 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="mileage"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Quilometragem
               </label>
@@ -849,7 +855,7 @@ export default function CarForm({ car }: CarFormProps) {
                 type="text"
                 id="mileage"
                 value={formattedMileage}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="50.000"
                 onChange={(e) => {
                   const formatted = formatNumber(e.target.value);
@@ -862,7 +868,7 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="passengers"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Passageiros
               </label>
@@ -870,7 +876,7 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("passengers")}
                 type="number"
                 id="passengers"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="5"
                 min="1"
                 max="50"
@@ -881,26 +887,26 @@ export default function CarForm({ car }: CarFormProps) {
 
         {/* Preço e Status */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
             Preço e Disponibilidade
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label
                 htmlFor="price"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Preço (R$) *
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-300">
                   R$
                 </span>
                 <input
                   type="text"
                   id="price"
                   value={formattedPrice}
-                  className="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full pl-12 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="75.000,00"
                   onChange={(e) => {
                     const formatted = formatCurrency(e.target.value);
@@ -910,7 +916,7 @@ export default function CarForm({ car }: CarFormProps) {
                 />
               </div>
               {errors.price && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                   {errors.price.message}
                 </p>
               )}
@@ -919,14 +925,14 @@ export default function CarForm({ car }: CarFormProps) {
             <div>
               <label
                 htmlFor="status"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
               >
                 Status *
               </label>
               <select
                 {...register("status")}
                 id="status"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="AVAILABLE">Disponível</option>
                 <option value="SOLD">Vendido</option>
@@ -938,11 +944,11 @@ export default function CarForm({ car }: CarFormProps) {
                 {...register("consignado")}
                 type="checkbox"
                 id="consignado"
-                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                className="w-4 h-4 text-primary dark:text-blue-400 border-gray-300 dark:border-slate-600 rounded focus:ring-primary"
               />
               <label
                 htmlFor="consignado"
-                className="ml-2 text-sm font-medium text-gray-700"
+                className="ml-2 text-sm font-medium text-gray-700 dark:text-slate-200"
               >
                 Veículo Consignado
               </label>
@@ -954,7 +960,7 @@ export default function CarForm({ car }: CarFormProps) {
         <div>
           <label
             htmlFor="optionals"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
           >
             Opcionais
           </label>
@@ -962,10 +968,10 @@ export default function CarForm({ car }: CarFormProps) {
             {...register("optionals")}
             id="optionals"
             rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             placeholder="Ar condicionado, Direção elétrica, Vidros elétricos, etc."
           />
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-slate-300">
             Liste os opcionais do veículo separados por vírgula
           </p>
         </div>
@@ -974,7 +980,7 @@ export default function CarForm({ car }: CarFormProps) {
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
           >
             Descrição *
           </label>
@@ -982,11 +988,11 @@ export default function CarForm({ car }: CarFormProps) {
             {...register("description")}
             id="description"
             rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             placeholder="Descrição detalhada do veículo..."
           />
           {errors.description && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
               {errors.description.message}
             </p>
           )}
@@ -996,7 +1002,7 @@ export default function CarForm({ car }: CarFormProps) {
         <div>
           <label
             htmlFor="additionalInfo"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
           >
             Informações Adicionais
           </label>
@@ -1004,19 +1010,19 @@ export default function CarForm({ car }: CarFormProps) {
             {...register("additionalInfo")}
             id="additionalInfo"
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             placeholder="Observações importantes, histórico, etc."
           />
         </div>
 
         {/* Imagens */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
             Imagens do Veículo
           </label>
 
           {/* Image Upload Area */}
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors">
+          <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-6 text-center hover:border-primary transition-colors">
             <input
               type="file"
               accept="image/jpeg,image/jpg,image/png,image/webp"
@@ -1032,16 +1038,18 @@ export default function CarForm({ car }: CarFormProps) {
             >
               {uploadingImage ? (
                 <>
-                  <Loader2 className="w-12 h-12 text-primary animate-spin mb-3" />
-                  <p className="text-sm text-gray-600">Fazendo upload...</p>
+                  <Loader2 className="w-12 h-12 text-primary dark:text-blue-400 animate-spin mb-3" />
+                  <p className="text-sm text-gray-600 dark:text-slate-300">
+                    Fazendo upload...
+                  </p>
                 </>
               ) : (
                 <>
-                  <Upload className="w-12 h-12 text-gray-400 mb-3" />
-                  <p className="text-sm text-gray-600 mb-1">
+                  <Upload className="w-12 h-12 text-gray-400 dark:text-slate-400 mb-3" />
+                  <p className="text-sm text-gray-600 dark:text-slate-300 mb-1">
                     Clique para fazer upload das imagens
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-slate-300">
                     JPG, PNG ou WebP (máx. 5MB por arquivo)
                   </p>
                 </>
@@ -1086,7 +1094,7 @@ export default function CarForm({ car }: CarFormProps) {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-6 py-3 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+            className="px-6 py-3 border border-gray-300 dark:border-slate-600 rounded-lg font-semibold text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
           >
             Cancelar
           </button>

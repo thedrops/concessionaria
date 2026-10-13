@@ -260,7 +260,7 @@ export default function CarrosselPage() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-secondary-900">
+        <h1 className="text-3xl font-bold text-secondary-900 dark:text-slate-100">
           Gerenciar Carrossel
         </h1>
         <button
@@ -273,8 +273,8 @@ export default function CarrosselPage() {
       </div>
 
       {images.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">
+        <div className="text-center py-12 bg-gray-50 dark:bg-slate-800 rounded-lg">
+          <p className="text-gray-500 dark:text-slate-300">
             Nenhuma imagem cadastrada no carrossel
           </p>
         </div>
@@ -283,7 +283,7 @@ export default function CarrosselPage() {
           {images.map((image, index) => (
             <div
               key={image.id}
-              className={`bg-white rounded-lg shadow p-4 flex items-center gap-4 ${
+              className={`bg-white dark:bg-slate-900 rounded-lg shadow p-4 flex items-center gap-4 ${
                 !image.active ? "opacity-50" : ""
               }`}
             >
@@ -301,9 +301,11 @@ export default function CarrosselPage() {
                   {image.title || "(Sem título)"}
                 </h3>
                 {image.link && (
-                  <p className="text-sm text-gray-500 truncate">{image.link}</p>
+                  <p className="text-sm text-gray-500 dark:text-slate-300 truncate">
+                    {image.link}
+                  </p>
                 )}
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">
                   Ordem: {image.order}
                 </p>
               </div>
@@ -312,7 +314,7 @@ export default function CarrosselPage() {
                 <button
                   onClick={() => handleChangeOrder(image, "up")}
                   disabled={index === 0}
-                  className="p-2 text-gray-600 hover:bg-gray-100 rounded disabled:opacity-30"
+                  className="p-2 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded disabled:opacity-30"
                   title="Mover para cima"
                 >
                   <ArrowUp className="w-5 h-5" />
@@ -320,14 +322,14 @@ export default function CarrosselPage() {
                 <button
                   onClick={() => handleChangeOrder(image, "down")}
                   disabled={index === images.length - 1}
-                  className="p-2 text-gray-600 hover:bg-gray-100 rounded disabled:opacity-30"
+                  className="p-2 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded disabled:opacity-30"
                   title="Mover para baixo"
                 >
                   <ArrowDown className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => handleToggleActive(image)}
-                  className="p-2 text-gray-600 hover:bg-gray-100 rounded"
+                  className="p-2 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded"
                   title={image.active ? "Desativar" : "Ativar"}
                 >
                   {image.active ? (
@@ -338,14 +340,14 @@ export default function CarrosselPage() {
                 </button>
                 <button
                   onClick={() => openModal(image)}
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                  className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 rounded"
                   title="Editar"
                 >
                   <Edit className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => handleDelete(image.id)}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded"
+                  className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950 rounded"
                   title="Excluir"
                 >
                   <Trash2 className="w-5 h-5" />
@@ -359,22 +361,22 @@ export default function CarrosselPage() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-6">
+          <div className="bg-white dark:bg-slate-900 rounded-lg max-w-2xl w-full p-6">
             <h2 className="text-2xl font-bold mb-4">
               {editingImage ? "Editar Imagem" : "Nova Imagem"}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
                   Upload de Imagem *
                 </label>
-                <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800">
+                <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
                     <strong>Dimensão recomendada:</strong> 1920x600 pixels
                     (proporção 16:5)
                   </p>
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
                     Para melhor visualização no carrossel, use imagens em
                     formato landscape (horizontal) com boa resolução.
                   </p>
@@ -384,10 +386,12 @@ export default function CarrosselPage() {
                   accept="image/*"
                   onChange={handleImageUpload}
                   disabled={uploadingImage}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 mb-2"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 mb-2"
                 />
                 {uploadingImage && (
-                  <p className="text-sm text-gray-500">Fazendo upload...</p>
+                  <p className="text-sm text-gray-500 dark:text-slate-300">
+                    Fazendo upload...
+                  </p>
                 )}
                 {formData.image && (
                   <div className="mt-2 relative w-full h-48 rounded-lg overflow-hidden">
@@ -399,13 +403,13 @@ export default function CarrosselPage() {
                     />
                   </div>
                 )}
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-slate-300 mt-1">
                   Ou insira a URL manualmente abaixo
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
                   URL da Imagem *
                 </label>
                 <input
@@ -414,14 +418,14 @@ export default function CarrosselPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, image: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   required
                   placeholder="/uploads/carousel/imagem.jpg"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
                   Título (opcional)
                 </label>
                 <input
@@ -430,13 +434,13 @@ export default function CarrosselPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   placeholder="Título da imagem"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
                   Link (opcional)
                 </label>
                 <input
@@ -445,7 +449,7 @@ export default function CarrosselPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, link: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   placeholder="/catalogo ou URL externa"
                 />
               </div>
@@ -458,11 +462,11 @@ export default function CarrosselPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, active: e.target.checked })
                   }
-                  className="w-4 h-4 text-primary-500 rounded"
+                  className="w-4 h-4 text-primary-500 dark:text-blue-400 rounded"
                 />
                 <label
                   htmlFor="active"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-gray-700 dark:text-slate-200"
                 >
                   Ativo (visível no carrossel)
                 </label>
@@ -472,7 +476,7 @@ export default function CarrosselPage() {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                  className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition"
                 >
                   Cancelar
                 </button>

@@ -143,14 +143,16 @@ export default function PostForm({ post, authorId }: PostFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {error && (
-        <div className="bg-red-50 text-red-600 p-4 rounded-lg">{error}</div>
+        <div className="bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 p-4 rounded-lg">
+          {error}
+        </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="md:col-span-2">
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
           >
             Título *
           </label>
@@ -162,18 +164,20 @@ export default function PostForm({ post, authorId }: PostFormProps) {
             }}
             type="text"
             id="title"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             placeholder="Título do post"
           />
           {errors.title && (
-            <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {errors.title.message}
+            </p>
           )}
         </div>
 
         <div className="md:col-span-2">
           <label
             htmlFor="slug"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
           >
             Slug *
           </label>
@@ -181,13 +185,15 @@ export default function PostForm({ post, authorId }: PostFormProps) {
             {...register("slug")}
             type="text"
             id="slug"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             placeholder="slug-do-post"
           />
           {errors.slug && (
-            <p className="mt-1 text-sm text-red-600">{errors.slug.message}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {errors.slug.message}
+            </p>
           )}
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-slate-300">
             URL amigável (apenas letras minúsculas, números e hífens)
           </p>
         </div>
@@ -195,7 +201,7 @@ export default function PostForm({ post, authorId }: PostFormProps) {
         <div className="md:col-span-2">
           <label
             htmlFor="excerpt"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
           >
             Resumo
           </label>
@@ -203,11 +209,11 @@ export default function PostForm({ post, authorId }: PostFormProps) {
             {...register("excerpt")}
             id="excerpt"
             rows={2}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             placeholder="Breve resumo do post (opcional)"
           />
           {errors.excerpt && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
               {errors.excerpt.message}
             </p>
           )}
@@ -216,7 +222,7 @@ export default function PostForm({ post, authorId }: PostFormProps) {
         <div className="md:col-span-2">
           <label
             htmlFor="image"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
           >
             URL da Imagem
           </label>
@@ -224,18 +230,20 @@ export default function PostForm({ post, authorId }: PostFormProps) {
             {...register("image")}
             type="text"
             id="image"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             placeholder="https://exemplo.com/imagem.jpg"
           />
           {errors.image && (
-            <p className="mt-1 text-sm text-red-600">{errors.image.message}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {errors.image.message}
+            </p>
           )}
         </div>
 
         <div className="md:col-span-2">
           <label
             htmlFor="content"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2"
           >
             Conteúdo *
           </label>
@@ -243,15 +251,15 @@ export default function PostForm({ post, authorId }: PostFormProps) {
             {...register("content")}
             id="content"
             rows={12}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent font-mono text-sm"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent font-mono text-sm"
             placeholder="Conteúdo do post (aceita Markdown)"
           />
           {errors.content && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
               {errors.content.message}
             </p>
           )}
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-slate-300">
             Você pode usar Markdown para formatar o texto
           </p>
         </div>
@@ -262,16 +270,16 @@ export default function PostForm({ post, authorId }: PostFormProps) {
               {...register("published")}
               type="checkbox"
               id="published"
-              className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+              className="h-4 w-4 text-primary dark:text-blue-400 focus:ring-primary border-gray-300 dark:border-slate-600 rounded"
             />
             <label
               htmlFor="published"
-              className="ml-2 block text-sm text-gray-900"
+              className="ml-2 block text-sm text-gray-900 dark:text-slate-100"
             >
               Publicar post
             </label>
           </div>
-          <p className="mt-1 text-sm text-gray-500 ml-6">
+          <p className="mt-1 text-sm text-gray-500 dark:text-slate-300 ml-6">
             Posts não publicados ficam salvos como rascunho
           </p>
         </div>
@@ -295,7 +303,7 @@ export default function PostForm({ post, authorId }: PostFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-3 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+          className="px-6 py-3 border border-gray-300 dark:border-slate-600 rounded-lg font-semibold text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
         >
           Cancelar
         </button>

@@ -68,7 +68,7 @@ export default function DeletePostButton({
   return (
     <button
       onClick={handleDelete}
-      className="text-red-600 hover:text-red-800"
+      className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
       title="Excluir"
       disabled={isDeleting}
     >

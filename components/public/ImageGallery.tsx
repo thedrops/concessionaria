@@ -29,8 +29,8 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
 
   if (!hasImages) {
     return (
-      <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-secondary-100">
-        <div className="text-center text-secondary-400">
+      <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-secondary-100 dark:bg-slate-800">
+        <div className="text-center text-secondary-400 dark:text-slate-400">
           <Car className="mx-auto mb-3 h-16 w-16" />
           <span>Sem imagem disponível</span>
         </div>
@@ -40,7 +40,7 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
 
   return (
     <div className="space-y-4">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-secondary-100">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-secondary-100 dark:bg-slate-800">
         <Image
           src={imageUrls[currentImage]}
           alt={`${alt} - ${currentImage + 1}`}
@@ -59,7 +59,7 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
             <button
               type="button"
               onClick={prevImage}
-              className="absolute left-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-secondary-900 shadow transition hover:bg-white"
+              className="absolute left-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 dark:bg-slate-900/95 text-secondary-900 dark:text-slate-100 shadow transition hover:bg-white dark:hover:bg-slate-900"
               aria-label="Imagem anterior"
             >
               <ChevronLeft className="h-6 w-6" />
@@ -67,7 +67,7 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
             <button
               type="button"
               onClick={nextImage}
-              className="absolute right-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-secondary-900 shadow transition hover:bg-white"
+              className="absolute right-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 dark:bg-slate-900/95 text-secondary-900 dark:text-slate-100 shadow transition hover:bg-white dark:hover:bg-slate-900"
               aria-label="Próxima imagem"
             >
               <ChevronRight className="h-6 w-6" />
@@ -83,10 +83,10 @@ export default function ImageGallery({ images, alt }: ImageGalleryProps) {
               type="button"
               key={image}
               onClick={() => setCurrentImage(index)}
-              className={`relative aspect-[4/3] overflow-hidden rounded-lg border-2 bg-secondary-100 transition ${
+              className={`relative aspect-[4/3] overflow-hidden rounded-lg border-2 bg-secondary-100 dark:bg-slate-800 transition ${
                 currentImage === index
                   ? "border-primary"
-                  : "border-transparent hover:border-secondary-300"
+                  : "border-transparent hover:border-secondary-300 dark:hover:border-slate-600"
               }`}
               aria-label={`Ver imagem ${index + 1}`}
             >

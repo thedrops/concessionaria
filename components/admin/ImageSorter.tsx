@@ -119,10 +119,10 @@ export default function ImageSorter({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-medium text-gray-700">
+          <h3 className="text-sm font-medium text-gray-700 dark:text-slate-200">
             Imagens do Veículo ({images.length})
           </h3>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 dark:text-slate-300 mt-1">
             Arraste e solte para reordenar. A primeira imagem será a principal.
           </p>
         </div>
@@ -157,15 +157,15 @@ export default function ImageSorter({
             onDragEnter={() => handleDragEnter(index)}
             onDragEnd={handleDragEnd}
             onDragOver={handleDragOver}
-            className={`relative group aspect-video bg-gray-100 rounded-lg overflow-hidden border-2 transition-all cursor-move ${
+            className={`relative group aspect-video bg-gray-100 dark:bg-slate-800 rounded-lg overflow-hidden border-2 transition-all cursor-move ${
               draggingIndex === index
                 ? "border-primary opacity-50 scale-95"
                 : "border-transparent hover:border-primary"
             }`}
           >
             {/* Drag Handle */}
-            <div className="absolute top-2 left-2 bg-white/90 rounded p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-              <GripVertical className="w-5 h-5 text-gray-600" />
+            <div className="absolute top-2 left-2 bg-white/90 dark:bg-slate-900/90 rounded p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+              <GripVertical className="w-5 h-5 text-gray-600 dark:text-slate-300" />
             </div>
 
             {/* Image */}
@@ -207,8 +207,8 @@ export default function ImageSorter({
       </div>
 
       {!carId && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-          <p className="text-sm text-yellow-800">
+        <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">
             <strong>Nota:</strong> Salve o carro primeiro para poder salvar a
             ordem das imagens. Por enquanto, você pode arrastar para organizar,
             mas a ordem só será persistida após salvar o carro.

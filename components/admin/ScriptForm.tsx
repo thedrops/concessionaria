@@ -171,14 +171,14 @@ export default function ScriptForm({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-slate-100">
             {script ? "Editar Script" : "Novo Script"}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 dark:text-slate-300 hover:text-gray-700 dark:hover:text-slate-200"
           >
             <X className="w-6 h-6" />
           </button>
@@ -187,8 +187,8 @@ export default function ScriptForm({
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
           {/* Exemplos de scripts */}
           {!script && (
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">
+            <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-4">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">
                 Exemplos rápidos (clique para preencher):
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -197,7 +197,7 @@ export default function ScriptForm({
                     key={idx}
                     type="button"
                     onClick={() => loadExample(example)}
-                    className="text-xs bg-white border border-gray-200 px-3 py-1 rounded hover:bg-gray-100 transition"
+                    className="text-xs bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 px-3 py-1 rounded hover:bg-gray-100 dark:hover:bg-slate-800 transition"
                   >
                     {example.name}
                   </button>
@@ -208,29 +208,31 @@ export default function ScriptForm({
 
           {/* Nome */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-1">
               Nome do Script *
             </label>
             <input
               type="text"
               {...register("name")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               placeholder="Ex: Google Tag Manager"
             />
             {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+              <p className="text-red-500 dark:text-red-400 text-sm mt-1">
+                {errors.name.message}
+              </p>
             )}
           </div>
 
           {/* Posição e Ordem */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-1">
                 Posição *
               </label>
               <select
                 {...register("position")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
                 <option value="HEAD">Head (dentro do &lt;head&gt;)</option>
                 <option value="BODY_START">
@@ -241,23 +243,23 @@ export default function ScriptForm({
                 </option>
               </select>
               {errors.position && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1">
                   {errors.position.message}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-1">
                 Ordem de Carregamento
               </label>
               <input
                 type="number"
                 {...register("order", { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 min="0"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-slate-300 mt-1">
                 Scripts com menor número são carregados primeiro
               </p>
             </div>
@@ -265,13 +267,13 @@ export default function ScriptForm({
 
           {/* Descrição */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-1">
               Descrição (opcional)
             </label>
             <input
               type="text"
               {...register("description")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               placeholder="Descrição para identificação do script"
             />
           </div>
@@ -279,13 +281,13 @@ export default function ScriptForm({
           {/* Conteúdo do Script */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-200">
                 Código do Script *
               </label>
               <button
                 type="button"
                 onClick={() => setShowPreview(!showPreview)}
-                className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1"
+                className="text-sm text-primary-600 dark:text-blue-400 hover:text-primary-700 dark:hover:text-blue-300 flex items-center gap-1"
               >
                 {showPreview ? (
                   <>
@@ -303,11 +305,11 @@ export default function ScriptForm({
             <textarea
               {...register("content")}
               rows={10}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-mono text-sm"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-mono text-sm"
               placeholder="Cole aqui o código do script (incluindo as tags <script>)"
             />
             {errors.content && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 dark:text-red-400 text-sm mt-1">
                 {errors.content.message}
               </p>
             )}
@@ -328,16 +330,19 @@ export default function ScriptForm({
               type="checkbox"
               id="isActive"
               {...register("isActive")}
-              className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
+              className="w-4 h-4 text-primary-500 dark:text-blue-400 border-gray-300 dark:border-slate-600 rounded focus:ring-primary-500"
             />
-            <label htmlFor="isActive" className="text-sm text-gray-700">
+            <label
+              htmlFor="isActive"
+              className="text-sm text-gray-700 dark:text-slate-200"
+            >
               Script ativo (será renderizado nas páginas públicas)
             </label>
           </div>
 
           {/* Aviso de segurança */}
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <p className="text-sm text-yellow-800">
+          <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+            <p className="text-sm text-yellow-800 dark:text-yellow-200">
               <strong>⚠️ Atenção:</strong> Certifique-se de que o código
               inserido é de fonte confiável. Scripts maliciosos podem
               comprometer a segurança do site e dos usuários.
@@ -349,7 +354,7 @@ export default function ScriptForm({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+              className="px-4 py-2 text-gray-700 dark:text-slate-200 bg-gray-100 dark:bg-slate-800 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition"
             >
               Cancelar
             </button>

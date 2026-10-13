@@ -31,9 +31,11 @@ const positionLabels: Record<string, string> = {
 };
 
 const positionColors: Record<string, string> = {
-  HEAD: "bg-blue-100 text-blue-800",
-  BODY_START: "bg-green-100 text-green-800",
-  BODY_END: "bg-purple-100 text-purple-800",
+  HEAD: "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200",
+  BODY_START:
+    "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200",
+  BODY_END:
+    "bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200",
 };
 
 export default function ScriptsPage() {
@@ -163,10 +165,10 @@ export default function ScriptsPage() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-slate-100">
             Scripts Personalizados
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-600 dark:text-slate-300 mt-1">
             Gerencie scripts como Google Tag Manager, Meta Pixel, popups e
             outros
           </p>
@@ -181,12 +183,12 @@ export default function ScriptsPage() {
       </div>
 
       {/* Informações sobre posições */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-        <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+      <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+        <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 flex items-center gap-2">
           <Code className="w-5 h-5" />
           Onde os scripts serão inseridos:
         </h3>
-        <ul className="text-sm text-blue-700 space-y-1">
+        <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
           <li>
             <strong>HEAD:</strong> Dentro da tag &lt;head&gt; - ideal para
             Google Tag Manager, Meta Pixel, Analytics
@@ -203,12 +205,12 @@ export default function ScriptsPage() {
       </div>
 
       {scripts.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-8 text-center">
-          <Code className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-700 mb-2">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-8 text-center">
+          <Code className="w-16 h-16 text-gray-300 dark:text-slate-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-700 dark:text-slate-200 mb-2">
             Nenhum script cadastrado
           </h3>
-          <p className="text-gray-500 mb-4">
+          <p className="text-gray-500 dark:text-slate-300 mb-4">
             Adicione scripts personalizados para integrar ferramentas de análise
             e marketing
           </p>
@@ -221,37 +223,40 @@ export default function ScriptsPage() {
           </button>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+            <thead className="bg-gray-50 dark:bg-slate-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">
                   Nome
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">
                   Posição
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">
                   Ordem
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-300 uppercase tracking-wider">
                   Ações
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-200 dark:divide-slate-700">
               {scripts.map((script) => (
-                <tr key={script.id} className="hover:bg-gray-50">
+                <tr
+                  key={script.id}
+                  className="hover:bg-gray-50 dark:hover:bg-slate-800"
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
-                      <div className="font-medium text-gray-900">
+                      <div className="font-medium text-gray-900 dark:text-slate-100">
                         {script.name}
                       </div>
                       {script.description && (
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 dark:text-slate-300">
                           {script.description}
                         </div>
                       )}
@@ -264,7 +269,7 @@ export default function ScriptsPage() {
                       {script.position}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-300">
                     {script.order}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -272,8 +277,8 @@ export default function ScriptsPage() {
                       onClick={() => handleToggleActive(script)}
                       className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition ${
                         script.isActive
-                          ? "bg-green-100 text-green-800 hover:bg-green-200"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-800"
+                          : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
                       }`}
                     >
                       {script.isActive ? (
@@ -293,14 +298,14 @@ export default function ScriptsPage() {
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => handleEdit(script)}
-                        className="text-blue-600 hover:text-blue-800 p-1"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 p-1"
                         title="Editar"
                       >
                         <Edit2 className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => handleDelete(script)}
-                        className="text-red-600 hover:text-red-800 p-1"
+                        className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200 p-1"
                         title="Excluir"
                       >
                         <Trash2 className="w-5 h-5" />

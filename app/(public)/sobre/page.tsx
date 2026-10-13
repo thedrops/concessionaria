@@ -62,7 +62,7 @@ const timeline = [
 
 export default function SobrePage() {
   return (
-    <div className="bg-white">
+    <div className="bg-white dark:bg-slate-900">
       <section className="bg-primary text-white py-20 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
@@ -84,30 +84,30 @@ export default function SobrePage() {
       <section className="py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-            <div className="rounded-lg bg-secondary-50 p-8 border border-secondary-100">
-              <Award className="h-10 w-10 text-primary mb-5" />
-              <p className="text-5xl font-display font-bold text-secondary-900 mb-2">
+            <div className="rounded-lg bg-secondary-50 dark:bg-slate-800 p-8 border border-secondary-100 dark:border-slate-700">
+              <Award className="h-10 w-10 text-primary dark:text-blue-400 mb-5" />
+              <p className="text-5xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-2">
                 40+
               </p>
-              <p className="text-lg font-semibold text-secondary-900 mb-4">
+              <p className="text-lg font-semibold text-secondary-900 dark:text-slate-100 mb-4">
                 anos de história
               </p>
-              <p className="text-secondary-600 leading-relaxed">
+              <p className="text-secondary-600 dark:text-slate-300 leading-relaxed">
                 Tradição construída com presença local, atendimento próximo e
                 compromisso em entregar veículos bem selecionados.
               </p>
             </div>
             <div>
-              <h2 className="text-4xl font-display font-bold text-secondary-900 mb-5">
+              <h2 className="text-4xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-5">
                 Uma história de confiança
               </h2>
               <div className="section-divider w-24 mb-6" />
-              <p className="text-lg text-secondary-600 leading-relaxed mb-4">
+              <p className="text-lg text-secondary-600 dark:text-slate-300 leading-relaxed mb-4">
                 A Israel Veículos atua para simplificar a compra de seminovos e
                 usados. A equipe acompanha o cliente desde a escolha do modelo
                 até os detalhes de documentação, financiamento e entrega.
               </p>
-              <p className="text-lg text-secondary-600 leading-relaxed">
+              <p className="text-lg text-secondary-600 dark:text-slate-300 leading-relaxed">
                 O objetivo é oferecer uma experiência objetiva, respeitosa e
                 segura, com informações claras sobre cada veículo e atendimento
                 preparado para orientar a melhor decisão.
@@ -117,13 +117,13 @@ export default function SobrePage() {
         </div>
       </section>
 
-      <section className="bg-secondary-50 py-16 md:py-20">
+      <section className="bg-secondary-50 dark:bg-slate-800 py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-display font-bold text-secondary-900 mb-3">
+            <h2 className="text-4xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-3">
               Missão, Visão e Valores
             </h2>
-            <p className="text-lg text-secondary-500">
+            <p className="text-lg text-secondary-500 dark:text-slate-300">
               Princípios que orientam o atendimento e a curadoria do estoque.
             </p>
           </div>
@@ -131,15 +131,15 @@ export default function SobrePage() {
             {values.map((item) => (
               <div
                 key={item.title}
-                className="card-hover rounded-lg bg-white p-6 border border-secondary-100 shadow-sm"
+                className="card-hover rounded-lg bg-white dark:bg-slate-900 p-6 border border-secondary-100 dark:border-slate-700 shadow-sm"
               >
                 <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-white">
                   <item.icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-2xl font-bold text-secondary-900 mb-3">
+                <h3 className="text-2xl font-bold text-secondary-900 dark:text-slate-100 mb-3">
                   {item.title}
                 </h3>
-                <p className="text-secondary-600 leading-relaxed">
+                <p className="text-secondary-600 dark:text-slate-300 leading-relaxed">
                   {item.description}
                 </p>
               </div>
@@ -151,10 +151,10 @@ export default function SobrePage() {
       <section className="py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
-            <h2 className="text-4xl font-display font-bold text-secondary-900 mb-3">
+            <h2 className="text-4xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-3">
               Nossa trajetória
             </h2>
-            <p className="text-lg text-secondary-500">
+            <p className="text-lg text-secondary-500 dark:text-slate-300">
               Marcos que representam evolução, permanência e atendimento.
             </p>
           </div>
@@ -162,56 +162,58 @@ export default function SobrePage() {
             {timeline.map((item) => (
               <div
                 key={item.year}
-                className="rounded-lg border border-secondary-100 bg-white p-6 shadow-sm"
+                className="rounded-lg border border-secondary-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm"
               >
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-800 font-bold text-white">
                   {item.year === "Hoje" ? "Atual" : item.year.slice(2)}
                 </div>
-                <p className="text-sm font-semibold text-primary mb-2">
+                <p className="text-sm font-semibold text-primary dark:text-blue-400 mb-2">
                   {item.year}
                 </p>
-                <h3 className="text-xl font-bold text-secondary-900 mb-2">
+                <h3 className="text-xl font-bold text-secondary-900 dark:text-slate-100 mb-2">
                   {item.title}
                 </h3>
-                <p className="text-secondary-600">{item.description}</p>
+                <p className="text-secondary-600 dark:text-slate-300">
+                  {item.description}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-secondary-50 py-16 md:py-20">
+      <section className="bg-secondary-50 dark:bg-slate-800 py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 md:grid-cols-3">
             <div className="flex gap-4">
-              <Users className="h-8 w-8 text-primary" />
+              <Users className="h-8 w-8 text-primary dark:text-blue-400" />
               <div>
-                <h3 className="text-xl font-bold text-secondary-900 mb-2">
+                <h3 className="text-xl font-bold text-secondary-900 dark:text-slate-100 mb-2">
                   Equipe consultiva
                 </h3>
-                <p className="text-secondary-600">
+                <p className="text-secondary-600 dark:text-slate-300">
                   Atendimento direto para entender necessidade, orçamento e uso.
                 </p>
               </div>
             </div>
             <div className="flex gap-4">
-              <Handshake className="h-8 w-8 text-primary" />
+              <Handshake className="h-8 w-8 text-primary dark:text-blue-400" />
               <div>
-                <h3 className="text-xl font-bold text-secondary-900 mb-2">
+                <h3 className="text-xl font-bold text-secondary-900 dark:text-slate-100 mb-2">
                   Parcerias
                 </h3>
-                <p className="text-secondary-600">
+                <p className="text-secondary-600 dark:text-slate-300">
                   Apoio em financiamento, documentação e etapas de compra.
                 </p>
               </div>
             </div>
             <div className="flex gap-4">
-              <Shield className="h-8 w-8 text-primary" />
+              <Shield className="h-8 w-8 text-primary dark:text-blue-400" />
               <div>
-                <h3 className="text-xl font-bold text-secondary-900 mb-2">
+                <h3 className="text-xl font-bold text-secondary-900 dark:text-slate-100 mb-2">
                   Segurança
                 </h3>
-                <p className="text-secondary-600">
+                <p className="text-secondary-600 dark:text-slate-300">
                   Veículos anunciados com informações claras e suporte da
                   equipe.
                 </p>
@@ -233,7 +235,7 @@ export default function SobrePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/catalogo"
-              className="inline-flex items-center justify-center rounded-lg bg-white px-7 py-4 font-semibold text-primary hover:bg-blue-50"
+              className="inline-flex items-center justify-center rounded-lg bg-white dark:bg-slate-900 px-7 py-4 font-semibold text-primary dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
             >
               Ver Catálogo
             </Link>

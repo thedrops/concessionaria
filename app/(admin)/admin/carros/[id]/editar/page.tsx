@@ -25,11 +25,15 @@ export default async function EditCarPage({ params }: PageProps) {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Editar Carro</h1>
-        <p className="text-gray-600 mt-1">Atualize as informações do veículo</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
+          Editar Carro
+        </h1>
+        <p className="text-gray-600 dark:text-slate-300 mt-1">
+          Atualize as informações do veículo
+        </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-6">
         <CarForm car={car} />
       </div>
     </div>

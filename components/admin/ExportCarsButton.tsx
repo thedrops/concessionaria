@@ -82,23 +82,23 @@ export default function ExportCarsButton() {
               className="fixed inset-0 z-10"
               onClick={() => setShowMenu(false)}
             />
-            <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
+            <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-slate-900 ring-1 ring-black ring-opacity-5 z-20">
               <div className="py-1">
                 <button
                   onClick={() => handleFilterSelect("todos")}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800"
                 >
                   Exportar Todos
                 </button>
                 <button
                   onClick={() => handleFilterSelect("sim")}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800"
                 >
                   Exportar Consignados
                 </button>
                 <button
                   onClick={() => handleFilterSelect("nao")}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800"
                 >
                   Exportar Não Consignados
                 </button>
@@ -116,10 +116,10 @@ export default function ExportCarsButton() {
             onClick={() => setShowFormatModal(false)}
           >
             <div
-              className="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full mx-4"
+              className="bg-white dark:bg-slate-900 rounded-lg p-6 shadow-xl max-w-sm w-full mx-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="text-lg font-bold text-gray-900 mb-4">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-4">
                 Selecione o formato de exportação
               </h3>
               <div className="space-y-3">
@@ -146,7 +146,7 @@ export default function ExportCarsButton() {
                 </button>
                 <button
                   onClick={() => setShowFormatModal(false)}
-                  className="w-full px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors font-medium"
+                  className="w-full px-4 py-3 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 rounded-lg transition-colors font-medium"
                 >
                   Cancelar
                 </button>

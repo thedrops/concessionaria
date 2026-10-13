@@ -82,14 +82,14 @@ export default function Carousel({ images }: CarouselProps) {
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-secondary-900 p-2 rounded-full transition z-10"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-900 text-secondary-900 dark:text-slate-100 p-2 rounded-full transition z-10"
             aria-label="Imagem anterior"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-secondary-900 p-2 rounded-full transition z-10"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-900 text-secondary-900 dark:text-slate-100 p-2 rounded-full transition z-10"
             aria-label="Próxima imagem"
           >
             <ChevronRight className="w-6 h-6" />

@@ -147,70 +147,70 @@ export default function InterestModal({ car }: InterestModalProps) {
 
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-6 relative">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-2xl max-w-md w-full p-6 relative">
           <button
             onClick={() => setIsOpen(false)}
-            className="absolute top-4 right-4 text-secondary-400 hover:text-secondary-600"
+            className="absolute top-4 right-4 text-secondary-400 dark:text-slate-400 hover:text-secondary-600 dark:hover:text-slate-300"
           >
             <X className="h-6 w-6" />
           </button>
 
-          <h2 className="text-2xl font-bold text-secondary-900 mb-2">
+          <h2 className="text-2xl font-bold text-secondary-900 dark:text-slate-100 mb-2">
             Manifestar Interesse
           </h2>
-          <p className="text-secondary-600 mb-6">
+          <p className="text-secondary-600 dark:text-slate-300 mb-6">
             {car.brand} {car.model} ({car.year})
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-slate-200 mb-2">
                 Nome Completo
               </label>
               <input
                 {...register("name")}
                 type="text"
-                className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-secondary-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="Seu nome"
               />
               {errors.name && (
-                <p className="text-accent text-sm mt-1">
+                <p className="text-accent dark:text-red-400 text-sm mt-1">
                   {errors.name.message}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-slate-200 mb-2">
                 Email
               </label>
               <input
                 {...register("email")}
                 type="email"
-                className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-secondary-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="seu@email.com"
               />
               {errors.email && (
-                <p className="text-accent text-sm mt-1">
+                <p className="text-accent dark:text-red-400 text-sm mt-1">
                   {errors.email.message}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-slate-200 mb-2">
                 Telefone
               </label>
               <input
                 type="tel"
                 value={phone}
                 onChange={handlePhoneChange}
-                className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-secondary-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="(12) 97408-8993"
                 maxLength={15}
               />
               {errors.phone && (
-                <p className="text-accent text-sm mt-1">
+                <p className="text-accent dark:text-red-400 text-sm mt-1">
                   {errors.phone.message}
                 </p>
               )}
@@ -219,7 +219,7 @@ export default function InterestModal({ car }: InterestModalProps) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-primary hover:bg-primary-600 disabled:bg-secondary-300 text-white font-bold py-3 px-6 rounded-md transition"
+              className="w-full bg-primary hover:bg-primary-600 disabled:bg-secondary-300 dark:disabled:bg-slate-600 text-white font-bold py-3 px-6 rounded-md transition"
             >
               {isSubmitting ? "Enviando..." : "Enviar e Continuar no WhatsApp"}
             </button>

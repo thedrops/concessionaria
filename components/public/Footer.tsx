@@ -95,7 +95,7 @@ export default function Footer() {
               </li>
               <li className="flex justify-between">
                 <span>Domingo:</span>
-                <span className="font-semibold text-secondary-300">
+                <span className="font-semibold text-secondary-300 dark:text-slate-400">
                   Fechado
                 </span>
               </li>

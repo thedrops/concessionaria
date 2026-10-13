@@ -40,43 +40,45 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center px-4">
-      <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-2xl p-8 w-full max-w-md">
         <div className="flex items-center justify-center mb-8">
-          <Car className="h-12 w-12 text-primary-500 mr-3" />
-          <h1 className="text-3xl font-bold text-secondary-900">Admin Login</h1>
+          <Car className="h-12 w-12 text-primary-500 dark:text-blue-400 mr-3" />
+          <h1 className="text-3xl font-bold text-secondary-900 dark:text-slate-100">
+            Admin Login
+          </h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-slate-200 mb-2">
               Email
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-4 py-3 border border-secondary-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               placeholder="seu@email.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-slate-200 mb-2">
               Senha
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-4 py-3 border border-secondary-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               placeholder="••••••••"
               required
             />
           </div>
 
           {error && (
-            <div className="bg-accent-50 border border-accent-500 text-accent-700 px-4 py-3 rounded-lg">
+            <div className="bg-accent-50 border border-accent-500 text-accent-700 dark:text-red-300 px-4 py-3 rounded-lg">
               {error}
             </div>
           )}
@@ -84,14 +86,17 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-primary-500 hover:bg-primary-600 disabled:bg-secondary-300 text-white font-bold py-3 px-6 rounded-lg transition"
+            className="w-full bg-primary-500 hover:bg-primary-600 disabled:bg-secondary-300 dark:disabled:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition"
           >
             {isLoading ? "Entrando..." : "Entrar"}
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-secondary-600">
-          <Link href="/" className="hover:text-primary-500 transition">
+        <div className="mt-6 text-center text-sm text-secondary-600 dark:text-slate-300">
+          <Link
+            href="/"
+            className="hover:text-primary-500 dark:hover:text-blue-400 transition"
+          >
             ← Voltar para o site
           </Link>
         </div>

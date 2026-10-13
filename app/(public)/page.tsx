@@ -109,7 +109,7 @@ export default async function Home() {
   const heroImage = await getHeroImage();
 
   return (
-    <div className="bg-white">
+    <div className="bg-white dark:bg-slate-900">
       <section className="relative min-h-[500px] md:min-h-[600px] flex items-center overflow-hidden text-white">
         {heroImage ? (
           <Image
@@ -141,7 +141,7 @@ export default async function Home() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/catalogo"
-                className="inline-flex items-center justify-center rounded-lg bg-white px-7 py-4 font-semibold text-primary transition hover:bg-blue-50"
+                className="inline-flex items-center justify-center rounded-lg bg-white dark:bg-slate-900 px-7 py-4 font-semibold text-primary dark:text-blue-400 transition hover:bg-blue-50 dark:hover:bg-blue-950"
               >
                 Ver Catálogo Completo
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -157,7 +157,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="border-b border-secondary-100 bg-white py-5">
+      <section className="border-b border-secondary-100 dark:border-slate-700 bg-white dark:bg-slate-900 py-5">
         <form
           action="/catalogo"
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
@@ -167,7 +167,7 @@ export default async function Home() {
               name="search"
               type="text"
               placeholder="Buscar por marca, modelo, placa..."
-              className="min-h-12 flex-1 rounded-lg border border-secondary-200 px-4 text-secondary-900 outline-none focus:ring-2 focus:ring-primary"
+              className="min-h-12 flex-1 rounded-lg border border-secondary-200 dark:border-slate-700 px-4 text-secondary-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-primary"
             />
             <button type="submit" className="btn-primary min-h-12">
               Buscar
@@ -176,13 +176,13 @@ export default async function Home() {
         </form>
       </section>
 
-      <section className="bg-secondary-50 py-16 md:py-20">
+      <section className="bg-secondary-50 dark:bg-slate-800 py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-display font-bold text-secondary-900 mb-3">
+            <h2 className="text-4xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-3">
               Por Que Escolher a Israel Veículos?
             </h2>
-            <p className="text-lg text-secondary-500">
+            <p className="text-lg text-secondary-500 dark:text-slate-300">
               Qualidade, atendimento e experiência em cada negociação.
             </p>
           </div>
@@ -190,15 +190,15 @@ export default async function Home() {
             {benefits.map((benefit) => (
               <div
                 key={benefit.title}
-                className="card-hover rounded-lg bg-white p-6 shadow-sm border border-secondary-100"
+                className="card-hover rounded-lg bg-white dark:bg-slate-900 p-6 shadow-sm border border-secondary-100 dark:border-slate-700"
               >
                 <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-white">
                   <benefit.icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-xl font-bold text-secondary-900 mb-2">
+                <h3 className="text-xl font-bold text-secondary-900 dark:text-slate-100 mb-2">
                   {benefit.title}
                 </h3>
-                <p className="text-secondary-500 leading-relaxed">
+                <p className="text-secondary-500 dark:text-slate-300 leading-relaxed">
                   {benefit.description}
                 </p>
               </div>
@@ -211,16 +211,16 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-4xl font-display font-bold text-secondary-900 mb-3">
+              <h2 className="text-4xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-3">
                 Veículos em Destaque
               </h2>
-              <p className="text-lg text-secondary-500">
+              <p className="text-lg text-secondary-500 dark:text-slate-300">
                 Confira alguns modelos disponíveis no estoque.
               </p>
             </div>
             <Link
               href="/catalogo"
-              className="inline-flex items-center font-semibold text-primary hover:text-primary-700"
+              className="inline-flex items-center font-semibold text-primary dark:text-blue-400 hover:text-primary-700 dark:hover:text-blue-300"
             >
               Ver Todos
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -234,13 +234,13 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-secondary-50 py-16 md:py-20">
+      <section className="bg-secondary-50 dark:bg-slate-800 py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-display font-bold text-secondary-900 mb-3">
+            <h2 className="text-4xl font-display font-bold text-secondary-900 dark:text-slate-100 mb-3">
               Processo de Compra
             </h2>
-            <p className="text-lg text-secondary-500">
+            <p className="text-lg text-secondary-500 dark:text-slate-300">
               Quatro etapas simples para comprar com segurança.
             </p>
           </div>
@@ -248,16 +248,18 @@ export default async function Home() {
             {processSteps.map((step, index) => (
               <div key={step.title} className="relative text-center">
                 {index < processSteps.length - 1 && (
-                  <div className="hidden lg:block absolute left-1/2 top-8 h-0.5 w-full bg-secondary-200" />
+                  <div className="hidden lg:block absolute left-1/2 top-8 h-0.5 w-full bg-secondary-200 dark:bg-slate-700" />
                 )}
                 <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary-800 text-white text-2xl font-bold">
                   {index + 1}
                 </div>
-                <step.icon className="mx-auto mb-3 h-6 w-6 text-primary" />
-                <h3 className="text-xl font-bold text-secondary-900 mb-2">
+                <step.icon className="mx-auto mb-3 h-6 w-6 text-primary dark:text-blue-400" />
+                <h3 className="text-xl font-bold text-secondary-900 dark:text-slate-100 mb-2">
                   {step.title}
                 </h3>
-                <p className="text-secondary-500">{step.description}</p>
+                <p className="text-secondary-500 dark:text-slate-300">
+                  {step.description}
+                </p>
               </div>
             ))}
           </div>
@@ -275,7 +277,7 @@ export default async function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/catalogo"
-              className="inline-flex items-center justify-center rounded-lg bg-white px-7 py-4 font-semibold text-primary hover:bg-blue-50"
+              className="inline-flex items-center justify-center rounded-lg bg-white dark:bg-slate-900 px-7 py-4 font-semibold text-primary dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
             >
               Ver Catálogo
             </Link>
